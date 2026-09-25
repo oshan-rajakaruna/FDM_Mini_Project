@@ -1,0 +1,24 @@
+Feature,Missing count,Missing percentage,Non-missing count,Descriptive severity
+Sunshine,69835,48.0098,75625,High missingness
+Evaporation,62790,43.1665,82670,High missingness
+Cloud3pm,59358,40.8071,86102,High missingness
+Cloud9am,55888,38.4216,89572,High missingness
+Pressure9am,15065,10.3568,130395,Moderate missingness
+Pressure3pm,15028,10.3314,130432,Moderate missingness
+WindDir9am,10566,7.2639,134894,Moderate missingness
+WindGustDir,10326,7.0989,135134,Moderate missingness
+WindGustSpeed,10263,7.0555,135197,Moderate missingness
+Humidity3pm,4507,3.0984,140953,Low missingness
+WindDir3pm,4228,2.9066,141232,Low missingness
+Temp3pm,3609,2.4811,141851,Low missingness
+RainTomorrow,3267,2.246,142193,Low missingness
+RainToday,3261,2.2419,142199,Low missingness
+Rainfall,3261,2.2419,142199,Low missingness
+WindSpeed3pm,3062,2.105,142398,Low missingness
+Humidity9am,2654,1.8246,142806,Low missingness
+Temp9am,1767,1.2148,143693,Low missingness
+WindSpeed9am,1767,1.2148,143693,Low missingness
+MinTemp,1485,1.0209,143975,Low missingness
+MaxTemp,1261,0.8669,144199,Low missingness
+Date,0,0.0,145460,No missingness
+Location,0,0.0,145460,No missingness

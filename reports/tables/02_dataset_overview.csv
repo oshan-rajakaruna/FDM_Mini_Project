@@ -1,0 +1,8 @@
+Characteristic,Value
+Dataset purpose,Daily Australian weather observations for next-day rain prediction
+Rows,145460
+Columns,23
+Minimum date,2007-11-01
+Maximum date,2017-06-25
+Locations,49
+Target variable,RainTomorrow

@@ -1,0 +1,6 @@
+Finding,Observation,Interpretation,Future preprocessing consideration
+Sunshine station pattern,Sunshine is completely absent at 19 locations.,This is consistent with strong station-dependent structural missingness.,"Compare retention with grouped strategies, missing indicators, or native missing handling; do not default to a global mean."
+Evaporation station pattern,Evaporation is completely absent at 16 locations.,This is consistent with station-dependent measurement availability.,Compare station-aware strategies and model-native missing handling after splitting.
+Cloud station pattern,Cloud9am is absent at 12 locations and Cloud3pm at 12 locations.,Station coverage is a major component; yearly variation also needs consideration.,Avoid assuming one global missingness mechanism; evaluate station-aware handling later.
+Rainfall and RainToday,Their missingness masks are tested directly and reported with exception counts.,Coincident masks would be consistent with RainToday depending on Rainfall availability.,Handle the paired fields consistently during T07 without deriving or filling them here.
+Missing target labels,"RainTomorrow is missing in 3,267 rows.",These rows cannot provide labels for supervised training.,"Exclude them from supervised-learning datasets later, after the split strategy is defined."

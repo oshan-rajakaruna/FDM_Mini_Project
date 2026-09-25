@@ -1,0 +1,7 @@
+Relationship metric,Value
+Rainfall missing count,3261
+RainToday missing count,3261
+Both missing count,3261
+Rainfall-only missing count,0
+RainToday-only missing count,0
+Missingness fully coincides,True

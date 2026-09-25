@@ -1,0 +1,8 @@
+Row-missingness metric,Value
+Total rows,145460.0
+Rows with at least one missing value,89040.0
+Rows with at least one missing value (%),61.2127
+Maximum missing fields in one row,21.0
+Very-high threshold (missing fields),10.0
+Rows meeting very-high threshold,3117.0
+Rows meeting very-high threshold (%),2.1429

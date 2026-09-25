@@ -1,0 +1,17 @@
+Feature group,Feature,Unit / scale,Non-null count,Missing count,Observed minimum,Observed maximum,Later-investigation flag
+Temperature,MinTemp,degrees Celsius (°C),143975,1485,-8.5,33.9,No basic range flag at T02; detailed assessment deferred.
+Temperature,MaxTemp,degrees Celsius (°C),144199,1261,-4.8,48.1,No basic range flag at T02; detailed assessment deferred.
+Temperature,Temp9am,degrees Celsius (°C),143693,1767,-7.2,40.2,No basic range flag at T02; detailed assessment deferred.
+Temperature,Temp3pm,degrees Celsius (°C),141851,3609,-5.4,46.7,No basic range flag at T02; detailed assessment deferred.
+Humidity,Humidity9am,percent (%),142806,2654,0.0,100.0,A 0% boundary observation occurs; verify context and frequency in later EDA/T05.
+Humidity,Humidity3pm,percent (%),140953,4507,0.0,100.0,A 0% boundary observation occurs; verify context and frequency in later EDA/T05.
+Pressure,Pressure9am,"hectopascals (hPa), mean-sea-level pressure",130395,15065,980.5,1041.0,No basic range flag at T02; detailed assessment deferred.
+Pressure,Pressure3pm,"hectopascals (hPa), mean-sea-level pressure",130432,15028,977.1,1039.6,No basic range flag at T02; detailed assessment deferred.
+Wind speed,WindGustSpeed,kilometres per hour (km/h),135197,10263,6.0,135.0,High wind-speed maximum; retain and investigate distribution/context later.
+Wind speed,WindSpeed9am,kilometres per hour (km/h),143693,1767,0.0,130.0,High wind-speed maximum; retain and investigate distribution/context later.
+Wind speed,WindSpeed3pm,kilometres per hour (km/h),142398,3062,0.0,87.0,No basic range flag at T02; detailed assessment deferred.
+Rainfall,Rainfall,millimetres (mm),142199,3261,0.0,371.0,Very high daily maximum; retain and investigate distribution/context later.
+Evaporation,Evaporation,"millimetres (mm), Class A pan evaporation",82670,62790,0.0,145.0,Very high recorded maximum; retain and investigate distribution/context later.
+Sunshine,Sunshine,hours,75625,69835,0.0,14.5,No basic range flag at T02; detailed assessment deferred.
+Cloud,Cloud9am,oktas (eighths of sky covered; documented scale 0–8),89572,55888,0.0,9.0,Maximum exceeds the documented 0–8 clear-to-overcast scale; investigate meaning in T05.
+Cloud,Cloud3pm,oktas (eighths of sky covered; documented scale 0–8),86102,59358,0.0,9.0,Maximum exceeds the documented 0–8 clear-to-overcast scale; investigate meaning in T05.

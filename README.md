@@ -7,9 +7,9 @@ rainfall and presenting weather-risk information for decision support.
 
 ## Current scope
 
-T00 Project Setup, T01 Dataset Verification, and T02 Data Understanding have
-been completed. Detailed missing-value and relationship EDA, outlier analysis,
-data preparation, feature engineering, and model development have not started.
+T00 Project Setup through T03 Missing-Value Analysis have been completed.
+Target/feature relationship EDA, outlier analysis, data preparation, feature
+engineering, and model development have not started.
 
 ## Project structure
 
@@ -38,4 +38,4 @@ python scripts/verify_stage1.py
 ```
 
 The command exits with status code `0` and prints PASS results for T00 through
-T02 when the completed-stage requirements are satisfied.
+T03 when the completed-stage requirements are satisfied.

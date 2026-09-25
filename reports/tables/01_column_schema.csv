@@ -1,0 +1,24 @@
+Position,Column,Pandas dtype
+1,Date,str
+2,Location,str
+3,MinTemp,float64
+4,MaxTemp,float64
+5,Rainfall,float64
+6,Evaporation,float64
+7,Sunshine,float64
+8,WindGustDir,str
+9,WindGustSpeed,float64
+10,WindDir9am,str
+11,WindDir3pm,str
+12,WindSpeed9am,float64
+13,WindSpeed3pm,float64
+14,Humidity9am,float64
+15,Humidity3pm,float64
+16,Pressure9am,float64
+17,Pressure3pm,float64
+18,Cloud9am,float64
+19,Cloud3pm,float64
+20,Temp9am,float64
+21,Temp3pm,float64
+22,RainToday,str
+23,RainTomorrow,str

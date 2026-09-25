@@ -1,0 +1,18 @@
+Verification item,Actual dataset value
+Dataset loaded successfully,True
+Total rows,145460
+Total columns,23
+Date minimum,2007-11-01
+Date maximum,2017-06-25
+Invalid or missing dates,0
+Unique Locations,49
+RainTomorrow exists,True
+RainTomorrow unique non-missing values,"No, Yes"
+RainTomorrow missing count,3267
+Labelled RainTomorrow rows,142193
+Exact duplicate rows,0
+Duplicate Date + Location combinations,0
+Rows in duplicate Date + Location combinations,0
+RISK_MM exists,False
+Unexpected extra columns,None
+Missing expected columns,None

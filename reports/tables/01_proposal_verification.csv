@@ -1,0 +1,8 @@
+Claim,Expected value,Actual dataset value,Match / Mismatch,Comment
+Total rows,145460,145460,Match,Compares all loaded observations.
+Total columns,23,23,Match,Compares the complete CSV header width.
+Unique locations,49,49,Match,Counts distinct non-missing Location values.
+Labelled RainTomorrow rows,142193,142193,Match,Counts non-missing target values.
+Missing RainTomorrow rows,3267,3267,Match,Counts missing target values.
+Date range,2007-11-01 to 2017-06-25,2007-11-01 to 2017-06-25,Match,Uses parsed valid dates and inclusive endpoints.
+RISK_MM exists,False,False,Match,Leakage-prone RISK_MM is expected to be absent.

@@ -1,0 +1,19 @@
+Target-missingness metric,Value
+Total rows,145460
+Missing RainTomorrow count,3267
+Missing RainTomorrow percentage,2.246
+Labelled RainTomorrow count,142193
+Earliest missing-target date,2008-07-05
+Latest missing-target date,2017-06-25
+Missing targets exact station endpoints (count),10
+Missing targets exact station endpoints (%),0.3061
+All rows exact station endpoints (%),0.0674
+Endpoint concentration ratio (0 days),4.5433
+Missing targets within 7 days of station endpoints (count),25
+Missing targets within 7 days of station endpoints (%),0.7652
+All rows within 7 days of station endpoints (%),0.539
+Endpoint concentration ratio (7 days),1.4198
+Missing targets within 30 days of station endpoints (count),78
+Missing targets within 30 days of station endpoints (%),2.3875
+All rows within 30 days of station endpoints (%),2.0885
+Endpoint concentration ratio (30 days),1.1431

@@ -1,0 +1,7 @@
+Feature,Number of categories,Category values,Most frequent category,Most frequent count,Missing count
+Location,49,See 02_categorical_frequencies.csv for 49 location values,Canberra,3436,0
+WindGustDir,16,E | ENE | ESE | N | NE | NNE | NNW | NW | S | SE | SSE | SSW | SW | W | WNW | WSW,W,9915,10326
+WindDir9am,16,E | ENE | ESE | N | NE | NNE | NNW | NW | S | SE | SSE | SSW | SW | W | WNW | WSW,N,11758,10566
+WindDir3pm,16,E | ENE | ESE | N | NE | NNE | NNW | NW | S | SE | SSE | SSW | SW | W | WNW | WSW,SE,10838,4228
+RainToday,2,No | Yes,No,110319,3261
+RainTomorrow,2,No | Yes,No,110316,3267

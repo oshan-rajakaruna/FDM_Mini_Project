@@ -1,0 +1,14 @@
+Claim,Expected value,Actual dataset value,Match / Mismatch,Comment
+Sunshine missing count,69835,69835,Match,Direct count of missing values in the raw dataset.
+Evaporation missing count,62790,62790,Match,Direct count of missing values in the raw dataset.
+Cloud3pm missing count,59358,59358,Match,Direct count of missing values in the raw dataset.
+Cloud9am missing count,55888,55888,Match,Direct count of missing values in the raw dataset.
+Pressure9am missing count,15065,15065,Match,Direct count of missing values in the raw dataset.
+Pressure3pm missing count,15028,15028,Match,Direct count of missing values in the raw dataset.
+WindDir9am missing count,10566,10566,Match,Direct count of missing values in the raw dataset.
+WindGustDir missing count,10326,10326,Match,Direct count of missing values in the raw dataset.
+WindGustSpeed missing count,10263,10263,Match,Direct count of missing values in the raw dataset.
+Sunshine is entirely absent at some stations,At least 1 station,19 stations,Match,A station is counted only when every row for that feature is missing.
+Evaporation is entirely absent at some stations,At least 1 station,16 stations,Match,A station is counted only when every row for that feature is missing.
+Cloud9am is entirely absent at some stations,At least 1 station,12 stations,Match,A station is counted only when every row for that feature is missing.
+Cloud3pm is entirely absent at some stations,At least 1 station,12 stations,Match,A station is counted only when every row for that feature is missing.

@@ -1,0 +1,208 @@
+Period type,Period,Feature,Record count,Missing count,Missing percentage,Non-missing count
+Year,2007,Sunshine,61,0,0.0,61
+Year,2007,Evaporation,61,0,0.0,61
+Year,2007,Cloud9am,61,0,0.0,61
+Year,2007,Cloud3pm,61,0,0.0,61
+Year,2007,Pressure9am,61,0,0.0,61
+Year,2007,Pressure3pm,61,0,0.0,61
+Year,2007,WindDir9am,61,0,0.0,61
+Year,2007,WindGustDir,61,0,0.0,61
+Year,2007,WindGustSpeed,61,0,0.0,61
+Year,2008,Sunshine,2270,323,14.2291,1947
+Year,2008,Evaporation,2270,339,14.9339,1931
+Year,2008,Cloud9am,2270,379,16.696,1891
+Year,2008,Cloud3pm,2270,389,17.1366,1881
+Year,2008,Pressure9am,2270,95,4.185,2175
+Year,2008,Pressure3pm,2270,94,4.141,2176
+Year,2008,WindDir9am,2270,92,4.0529,2178
+Year,2008,WindGustDir,2270,453,19.9559,1817
+Year,2008,WindGustSpeed,2270,452,19.9119,1818
+Year,2009,Sunshine,16789,6146,36.6073,10643
+Year,2009,Evaporation,16789,5714,34.0342,11075
+Year,2009,Cloud9am,16789,5567,33.1586,11222
+Year,2009,Cloud3pm,16789,5802,34.5583,10987
+Year,2009,Pressure9am,16789,1745,10.3937,15044
+Year,2009,Pressure3pm,16789,1746,10.3997,15043
+Year,2009,WindDir9am,16789,1383,8.2375,15406
+Year,2009,WindGustDir,16789,1718,10.2329,15071
+Year,2009,WindGustSpeed,16789,1716,10.221,15073
+Year,2010,Sunshine,16782,6220,37.0635,10562
+Year,2010,Evaporation,16782,5925,35.3057,10857
+Year,2010,Cloud9am,16782,5532,32.9639,11250
+Year,2010,Cloud3pm,16782,5683,33.8637,11099
+Year,2010,Pressure9am,16782,1624,9.677,15158
+Year,2010,Pressure3pm,16782,1618,9.6413,15164
+Year,2010,WindDir9am,16782,1511,9.0037,15271
+Year,2010,WindGustDir,16782,1546,9.2123,15236
+Year,2010,WindGustSpeed,16782,1543,9.1944,15239
+Year,2011,Sunshine,15407,6053,39.2873,9354
+Year,2011,Evaporation,15407,5797,37.6258,9610
+Year,2011,Cloud9am,15407,5840,37.9048,9567
+Year,2011,Cloud3pm,15407,6078,39.4496,9329
+Year,2011,Pressure9am,15407,1559,10.1188,13848
+Year,2011,Pressure3pm,15407,1542,10.0084,13865
+Year,2011,WindDir9am,15407,1036,6.7242,14371
+Year,2011,WindGustDir,15407,1028,6.6723,14379
+Year,2011,WindGustSpeed,15407,1026,6.6593,14381
+Year,2012,Sunshine,15409,6539,42.4362,8870
+Year,2012,Evaporation,15409,6056,39.3017,9353
+Year,2012,Cloud9am,15409,5869,38.0881,9540
+Year,2012,Cloud3pm,15409,6139,39.8404,9270
+Year,2012,Pressure9am,15409,1379,8.9493,14030
+Year,2012,Pressure3pm,15409,1391,9.0272,14018
+Year,2012,WindDir9am,15409,1138,7.3853,14271
+Year,2012,WindGustDir,15409,877,5.6915,14532
+Year,2012,WindGustSpeed,15409,872,5.659,14537
+Year,2013,Sunshine,16415,7570,46.1164,8845
+Year,2013,Evaporation,16415,6428,39.1593,9987
+Year,2013,Cloud9am,16415,6769,41.2367,9646
+Year,2013,Cloud3pm,16415,6818,41.5352,9597
+Year,2013,Pressure9am,16415,1384,8.4313,15031
+Year,2013,Pressure3pm,16415,1372,8.3582,15043
+Year,2013,WindDir9am,16415,1110,6.7621,15305
+Year,2013,WindGustDir,16415,852,5.1904,15563
+Year,2013,WindGustSpeed,16415,825,5.0259,15590
+Year,2014,Sunshine,17885,9157,51.1993,8728
+Year,2014,Evaporation,17885,8227,45.9994,9658
+Year,2014,Cloud9am,17885,7149,39.972,10736
+Year,2014,Cloud3pm,17885,7221,40.3746,10664
+Year,2014,Pressure9am,17885,2014,11.2608,15871
+Year,2014,Pressure3pm,17885,2003,11.1993,15882
+Year,2014,WindDir9am,17885,1475,8.2471,16410
+Year,2014,WindGustDir,17885,1191,6.6592,16694
+Year,2014,WindGustSpeed,17885,1189,6.648,16696
+Year,2015,Sunshine,17885,9441,52.7873,8444
+Year,2015,Evaporation,17885,8691,48.5938,9194
+Year,2015,Cloud9am,17885,7105,39.726,10780
+Year,2015,Cloud3pm,17885,7528,42.0911,10357
+Year,2015,Pressure9am,17885,2396,13.3967,15489
+Year,2015,Pressure3pm,17885,2392,13.3743,15493
+Year,2015,WindDir9am,17885,1182,6.6089,16703
+Year,2015,WindGustDir,17885,1025,5.7311,16860
+Year,2015,WindGustSpeed,17885,1004,5.6136,16881
+Year,2016,Sunshine,17934,11994,66.8786,5940
+Year,2016,Evaporation,17934,9860,54.9794,8074
+Year,2016,Cloud9am,17934,7645,42.6285,10289
+Year,2016,Cloud3pm,17934,8985,50.1004,8949
+Year,2016,Pressure9am,17934,1980,11.0405,15954
+Year,2016,Pressure3pm,17934,1983,11.0572,15951
+Year,2016,WindDir9am,17934,1030,5.7433,16904
+Year,2016,WindGustDir,17934,1096,6.1113,16838
+Year,2016,WindGustSpeed,17934,1096,6.1113,16838
+Year,2017,Sunshine,8623,6392,74.1273,2231
+Year,2017,Evaporation,8623,5753,66.7169,2870
+Year,2017,Cloud9am,8623,4033,46.7703,4590
+Year,2017,Cloud3pm,8623,4715,54.6793,3908
+Year,2017,Pressure9am,8623,889,10.3096,7734
+Year,2017,Pressure3pm,8623,887,10.2864,7736
+Year,2017,WindDir9am,8623,609,7.0625,8014
+Year,2017,WindGustDir,8623,540,6.2623,8083
+Year,2017,WindGustSpeed,8623,540,6.2623,8083
+Month of year,1,Sunshine,13236,6268,47.3557,6968
+Month of year,1,Evaporation,13236,5774,43.6235,7462
+Month of year,1,Cloud9am,13236,5285,39.929,7951
+Month of year,1,Cloud3pm,13236,5700,43.0644,7536
+Month of year,1,Pressure9am,13236,1407,10.6301,11829
+Month of year,1,Pressure3pm,13236,1414,10.683,11822
+Month of year,1,WindDir9am,13236,520,3.9287,12716
+Month of year,1,WindGustDir,13236,996,7.5249,12240
+Month of year,1,WindGustSpeed,13236,990,7.4796,12246
+Month of year,2,Sunshine,10793,5091,47.1695,5702
+Month of year,2,Evaporation,10793,4662,43.1947,6131
+Month of year,2,Cloud9am,10793,4188,38.8029,6605
+Month of year,2,Cloud3pm,10793,4542,42.0828,6251
+Month of year,2,Pressure9am,10793,1183,10.9608,9610
+Month of year,2,Pressure3pm,10793,1174,10.8774,9619
+Month of year,2,WindDir9am,10793,597,5.5314,10196
+Month of year,2,WindGustDir,10793,818,7.579,9975
+Month of year,2,WindGustSpeed,10793,817,7.5697,9976
+Month of year,3,Sunshine,13361,6284,47.0324,7077
+Month of year,3,Evaporation,13361,5754,43.0656,7607
+Month of year,3,Cloud9am,13361,5187,38.8219,8174
+Month of year,3,Cloud3pm,13361,5482,41.0299,7879
+Month of year,3,Pressure9am,13361,1385,10.366,11976
+Month of year,3,Pressure3pm,13361,1387,10.381,11974
+Month of year,3,WindDir9am,13361,1175,8.7943,12186
+Month of year,3,WindGustDir,13361,938,7.0204,12423
+Month of year,3,WindGustSpeed,13361,936,7.0055,12425
+Month of year,4,Sunshine,11550,5605,48.5281,5945
+Month of year,4,Evaporation,11550,5041,43.645,6509
+Month of year,4,Cloud9am,11550,4487,38.8485,7063
+Month of year,4,Cloud3pm,11550,4699,40.684,6851
+Month of year,4,Pressure9am,11550,1121,9.7056,10429
+Month of year,4,Pressure3pm,11550,1128,9.7662,10422
+Month of year,4,WindDir9am,11550,923,7.9913,10627
+Month of year,4,WindGustDir,11550,774,6.7013,10776
+Month of year,4,WindGustSpeed,11550,773,6.6926,10777
+Month of year,5,Sunshine,13353,6738,50.4606,6615
+Month of year,5,Evaporation,13353,5957,44.6117,7396
+Month of year,5,Cloud9am,13353,5184,38.8227,8169
+Month of year,5,Cloud3pm,13353,5516,41.3091,7837
+Month of year,5,Pressure9am,13353,1376,10.3048,11977
+Month of year,5,Pressure3pm,13353,1362,10.2,11991
+Month of year,5,WindDir9am,13353,1516,11.3533,11837
+Month of year,5,WindGustDir,13353,907,6.7925,12446
+Month of year,5,WindGustSpeed,13353,885,6.6277,12468
+Month of year,6,Sunshine,12684,6321,49.8344,6363
+Month of year,6,Evaporation,12684,5699,44.9306,6985
+Month of year,6,Cloud9am,12684,4719,37.2044,7965
+Month of year,6,Cloud3pm,12684,5061,39.9007,7623
+Month of year,6,Pressure9am,12684,1292,10.1861,11392
+Month of year,6,Pressure3pm,12684,1291,10.1782,11393
+Month of year,6,WindDir9am,12684,1535,12.1019,11149
+Month of year,6,WindGustDir,12684,885,6.9773,11799
+Month of year,6,WindGustSpeed,12684,876,6.9063,11808
+Month of year,7,Sunshine,12025,5630,46.8191,6395
+Month of year,7,Evaporation,12025,4950,41.1642,7075
+Month of year,7,Cloud9am,12025,4332,36.0249,7693
+Month of year,7,Cloud3pm,12025,4461,37.0977,7564
+Month of year,7,Pressure9am,12025,1209,10.0541,10816
+Month of year,7,Pressure3pm,12025,1214,10.0956,10811
+Month of year,7,WindDir9am,12025,1333,11.0852,10692
+Month of year,7,WindGustDir,12025,811,6.7443,11214
+Month of year,7,WindGustSpeed,12025,811,6.7443,11214
+Month of year,8,Sunshine,12028,5723,47.5806,6305
+Month of year,8,Evaporation,12028,5097,42.3761,6931
+Month of year,8,Cloud9am,12028,4466,37.13,7562
+Month of year,8,Cloud3pm,12028,4673,38.851,7355
+Month of year,8,Pressure9am,12028,1246,10.3592,10782
+Month of year,8,Pressure3pm,12028,1235,10.2677,10793
+Month of year,8,WindDir9am,12028,1052,8.7463,10976
+Month of year,8,WindGustDir,12028,858,7.1334,11170
+Month of year,8,WindGustSpeed,12028,856,7.1167,11172
+Month of year,9,Sunshine,11640,5524,47.457,6116
+Month of year,9,Evaporation,11640,4900,42.0962,6740
+Month of year,9,Cloud9am,11640,4417,37.9467,7223
+Month of year,9,Cloud3pm,11640,4616,39.6564,7024
+Month of year,9,Pressure9am,11640,1213,10.421,10427
+Month of year,9,Pressure3pm,11640,1204,10.3436,10436
+Month of year,9,WindDir9am,11640,597,5.1289,11043
+Month of year,9,WindGustDir,11640,893,7.6718,10747
+Month of year,9,WindGustSpeed,11640,877,7.5344,10763
+Month of year,10,Sunshine,12028,5708,47.4559,6320
+Month of year,10,Evaporation,12028,5135,42.6921,6893
+Month of year,10,Cloud9am,12028,4713,39.1836,7315
+Month of year,10,Cloud3pm,12028,5011,41.6611,7017
+Month of year,10,Pressure9am,12028,1238,10.2927,10790
+Month of year,10,Pressure3pm,12028,1233,10.2511,10795
+Month of year,10,WindDir9am,12028,531,4.4147,11497
+Month of year,10,WindGustDir,12028,830,6.9006,11198
+Month of year,10,WindGustSpeed,12028,827,6.8756,11201
+Month of year,11,Sunshine,11669,5516,47.2705,6153
+Month of year,11,Evaporation,11669,4946,42.3858,6723
+Month of year,11,Cloud9am,11669,4488,38.4609,7181
+Month of year,11,Cloud3pm,11669,4860,41.6488,6809
+Month of year,11,Pressure9am,11669,1192,10.2151,10477
+Month of year,11,Pressure3pm,11669,1199,10.2751,10470
+Month of year,11,WindDir9am,11669,382,3.2736,11287
+Month of year,11,WindGustDir,11669,790,6.7701,10879
+Month of year,11,WindGustSpeed,11669,789,6.7615,10880
+Month of year,12,Sunshine,11093,5427,48.9227,5666
+Month of year,12,Evaporation,11093,4875,43.9466,6218
+Month of year,12,Cloud9am,11093,4422,39.863,6671
+Month of year,12,Cloud3pm,11093,4737,42.7026,6356
+Month of year,12,Pressure9am,11093,1203,10.8447,9890
+Month of year,12,Pressure3pm,11093,1187,10.7004,9906
+Month of year,12,WindDir9am,11093,405,3.651,10688
+Month of year,12,WindGustDir,11093,826,7.4461,10267
+Month of year,12,WindGustSpeed,11093,826,7.4461,10267

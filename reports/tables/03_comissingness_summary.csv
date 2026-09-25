@@ -1,0 +1,20 @@
+Group,Feature A,Feature B,A missing,B missing,Both missing,A only missing,B only missing,Missing union,Both missing percentage of rows,Jaccard co-missingness percentage,Identical missingness masks
+Rainfall / RainToday,Rainfall,RainToday,3261,3261,3261,0,0,3261,2.2419,100.0,True
+Pressure,Pressure9am,Pressure3pm,15065,15028,14804,261,224,15289,10.1774,96.8278,False
+Cloud,Cloud9am,Cloud3pm,55888,59358,51744,4144,7614,63502,35.5727,81.484,False
+Sunshine / Evaporation,Sunshine,Evaporation,69835,62790,58547,11288,4243,74078,40.2496,79.0343,False
+Wind,WindGustDir,WindGustSpeed,10326,10263,10263,63,0,10326,7.0555,99.3899,False
+Wind,WindGustDir,WindDir9am,10326,10566,2951,7375,7615,17941,2.0287,16.4484,False
+Wind,WindGustDir,WindDir3pm,10326,4228,3258,7068,970,11296,2.2398,28.8421,False
+Wind,WindGustDir,WindSpeed9am,10326,1767,1424,8902,343,10669,0.979,13.3471,False
+Wind,WindGustDir,WindSpeed3pm,10326,3062,2781,7545,281,10607,1.9119,26.2185,False
+Wind,WindGustSpeed,WindDir9am,10263,10566,2902,7361,7664,17927,1.9951,16.1879,False
+Wind,WindGustSpeed,WindDir3pm,10263,4228,3212,7051,1016,11279,2.2082,28.4777,False
+Wind,WindGustSpeed,WindSpeed9am,10263,1767,1403,8860,364,10627,0.9645,13.2022,False
+Wind,WindGustSpeed,WindSpeed3pm,10263,3062,2763,7500,299,10562,1.8995,26.1598,False
+Wind,WindDir9am,WindDir3pm,10566,4228,2125,8441,2103,12669,1.4609,16.7732,False
+Wind,WindDir9am,WindSpeed9am,10566,1767,1767,8799,0,10566,1.2148,16.7235,False
+Wind,WindDir9am,WindSpeed3pm,10566,3062,1599,8967,1463,12029,1.0993,13.2929,False
+Wind,WindDir3pm,WindSpeed9am,4228,1767,1234,2994,533,4761,0.8483,25.9189,False
+Wind,WindDir3pm,WindSpeed3pm,4228,3062,3062,1166,0,4228,2.105,72.4219,False
+Wind,WindSpeed9am,WindSpeed3pm,1767,3062,1213,554,1849,3616,0.8339,33.5454,False

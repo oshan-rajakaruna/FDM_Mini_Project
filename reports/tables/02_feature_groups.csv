@@ -1,0 +1,24 @@
+Feature group,Feature
+Date / Location,Date
+Date / Location,Location
+Temperature,MinTemp
+Temperature,MaxTemp
+Temperature,Temp9am
+Temperature,Temp3pm
+Rain / evaporation / sunshine,Rainfall
+Rain / evaporation / sunshine,Evaporation
+Rain / evaporation / sunshine,Sunshine
+Rain / evaporation / sunshine,RainToday
+Wind,WindGustDir
+Wind,WindGustSpeed
+Wind,WindDir9am
+Wind,WindDir3pm
+Wind,WindSpeed9am
+Wind,WindSpeed3pm
+Humidity,Humidity9am
+Humidity,Humidity3pm
+Pressure,Pressure9am
+Pressure,Pressure3pm
+Cloud,Cloud9am
+Cloud,Cloud3pm
+Target,RainTomorrow
