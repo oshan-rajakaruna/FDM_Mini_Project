@@ -39,6 +39,35 @@ CATEGORICAL_PREDICTORS = (
     "RainToday",
 )
 
+ENGINEERED_NUMERICAL_PREDICTORS = (
+    *NUMERICAL_PREDICTORS,
+    "Month_sin",
+    "Month_cos",
+    "TempRange",
+    "TempChange",
+    "HumidityChange",
+    "PressureChange",
+    "WindSpeedChange",
+    "WindGustDir_sin",
+    "WindGustDir_cos",
+    "WindDir9am_sin",
+    "WindDir9am_cos",
+    "WindDir3pm_sin",
+    "WindDir3pm_cos",
+)
+
+ENGINEERED_CATEGORICAL_PREDICTORS = ("Location", "RainToday")
+ENGINEERED_PASSTHROUGH_INDICATORS = (
+    "WindGustDir_missing",
+    "WindDir9am_missing",
+    "WindDir3pm_missing",
+)
+ENGINEERED_PREDICTORS = (
+    *ENGINEERED_NUMERICAL_PREDICTORS,
+    *ENGINEERED_CATEGORICAL_PREDICTORS,
+    *ENGINEERED_PASSTHROUGH_INDICATORS,
+)
+
 STRUCTURAL_NUMERICAL_PREDICTORS = (
     "Sunshine",
     "Evaporation",
@@ -65,6 +94,26 @@ class PreprocessedSplits:
     """Transformed chronological subsets and their aligned target/date data."""
 
     preprocessor: "RainfallPreprocessor"
+    X_train: pd.DataFrame
+    X_validation: pd.DataFrame
+    X_test: pd.DataFrame
+    y_train: pd.Series
+    y_validation: pd.Series
+    y_test: pd.Series
+    dates_train: pd.Series
+    dates_validation: pd.Series
+    dates_test: pd.Series
+
+
+@dataclass(frozen=True)
+class EngineeredPreprocessedSplits:
+    """Feature-engineered and preprocessed chronological subsets."""
+
+    feature_engineer: object
+    preprocessor: "RainfallPreprocessor"
+    engineered_train: pd.DataFrame
+    engineered_validation: pd.DataFrame
+    engineered_test: pd.DataFrame
     X_train: pd.DataFrame
     X_validation: pd.DataFrame
     X_test: pd.DataFrame
@@ -117,21 +166,41 @@ class RainfallPreprocessor:
     explicit ``Missing`` category before one-hot encoding. Unknown categories
     are ignored safely. When requested, only the 16 imputed continuous numeric
     columns are standardised; binary indicators and one-hot columns remain
-    unchanged.
+    unchanged. The original configuration scales 16 numerical columns. The
+    engineered configuration scales its 29 continuous/circular numerical
+    columns while leaving missing indicators and one-hot columns unchanged.
     """
 
-    def __init__(self, scale_numeric: bool = False) -> None:
+    def __init__(self, scale_numeric: bool = False, configuration: str = "original") -> None:
         self.scale_numeric = bool(scale_numeric)
+        if configuration not in {"original", "engineered"}:
+            raise ValueError("configuration must be 'original' or 'engineered'")
+        self.configuration = configuration
+        if configuration == "original":
+            self.numerical_predictors_ = NUMERICAL_PREDICTORS
+            self.categorical_predictors_ = CATEGORICAL_PREDICTORS
+            self.passthrough_indicators_ = ()
+            self.predictor_columns_ = predictor_columns()
+        else:
+            self.numerical_predictors_ = ENGINEERED_NUMERICAL_PREDICTORS
+            self.categorical_predictors_ = ENGINEERED_CATEGORICAL_PREDICTORS
+            self.passthrough_indicators_ = ENGINEERED_PASSTHROUGH_INDICATORS
+            self.predictor_columns_ = ENGINEERED_PREDICTORS
         self.is_fitted_ = False
 
     def _validate_predictors(self, frame: pd.DataFrame) -> None:
-        missing = sorted(set(predictor_columns()).difference(frame.columns))
+        missing = sorted(set(self.predictor_columns_).difference(frame.columns))
         if missing:
             raise ValueError(f"Required predictor columns are missing: {', '.join(missing)}")
-        unexpected = sorted(set(frame.columns).difference(predictor_columns()))
+        unexpected = sorted(set(frame.columns).difference(self.predictor_columns_))
         if unexpected:
+            scope = (
+                "original T07 predictors"
+                if self.configuration == "original"
+                else "T08 engineered predictors"
+            )
             raise ValueError(
-                "Only original T07 predictors may enter preprocessing; separate or reject: "
+                f"Only {scope} may enter preprocessing; separate or reject: "
                 + ", ".join(unexpected)
             )
 
@@ -139,11 +208,11 @@ class RainfallPreprocessor:
         """Fit every learned parameter from training predictors only."""
 
         self._validate_predictors(X_train)
-        train = X_train.loc[:, predictor_columns()].copy(deep=True)
+        train = X_train.loc[:, self.predictor_columns_].copy(deep=True)
         self.fit_row_count_ = int(len(train))
         self.fit_index_fingerprint_ = _index_fingerprint(train.index)
 
-        self.numeric_medians_ = train.loc[:, NUMERICAL_PREDICTORS].median()
+        self.numeric_medians_ = train.loc[:, self.numerical_predictors_].median()
         if self.numeric_medians_.isna().any():
             affected = self.numeric_medians_.index[self.numeric_medians_.isna()].tolist()
             raise ValueError(f"Training data has no observed values for: {', '.join(affected)}")
@@ -157,7 +226,7 @@ class RainfallPreprocessor:
         categorical_train = self._prepare_categorical(train)
         self.categorical_categories_ = [
             np.asarray(sorted(set(categorical_train[feature]) | {MISSING_CATEGORY}), dtype=object)
-            for feature in CATEGORICAL_PREDICTORS
+            for feature in self.categorical_predictors_
         ]
         self.encoder_ = OneHotEncoder(
             categories=self.categorical_categories_,
@@ -165,19 +234,19 @@ class RainfallPreprocessor:
             sparse_output=False,
             dtype=np.float64,
         )
-        self.encoder_.fit(categorical_train.loc[:, CATEGORICAL_PREDICTORS])
+        self.encoder_.fit(categorical_train.loc[:, self.categorical_predictors_])
 
         imputed_numeric, _ = self._impute_numeric(train)
         self.scaler_ = StandardScaler() if self.scale_numeric else None
         if self.scaler_ is not None:
-            self.scaler_.fit(imputed_numeric.loc[:, NUMERICAL_PREDICTORS])
+            self.scaler_.fit(imputed_numeric.loc[:, self.numerical_predictors_])
 
-        self.numeric_feature_names_ = list(NUMERICAL_PREDICTORS)
+        self.numeric_feature_names_ = list(self.numerical_predictors_)
         self.indicator_feature_names_ = [
             f"{feature}_missing" for feature in STRUCTURAL_NUMERICAL_PREDICTORS
-        ]
+        ] + list(self.passthrough_indicators_)
         self.encoded_feature_names_ = list(
-            self.encoder_.get_feature_names_out(CATEGORICAL_PREDICTORS)
+            self.encoder_.get_feature_names_out(self.categorical_predictors_)
         )
         self.feature_names_out_ = (
             self.numeric_feature_names_
@@ -191,13 +260,12 @@ class RainfallPreprocessor:
         if not self.is_fitted_:
             raise RuntimeError("RainfallPreprocessor must be fitted before transformation")
 
-    @staticmethod
-    def _prepare_categorical(frame: pd.DataFrame) -> pd.DataFrame:
-        categorical = frame.loc[:, CATEGORICAL_PREDICTORS].copy(deep=True)
+    def _prepare_categorical(self, frame: pd.DataFrame) -> pd.DataFrame:
+        categorical = frame.loc[:, self.categorical_predictors_].copy(deep=True)
         return categorical.fillna(MISSING_CATEGORY).astype(str)
 
     def _impute_numeric(self, frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-        numeric = frame.loc[:, NUMERICAL_PREDICTORS].copy(deep=True)
+        numeric = frame.loc[:, self.numerical_predictors_].copy(deep=True)
         indicators = pd.DataFrame(index=frame.index)
 
         for feature in STRUCTURAL_NUMERICAL_PREDICTORS:
@@ -209,12 +277,17 @@ class RainfallPreprocessor:
 
         non_structural = [
             feature
-            for feature in NUMERICAL_PREDICTORS
+            for feature in self.numerical_predictors_
             if feature not in STRUCTURAL_NUMERICAL_PREDICTORS
         ]
         numeric.loc[:, non_structural] = numeric.loc[:, non_structural].fillna(
             self.numeric_medians_.loc[non_structural]
         )
+        for feature in self.passthrough_indicators_:
+            values = frame[feature]
+            if values.isna().any() or not values.isin([0, 1, 0.0, 1.0]).all():
+                raise ValueError(f"{feature} must contain only non-missing binary values")
+            indicators[feature] = values.astype(np.float64)
         return numeric, indicators
 
     def impute_numeric(self, X: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -222,26 +295,26 @@ class RainfallPreprocessor:
 
         self._check_fitted()
         self._validate_predictors(X)
-        return self._impute_numeric(X.loc[:, predictor_columns()].copy(deep=True))
+        return self._impute_numeric(X.loc[:, self.predictor_columns_].copy(deep=True))
 
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         """Transform predictors using only parameters learned during ``fit``."""
 
         self._check_fitted()
         self._validate_predictors(X)
-        source = X.loc[:, predictor_columns()].copy(deep=True)
+        source = X.loc[:, self.predictor_columns_].copy(deep=True)
         numeric, indicators = self._impute_numeric(source)
 
         if self.scaler_ is not None:
-            numeric_values = self.scaler_.transform(numeric.loc[:, NUMERICAL_PREDICTORS])
+            numeric_values = self.scaler_.transform(numeric.loc[:, self.numerical_predictors_])
             numeric = pd.DataFrame(
                 numeric_values,
                 index=source.index,
-                columns=NUMERICAL_PREDICTORS,
+                columns=self.numerical_predictors_,
             )
 
         categorical = self._prepare_categorical(source)
-        encoded_values = self.encoder_.transform(categorical.loc[:, CATEGORICAL_PREDICTORS])
+        encoded_values = self.encoder_.transform(categorical.loc[:, self.categorical_predictors_])
         encoded = pd.DataFrame(
             encoded_values,
             index=source.index,
@@ -274,7 +347,7 @@ class RainfallPreprocessor:
             feature: int(
                 (~categorical[feature].isin(set(self.categorical_categories_[position]))).sum()
             )
-            for position, feature in enumerate(CATEGORICAL_PREDICTORS)
+            for position, feature in enumerate(self.categorical_predictors_)
         }
         return pd.Series(counts, name="Unknown category rows")
 
@@ -319,6 +392,60 @@ def fit_transform_chronological_splits(
     X_test = preprocessor.transform(test.X)
     return PreprocessedSplits(
         preprocessor=preprocessor,
+        X_train=X_train,
+        X_validation=X_validation,
+        X_test=X_test,
+        y_train=train.y,
+        y_validation=validation.y,
+        y_test=test.y,
+        dates_train=train.dates,
+        dates_validation=validation.dates,
+        dates_test=test.dates,
+    )
+
+
+def fit_transform_engineered_chronological_splits(
+    split: ChronologicalSplit,
+    scale_numeric: bool = False,
+) -> EngineeredPreprocessedSplits:
+    """Engineer raw observation-date features, then fit preprocessing on Train.
+
+    The feature engineer is deterministic and target-independent. All learned
+    imputation, encoding, and scaling parameters are fitted by the downstream
+    preprocessor using the chronological Train subset only.
+    """
+
+    from fdm_rainfall.features import WeatherFeatureEngineer
+
+    train = separate_supervised_components(split.train)
+    validation = separate_supervised_components(split.validation)
+    test = separate_supervised_components(split.test)
+
+    raw_inputs = {
+        "Train": pd.concat([train.dates.rename(DATE_COLUMN), train.X], axis=1),
+        "Validation": pd.concat(
+            [validation.dates.rename(DATE_COLUMN), validation.X], axis=1
+        ),
+        "Test": pd.concat([test.dates.rename(DATE_COLUMN), test.X], axis=1),
+    }
+    engineer = WeatherFeatureEngineer(output="default").fit(raw_inputs["Train"])
+    engineered_train = engineer.transform(raw_inputs["Train"])
+    engineered_validation = engineer.transform(raw_inputs["Validation"])
+    engineered_test = engineer.transform(raw_inputs["Test"])
+
+    preprocessor = RainfallPreprocessor(
+        scale_numeric=scale_numeric,
+        configuration="engineered",
+    )
+    X_train = preprocessor.fit_transform(engineered_train)
+    X_validation = preprocessor.transform(engineered_validation)
+    X_test = preprocessor.transform(engineered_test)
+    return EngineeredPreprocessedSplits(
+        feature_engineer=engineer,
+        preprocessor=preprocessor,
+        engineered_train=engineered_train,
+        engineered_validation=engineered_validation,
+        engineered_test=engineered_test,
         X_train=X_train,
         X_validation=X_validation,
         X_test=X_test,

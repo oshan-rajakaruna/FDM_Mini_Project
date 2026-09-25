@@ -7,8 +7,15 @@ rainfall and presenting weather-risk information for decision support.
 
 ## Current scope
 
-T00 Project Setup through T07 Data Preprocessing have been completed. Feature
-engineering and model development have not started.
+T00 Project Setup through T08 Feature Engineering have been completed. The
+Progress Evaluation 1 implementation stage ends here; model development has not
+started.
+
+The T08 engineered default uses cyclical month, five within-day weather
+differences, and cyclical wind direction with explicit missing indicators. The
+original T07 preprocessing option remains available. Year and transformed
+rainfall are optional, and climate-zone grouping is deferred until an
+authoritative mapping is available.
 
 ## RainToday threshold clarification
 
@@ -42,5 +49,6 @@ From the repository root, run:
 python scripts/verify_stage1.py
 ```
 
-The command exits with status code `0` and prints PASS results for T00 through
-T07 when the completed-stage requirements are satisfied.
+The command exits with status code `0`, prints PASS results for T00 through T08,
+and reports completion of the Progress Evaluation 1 implementation stage when
+all completed-stage requirements are satisfied.

@@ -1,0 +1,6 @@
+Feature,Train minimum,Train maximum,Unique values,Decision,Reason
+Year,2007,2015,9,OPTIONAL,Known at prediction time but may proxy drift/coverage
+Month,1,12,12,DROP,Reporting only; redundant with cyclical pair
+Season,Autumn,Winter,4,DROP,Reporting only; coarser redundant seasonality
+Month_sin,-1.0,1.0,12,KEEP,Circular annual coordinate
+Month_cos,-1.0,1.0,12,KEEP,Circular annual coordinate

@@ -1,0 +1,90 @@
+Processed feature,Source,Role,Data type,Missing-value behavior,Leakage risk,Preprocessing requirement
+MinTemp,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+MaxTemp,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Rainfall,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Evaporation,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Sunshine,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+WindGustSpeed,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+WindSpeed9am,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+WindSpeed3pm,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Humidity9am,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Humidity3pm,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Pressure9am,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Pressure3pm,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Cloud9am,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Cloud3pm,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Temp9am,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Temp3pm,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Month_sin,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Month_cos,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+TempRange,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+TempChange,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+HumidityChange,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+PressureChange,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+WindSpeedChange,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+WindGustDir_sin,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+WindGustDir_cos,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+WindDir9am_sin,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+WindDir9am_cos,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+WindDir3pm_sin,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+WindDir3pm_cos,Raw measurement or T08 deterministic formula,Numerical/cyclical predictor,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted imputation; optional scaling
+Sunshine_missing,Original missingness,Missing indicator,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Binary passthrough; not scaled
+Evaporation_missing,Original missingness,Missing indicator,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Binary passthrough; not scaled
+Cloud9am_missing,Original missingness,Missing indicator,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Binary passthrough; not scaled
+Cloud3pm_missing,Original missingness,Missing indicator,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Binary passthrough; not scaled
+WindGustDir_missing,Original missingness,Missing indicator,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Binary passthrough; not scaled
+WindDir9am_missing,Original missingness,Missing indicator,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Binary passthrough; not scaled
+WindDir3pm_missing,Original missingness,Missing indicator,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Binary passthrough; not scaled
+Location_Adelaide,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Albany,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Albury,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_AliceSprings,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_BadgerysCreek,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Ballarat,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Bendigo,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Brisbane,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Cairns,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Canberra,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Cobar,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_CoffsHarbour,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Dartmoor,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Darwin,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_GoldCoast,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Hobart,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Katherine,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Launceston,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Melbourne,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_MelbourneAirport,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Mildura,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Missing,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Moree,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_MountGambier,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_MountGinini,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Newcastle,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Nhil,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_NorahHead,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_NorfolkIsland,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Nuriootpa,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_PearceRAAF,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Penrith,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Perth,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_PerthAirport,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Portland,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Richmond,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Sale,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_SalmonGums,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Sydney,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_SydneyAirport,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Townsville,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Tuggeranong,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Uluru,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_WaggaWagga,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Walpole,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Watsonia,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Williamtown,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Witchcliffe,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Wollongong,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+Location_Woomera,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+RainToday_Missing,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+RainToday_No,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled
+RainToday_Yes,Location or RainToday,One-hot categorical column,float64,No missing values after preprocessing,None: deterministic or Train-fitted only,Train-fitted one-hot; not scaled

@@ -1,4 +1,4 @@
-"""Verify the completed T00 through T07 stage requirements."""
+"""Verify the completed T00 through T08 Progress Evaluation 1 requirements."""
 
 from __future__ import annotations
 
@@ -188,6 +188,28 @@ T07_REQUIRED_FILES = (
     "reports/figures/preprocessing/07_structural_imputation_sources.png",
 )
 
+T08_REQUIRED_FILES = (
+    "notebooks/07_feature_engineering.ipynb",
+    "src/fdm_rainfall/features.py",
+    "tests/test_features.py",
+    "docs/decisions/feature_engineering_decisions.md",
+    "reports/evidence/08_feature_engineering.md",
+    "reports/tables/08_engineered_feature_inventory.csv",
+    "reports/tables/08_feature_decisions.csv",
+    "reports/tables/08_engineered_missingness.csv",
+    "reports/tables/08_train_engineered_target_summary.csv",
+    "reports/tables/08_feature_redundancy_summary.csv",
+    "reports/tables/08_cyclical_wind_mapping.csv",
+    "reports/tables/08_date_feature_summary.csv",
+    "reports/tables/08_rainfall_transform_summary.csv",
+    "reports/tables/08_engineered_schema_summary.csv",
+    "reports/tables/08_feature_engineering_leakage_checks.csv",
+    "reports/tables/08_final_feature_counts.csv",
+    "reports/figures/feature_engineering/08_weather_difference_target_distributions.png",
+    "reports/figures/feature_engineering/08_rainfall_raw_vs_log1p.png",
+    "reports/figures/feature_engineering/08_cyclical_encodings.png",
+)
+
 EXPECTED_TASKS = (
     ("T00", "Project Setup"),
     ("T01", "Dataset Verification"),
@@ -323,6 +345,29 @@ T07_EVIDENCE_HEADINGS = (
     "## Tests/checks executed",
     "## Limitations",
     "## Items deferred to T08",
+    "## Files created/modified",
+    "## Unresolved issues",
+    "## Final status",
+)
+
+T08_EVIDENCE_HEADINGS = (
+    "## Task objective",
+    "## Input split sizes",
+    "## Features considered",
+    "## Features implemented",
+    "## Formulas",
+    "## Train-only descriptive evidence",
+    "## Retained features",
+    "## Optional/deferred/rejected features",
+    "## Redundancy discussion",
+    "## Leakage controls",
+    "## Integration with preprocessing",
+    "## Processed feature counts",
+    "## Missingness verification",
+    "## Row/target integrity",
+    "## Tests/checks executed",
+    "## Limitations",
+    "## Future modelling considerations",
     "## Files created/modified",
     "## Unresolved issues",
     "## Final status",
@@ -1619,6 +1664,264 @@ def run_t07_checks() -> list[str]:
     return failures
 
 
+def _check_t08_table_structures(failures: list[str]) -> None:
+    expectations: dict[str, tuple[set[str], int]] = {
+        "reports/tables/08_engineered_feature_inventory.csv": (
+            {
+                "Feature", "Source columns", "Type", "Formula / mapping",
+                "Missing-value behavior", "Rationale", "Train-only descriptive finding",
+                "Redundancy concern", "Leakage concern", "Decision", "Reason",
+                "Preprocessing requirement", "Retained in default engineered schema?",
+            },
+            25,
+        ),
+        "reports/tables/08_feature_decisions.csv": (
+            {"Feature", "Decision", "Retained in default engineered schema?", "Reason"},
+            25,
+        ),
+        "reports/tables/08_engineered_missingness.csv": (
+            {"Split", "Feature", "Rows", "Missing count", "Missing percentage", "Handling"},
+            60,
+        ),
+        "reports/tables/08_train_engineered_target_summary.csv": (
+            {"Feature", "RainTomorrow", "Observed count", "Missing count", "Mean", "Median", "Q1", "Q3"},
+            38,
+        ),
+        "reports/tables/08_feature_redundancy_summary.csv": (
+            {"Engineered feature", "Compared with", "Train Pearson correlation", "Decision", "Reason"},
+            13,
+        ),
+        "reports/tables/08_cyclical_wind_mapping.csv": (
+            {"Direction", "Degrees", "Radians", "Sine", "Cosine"},
+            16,
+        ),
+        "reports/tables/08_date_feature_summary.csv": (
+            {"Feature", "Train minimum", "Train maximum", "Unique values", "Decision", "Reason"},
+            5,
+        ),
+        "reports/tables/08_rainfall_transform_summary.csv": (
+            {"Representation", "Observed Train rows", "Missing Train rows", "Skewness", "Q99", "Maximum", "Decision"},
+            2,
+        ),
+        "reports/tables/08_engineered_schema_summary.csv": (
+            {"Processed feature", "Source", "Role", "Data type", "Missing-value behavior", "Leakage risk", "Preprocessing requirement"},
+            89,
+        ),
+        "reports/tables/08_feature_engineering_leakage_checks.csv": (
+            {"Check", "Passed", "Evidence", "Result"},
+            12,
+        ),
+        "reports/tables/08_final_feature_counts.csv": (
+            {"Stage", "Measure", "Count", "Explanation"},
+            12,
+        ),
+    }
+    for relative_path, (required_columns, expected_rows) in expectations.items():
+        rows = _read_csv_rows(relative_path, failures)
+        if not rows:
+            if (PROJECT_ROOT / relative_path).is_file():
+                failures.append(f"T08 table is empty: {relative_path}")
+            continue
+        if not required_columns.issubset(rows[0]):
+            failures.append(f"T08 table missing required columns: {relative_path}")
+        if len(rows) != expected_rows:
+            failures.append(
+                f"T08 table {relative_path} has {len(rows)} rows; expected {expected_rows}"
+            )
+
+    decisions = _read_csv_rows("reports/tables/08_feature_decisions.csv", failures)
+    allowed = {"KEEP", "OPTIONAL", "DROP", "DEFERRED"}
+    if any(row.get("Decision") not in allowed for row in decisions):
+        failures.append("T08 decision table contains a decision outside the allowed vocabulary")
+    expected_features = {
+        "Year", "Month", "Season", "Month_sin", "Month_cos", "TempRange",
+        "TempChange", "HumidityChange", "PressureChange", "WindSpeedChange",
+        "WindGustDir_sin", "WindGustDir_cos", "WindDir9am_sin", "WindDir9am_cos",
+        "WindDir3pm_sin", "WindDir3pm_cos", "WindGustDir_missing",
+        "WindDir9am_missing", "WindDir3pm_missing", "Sunshine_missing",
+        "Evaporation_missing", "Cloud9am_missing", "Cloud3pm_missing",
+        "Rainfall_log1p", "ClimateZone",
+    }
+    if {row.get("Feature") for row in decisions} != expected_features:
+        failures.append("T08 decision table does not contain the exact required feature inventory")
+
+    leakage = _read_csv_rows(
+        "reports/tables/08_feature_engineering_leakage_checks.csv", failures
+    )
+    if any(row.get("Result") != "PASS" for row in leakage):
+        failures.append("T08 saved leakage table contains a failed check")
+
+
+def _check_t08_figures(failures: list[str]) -> None:
+    for relative_path in [path for path in T08_REQUIRED_FILES if path.endswith(".png")]:
+        path = PROJECT_ROOT / relative_path
+        if path.is_file() and path.stat().st_size < 10_000:
+            failures.append(f"T08 figure appears empty or incomplete: {relative_path}")
+
+
+def _check_t08_helper_outputs(failures: list[str]) -> None:
+    try:
+        import numpy as np
+
+        from fdm_rainfall.data import (
+            chronological_train_validation_test_split,
+            load_weather_data,
+        )
+        from fdm_rainfall.features import (
+            DEFAULT_ENGINEERED_PREDICTORS,
+            WeatherFeatureEngineer,
+        )
+        from fdm_rainfall.preprocessing import (
+            RainfallPreprocessor,
+            fit_transform_engineered_chronological_splits,
+            fit_transform_chronological_splits,
+        )
+
+        frame = load_weather_data(PROJECT_ROOT / "data/raw/weatherAUS.csv")
+        split = chronological_train_validation_test_split(frame)
+        engineered = fit_transform_engineered_chronological_splits(split)
+        engineered_scaled = fit_transform_engineered_chronological_splits(
+            split, scale_numeric=True
+        )
+        original = fit_transform_chronological_splits(split)
+    except Exception as exc:
+        failures.append(f"T08 reusable feature-engineering pipeline failed: {exc}")
+        return
+
+    expected_rows = {"Train": 99_546, "Validation": 21_342, "Test": 21_305}
+    expected_dates = {
+        "Train": ("2007-11-01", "2015-01-12"),
+        "Validation": ("2015-01-13", "2016-04-08"),
+        "Test": ("2016-04-09", "2017-06-25"),
+    }
+    for name, part in split.frames.items():
+        actual_dates = (
+            part["Date"].min().date().isoformat(),
+            part["Date"].max().date().isoformat(),
+        )
+        if len(part) != expected_rows[name] or actual_dates != expected_dates[name]:
+            failures.append(f"T08 changed the verified T06 {name} split")
+
+    outputs = {
+        "Train": (engineered.X_train, engineered_scaled.X_train, engineered.y_train, engineered.dates_train),
+        "Validation": (engineered.X_validation, engineered_scaled.X_validation, engineered.y_validation, engineered.dates_validation),
+        "Test": (engineered.X_test, engineered_scaled.X_test, engineered.y_test, engineered.dates_test),
+    }
+    for name, (unscaled, scaled, target, dates) in outputs.items():
+        if len(unscaled) != expected_rows[name] or len(scaled) != expected_rows[name]:
+            failures.append(f"T08 {name} feature engineering changed row count")
+        if not unscaled.index.equals(target.index) or not unscaled.index.equals(dates.index):
+            failures.append(f"T08 {name} target/date alignment changed")
+        if unscaled.isna().any().any() or scaled.isna().any().any():
+            failures.append(f"T08 {name} processed output contains missing values")
+        if np.isinf(unscaled.to_numpy(dtype=float)).any() or np.isinf(scaled.to_numpy(dtype=float)).any():
+            failures.append(f"T08 {name} processed output contains infinite values")
+        if {"RainTomorrow", "Date", "RISK_MM"}.intersection(unscaled.columns):
+            failures.append(f"T08 {name} processed output contains leakage/temporal columns")
+
+    if engineered.preprocessor.fit_row_count_ != 99_546:
+        failures.append("T08 engineered preprocessor was not fitted on exactly Train")
+    if len(engineered.feature_engineer.get_feature_names_out()) != 34:
+        failures.append("T08 default raw engineered schema does not contain 34 features")
+    if tuple(engineered.feature_engineer.get_feature_names_out()) != DEFAULT_ENGINEERED_PREDICTORS:
+        failures.append("T08 default engineered feature order is not deterministic")
+    if len(engineered.preprocessor.get_feature_names_out()) != 89:
+        failures.append("T08 final processed engineered schema does not contain 89 features")
+    if len(set(engineered.preprocessor.get_feature_names_out())) != 89:
+        failures.append("T08 final processed schema contains duplicate feature names")
+    if len(original.preprocessor.get_feature_names_out()) != 124:
+        failures.append("T08 broke the original 124-feature T07 configuration")
+
+    raw_input = split.train.drop(columns=["RainTomorrow"])
+    changed_target = split.train.copy()
+    changed_target["RainTomorrow"] = changed_target["RainTomorrow"].map({"No": "Yes", "Yes": "No"})
+    target_free = WeatherFeatureEngineer().fit_transform(raw_input)
+    target_present = WeatherFeatureEngineer().fit_transform(changed_target)
+    if not target_free.equals(target_present):
+        failures.append("T08 engineered predictors depend on RainTomorrow values")
+
+    raw_hash = hashlib.sha256((PROJECT_ROOT / "data/raw/weatherAUS.csv").read_bytes()).hexdigest().upper()
+    expected_hash = "573FD715CD69FCACC4DF32024D823B450AE3EDAAE7E8FF2EEB623ADBED424014"
+    if raw_hash != expected_hash:
+        failures.append(f"T08 raw dataset checksum changed: {raw_hash}")
+
+
+def _check_t08_documentation(failures: list[str]) -> None:
+    evidence_path = PROJECT_ROOT / "reports/evidence/08_feature_engineering.md"
+    if evidence_path.is_file():
+        evidence_text = evidence_path.read_text(encoding="utf-8")
+        for heading in T08_EVIDENCE_HEADINGS:
+            if heading not in evidence_text:
+                failures.append(f"T08 evidence missing heading: {heading}")
+
+    decision_path = PROJECT_ROOT / "docs/decisions/feature_engineering_decisions.md"
+    if decision_path.is_file():
+        decision_text = decision_path.read_text(encoding="utf-8")
+        required_sections = (
+            "## Feature-engineering principles", "## Date features",
+            "## Weather difference features", "## Wind cyclical representation",
+            "## Missing indicators", "## Rainfall transformation", "## Year caution",
+            "## Month/Season redundancy", "## Climate-zone decision",
+            "## Retained, optional, dropped, and deferred features",
+            "## Leakage prevention", "## Limitations and future model-stage evaluation",
+        )
+        for section in required_sections:
+            if section not in decision_text:
+                failures.append(f"T08 decision document missing section: {section}")
+
+    status_path = PROJECT_ROOT / "PROJECT_STATUS.md"
+    if status_path.is_file() and "| T08 | Feature Engineering | DONE |" not in status_path.read_text(encoding="utf-8"):
+        failures.append("T08 is not marked DONE with verification evidence in PROJECT_STATUS.md")
+
+
+def _check_t08_scope(failures: list[str]) -> None:
+    notebook_path = PROJECT_ROOT / "notebooks/07_feature_engineering.ipynb"
+    executable_texts = [
+        (PROJECT_ROOT / "src/fdm_rainfall/features.py").read_text(encoding="utf-8"),
+        (PROJECT_ROOT / "src/fdm_rainfall/preprocessing.py").read_text(encoding="utf-8"),
+        (PROJECT_ROOT / "tests/test_features.py").read_text(encoding="utf-8"),
+    ]
+    if notebook_path.is_file():
+        notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
+        executable_texts.append(
+            "\n".join(
+                "".join(cell.get("source", []))
+                for cell in notebook.get("cells", [])
+                if cell.get("cell_type") == "code"
+            )
+        )
+    forbidden_calls = (
+        "DummyClassifier(", "LogisticRegression(", "DecisionTreeClassifier(",
+        "RandomForestClassifier(", "GradientBoostingClassifier(", "XGBClassifier(",
+        "LGBMClassifier(", "GridSearchCV(", "RandomizedSearchCV(", "SMOTE(",
+    )
+    for token in forbidden_calls:
+        if any(token in text for text in executable_texts):
+            failures.append(f"T08 executable code contains out-of-scope operation: {token}")
+
+    forbidden_path_parts = {"backend", "frontend", "models", "modeling"}
+    for path in PROJECT_ROOT.rglob("*"):
+        if ".git" in path.parts:
+            continue
+        if forbidden_path_parts.intersection(part.lower() for part in path.parts):
+            failures.append(f"T08 found an out-of-scope project path: {path.relative_to(PROJECT_ROOT)}")
+            break
+
+
+def run_t08_checks() -> list[str]:
+    """Return descriptions of failed T08 checks."""
+
+    failures = _missing_files(T08_REQUIRED_FILES)
+    _check_notebook_execution("notebooks/07_feature_engineering.ipynb", "T08", failures)
+    _check_t08_table_structures(failures)
+    _check_t08_figures(failures)
+    _check_t08_helper_outputs(failures)
+    _check_t08_documentation(failures)
+    _check_t08_scope(failures)
+    _check_unit_tests(failures)
+    return failures
+
+
 def _print_result(task: str, failures: list[str]) -> None:
     if failures:
         print(f"FAIL: {task}")
@@ -1629,7 +1932,7 @@ def _print_result(task: str, failures: list[str]) -> None:
 
 
 def main() -> int:
-    """Print T00 through T07 verification results and return an exit code."""
+    """Print T00 through T08 verification results and return an exit code."""
 
     t00_failures = run_t00_checks()
     t01_failures = run_t01_checks()
@@ -1639,6 +1942,7 @@ def main() -> int:
     t05_failures = run_t05_checks()
     t06_failures = run_t06_checks()
     t07_failures = run_t07_checks()
+    t08_failures = run_t08_checks()
     _print_result("T00 Project Setup", t00_failures)
     _print_result("T01 Dataset Verification", t01_failures)
     _print_result("T02 Data Understanding", t02_failures)
@@ -1647,6 +1951,7 @@ def main() -> int:
     _print_result("T05 Outlier and Suspicious-Value Analysis", t05_failures)
     _print_result("T06 Leakage and Chronological Split Strategy", t06_failures)
     _print_result("T07 Data Preprocessing", t07_failures)
+    _print_result("T08 Feature Engineering", t08_failures)
 
     if (
         t00_failures
@@ -1657,6 +1962,7 @@ def main() -> int:
         or t05_failures
         or t06_failures
         or t07_failures
+        or t08_failures
     ):
         return 1
 
@@ -1669,7 +1975,9 @@ def main() -> int:
         f"{len(T04_REQUIRED_FILES)} T04 artifacts, and "
         f"{len(T05_REQUIRED_FILES)} T05 artifacts, and "
         f"{len(T06_REQUIRED_FILES)} T06 artifacts, and "
-        f"{len(T07_REQUIRED_FILES)} T07 artifacts."
+        f"{len(T07_REQUIRED_FILES)} T07 artifacts, and "
+        f"{len(T08_REQUIRED_FILES)} T08 artifacts.\n"
+        "PROGRESS EVALUATION 1 IMPLEMENTATION STAGE COMPLETE"
     )
     return 0
 

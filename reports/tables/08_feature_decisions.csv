@@ -1,0 +1,26 @@
+Feature,Decision,Retained in default engineered schema?,Reason
+Year,OPTIONAL,False,Known at prediction time but potentially unstable drift proxy
+Month,DROP,False,Reporting-only; numeric endpoints misrepresent December/January proximity
+Season,DROP,False,Reporting-only; cyclical month retains smoother detail
+Month_sin,KEEP,True,Preserves December/January closeness
+Month_cos,KEEP,True,Preserves December/January closeness
+TempRange,KEEP,True,Meaningful within-day change without discarding source levels
+TempChange,KEEP,True,Meaningful within-day change without discarding source levels
+HumidityChange,KEEP,True,Meaningful within-day change without discarding source levels
+PressureChange,KEEP,True,Meaningful within-day change without discarding source levels
+WindSpeedChange,KEEP,True,Meaningful within-day change without discarding source levels
+WindGustDir_sin,KEEP,True,Compact circular default; one-hot remains T07 baseline alternative
+WindGustDir_cos,KEEP,True,Compact circular default; one-hot remains T07 baseline alternative
+WindGustDir_missing,KEEP,True,Prevents silent assignment of missing to a bearing
+WindDir9am_sin,KEEP,True,Compact circular default; one-hot remains T07 baseline alternative
+WindDir9am_cos,KEEP,True,Compact circular default; one-hot remains T07 baseline alternative
+WindDir9am_missing,KEEP,True,Prevents silent assignment of missing to a bearing
+WindDir3pm_sin,KEEP,True,Compact circular default; one-hot remains T07 baseline alternative
+WindDir3pm_cos,KEEP,True,Compact circular default; one-hot remains T07 baseline alternative
+WindDir3pm_missing,KEEP,True,Prevents silent assignment of missing to a bearing
+Sunshine_missing,KEEP,True,T03/T07 evidence supports retaining the missingness signal
+Evaporation_missing,KEEP,True,T03/T07 evidence supports retaining the missingness signal
+Cloud9am_missing,KEEP,True,T03/T07 evidence supports retaining the missingness signal
+Cloud3pm_missing,KEEP,True,T03/T07 evidence supports retaining the missingness signal
+Rainfall_log1p,OPTIONAL,False,May help linear/scale-sensitive models; tree models may not need it
+ClimateZone,DEFERRED,False,No authoritative mapping is incorporated

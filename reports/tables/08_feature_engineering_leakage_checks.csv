@@ -1,0 +1,13 @@
+Check,Passed,Evidence,Result
+RainTomorrow excluded from engineered predictors,True,Target is separated before engineering/preprocessing,PASS
+RISK_MM absent,True,Raw/split schema contains no RISK_MM,PASS
+Date not directly encoded or scaled,True,Only observation-date month cycle is retained,PASS
+No tomorrow/future weather columns used,True,All formulas use observation-date sources,PASS
+Feature engineer learns no target parameters,True,Transformer fit validates schema only,PASS
+Preprocessor fitted on Train rows only,True,Validation/Test use unchanged Train parameters,PASS
+No Validation/Test target used for decisions,True,Only train_target_summary was calculated,PASS
+Train rows preserved,True,No row filtering,PASS
+Validation rows preserved,True,No row filtering,PASS
+Test rows preserved,True,No row filtering,PASS
+Target indices aligned,True,Predictor and target indices match,PASS
+Processed outputs finite and complete,True,Both unscaled and scaled paths checked,PASS

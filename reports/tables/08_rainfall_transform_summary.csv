@@ -1,0 +1,3 @@
+Representation,Observed Train rows,Missing Train rows,Skewness,Q99,Maximum,Decision
+Rainfall,98539,1007,9.96796398929164,38.0,371.0,KEEP
+Rainfall_log1p,98539,1007,2.0333580161943225,3.6635616461296463,5.918893854273146,OPTIONAL

@@ -59,4 +59,6 @@ reports/tables/*
 !reports/figures/leakage_split/*.png
 !reports/figures/preprocessing/
 !reports/figures/preprocessing/*.png
+!reports/figures/feature_engineering/
+!reports/figures/feature_engineering/*.png
 !reports/tables/*.csv

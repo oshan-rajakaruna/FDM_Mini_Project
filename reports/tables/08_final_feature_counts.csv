@@ -1,0 +1,13 @@
+Stage,Measure,Count,Explanation
+Before T08,Original raw non-Date predictors,21,16 numerical + 5 categorical
+Before T08,T07 processed features,124,16 numerical + 4 structural indicators + 104 one-hot
+T08 candidates,Implemented engineered raw features,20,5 date + 5 differences + 6 wind coordinates + 3 wind indicators + log1p rainfall
+T08 decisions,New T08 features retained by default,16,2 month-cycle + 5 differences + 6 wind coordinates + 3 wind indicators
+T08 decisions,Optional implemented features,2,Year and Rainfall_log1p
+T08 decisions,Dropped implemented representations,2,Month and Season retained for reporting only
+T08 decisions,Deferred proposal features,1,ClimateZone lacks an authoritative mapping
+Engineered default,Raw inputs to preprocessing,34,18 retained originals + 16 new T08 defaults
+Engineered default,Processed numerical columns,29,16 originals + 2 month-cycle + 5 differences + 6 wind coordinates
+Engineered default,Processed indicator columns,7,4 T07 structural + 3 T08 wind-direction indicators
+Engineered default,Processed one-hot columns,53,50 Location + 3 RainToday
+Engineered default,Final processed features,89,29 numerical + 7 indicators + 53 one-hot

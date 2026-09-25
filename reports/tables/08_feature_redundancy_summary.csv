@@ -1,0 +1,14 @@
+Engineered feature,Compared with,Train Pearson correlation,Decision,Reason
+TempRange,MinTemp,-0.25209554282778046,Keep both for now,Difference preserves movement/range while source preserves level
+TempRange,MaxTemp,0.4772703807154297,Keep both for now,Difference preserves movement/range while source preserves level
+TempChange,Temp9am,-0.15599559434523602,Keep both for now,Difference preserves movement/range while source preserves level
+TempChange,Temp3pm,0.37407316099114657,Keep both for now,Difference preserves movement/range while source preserves level
+HumidityChange,Humidity9am,-0.3200627200204794,Keep both for now,Difference preserves movement/range while source preserves level
+HumidityChange,Humidity3pm,0.49628167922426963,Keep both for now,Difference preserves movement/range while source preserves level
+PressureChange,Pressure9am,-0.17641506766902196,Keep both for now,Difference preserves movement/range while source preserves level
+PressureChange,Pressure3pm,0.10333642634211375,Keep both for now,Difference preserves movement/range while source preserves level
+WindSpeedChange,WindSpeed9am,-0.49773096975927056,Keep both for now,Difference preserves movement/range while source preserves level
+WindSpeedChange,WindSpeed3pm,0.4777942819423791,Keep both for now,Difference preserves movement/range while source preserves level
+Rainfall_log1p,Rainfall,0.7621479245421655,Rainfall_log1p optional,Monotonic transform is algorithm-dependent
+Month_sin + Month_cos,Month + Season,,Keep cyclical pair; drop Month/Season from default,Avoid duplicate seasonal representations while preserving circular proximity
+Wind direction sine/cosine,Wind direction one-hot,,Use cyclical pair in engineered default,Compact circular geometry; T07 one-hot remains a baseline alternative

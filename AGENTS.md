@@ -21,6 +21,7 @@ This repository contains the IT3051 Fundamentals of Data Mining mini project,
 
 ## Current boundary
 
-Work is complete through T07 Data Preprocessing. Do not begin T08 feature
-engineering or any later analysis or model training
-unless the user explicitly requests it in a later turn.
+Work is complete through T08 Feature Engineering, which is the end of the
+Progress Evaluation 1 implementation stage. Do not begin baseline modelling,
+model comparison, class balancing, tuning, backend/frontend work, or any later
+task unless the user explicitly requests it in a later turn.
