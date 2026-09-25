@@ -1,0 +1,15 @@
+Feature,Trigger,Value,Date,Location,Rainfall,Evaporation,WindGustSpeed,WindSpeed9am,WindSpeed3pm,MaxTemp,Humidity9am,Humidity3pm,RainToday,RainTomorrow,Classification
+Cloud9am,Cloud9am = 9,9.0,2009-09-23,Sydney,4.4,11.2,,30.0,37.0,21.8,40.0,36.0,Yes,No,suspicious / investigate later
+Rainfall,Rainfall maximum = 371 mm,371.0,2009-11-07,CoffsHarbour,371.0,,,13.0,19.0,23.1,93.0,81.0,Yes,Yes,likely valid extreme
+WindGustSpeed,WindGustSpeed maximum = 135 km/h,135.0,2010-12-07,Woomera,2.6,7.2,135.0,31.0,,37.8,68.0,,Yes,Yes,likely valid extreme
+WindGustSpeed,WindGustSpeed maximum = 135 km/h,135.0,2011-02-03,Townsville,,,135.0,65.0,41.0,28.6,83.0,89.0,,Yes,likely valid extreme
+Cloud9am,Cloud9am = 9,9.0,2012-05-27,Canberra,0.0,,30.0,4.0,9.0,14.5,99.0,41.0,No,No,suspicious / investigate later
+Cloud3pm,Cloud3pm = 9,9.0,2012-11-02,Woomera,0.2,11.6,39.0,26.0,17.0,24.6,45.0,13.0,No,No,suspicious / investigate later
+Humidity3pm,Humidity3pm = 0%,0.0,2013-10-20,Woomera,0.0,19.0,61.0,28.0,33.0,40.0,0.0,0.0,No,No,unresolved
+Humidity9am,Humidity9am = 0%,0.0,2013-10-20,Woomera,0.0,19.0,61.0,28.0,33.0,40.0,0.0,0.0,No,No,unresolved
+Humidity3pm,Humidity3pm = 0%,0.0,2014-11-13,Woomera,0.0,12.0,69.0,20.0,24.0,41.6,2.0,0.0,No,No,unresolved
+WindGustSpeed,WindGustSpeed maximum = 135 km/h,135.0,2015-04-21,NorahHead,61.4,,135.0,87.0,74.0,19.7,93.0,96.0,Yes,Yes,likely valid extreme
+Humidity3pm,Humidity3pm = 0%,0.0,2015-10-05,Woomera,0.0,14.8,70.0,17.0,37.0,37.1,11.0,0.0,No,No,unresolved
+Humidity3pm,Humidity3pm = 0%,0.0,2015-10-15,Woomera,0.0,14.4,50.0,30.0,28.0,38.1,7.0,0.0,No,No,unresolved
+Evaporation,Evaporation maximum = 145 mm,145.0,2016-12-19,Williamtown,58.2,145.0,,,30.0,23.9,72.0,52.0,Yes,No,suspicious / investigate later
+WindSpeed9am,WindSpeed9am maximum = 130 km/h,130.0,2017-01-18,Newcastle,0.0,,,130.0,,41.0,35.0,,No,No,suspicious / investigate later

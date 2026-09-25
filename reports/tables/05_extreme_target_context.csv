@@ -1,0 +1,9 @@
+Feature,Trigger,Selected_record_count,Labelled_target_count,Yes_count,No_count,Yes percentage among labelled
+Cloud3pm,Cloud3pm = 9,1,1,0,1,0.0
+Cloud9am,Cloud9am = 9,2,2,0,2,0.0
+Evaporation,Evaporation maximum = 145 mm,1,1,0,1,0.0
+Humidity3pm,Humidity3pm = 0%,4,4,0,4,0.0
+Humidity9am,Humidity9am = 0%,1,1,0,1,0.0
+Rainfall,Rainfall maximum = 371 mm,1,1,1,0,100.0
+WindGustSpeed,WindGustSpeed maximum = 135 km/h,3,3,3,0,100.0
+WindSpeed9am,WindSpeed9am maximum = 130 km/h,1,1,0,1,0.0

@@ -1,4 +1,4 @@
-"""Verify the completed T00 through T04 stage requirements."""
+"""Verify the completed T00 through T05 stage requirements."""
 
 from __future__ import annotations
 
@@ -127,6 +127,30 @@ T04_REQUIRED_FILES = (
     "reports/figures/relationships/04_numeric_correlation_heatmap.png",
 )
 
+T05_REQUIRED_FILES = (
+    "notebooks/04_outlier_analysis.ipynb",
+    "src/fdm_rainfall/outliers.py",
+    "tests/test_outliers.py",
+    "reports/evidence/05_outliers.md",
+    "reports/tables/05_percentile_summary.csv",
+    "reports/tables/05_outlier_summary.csv",
+    "reports/tables/05_cloud9_investigation.csv",
+    "reports/tables/05_humidity_boundary_summary.csv",
+    "reports/tables/05_rainfall_skewness.csv",
+    "reports/tables/05_extreme_pattern_summary.csv",
+    "reports/tables/05_extreme_weather_context.csv",
+    "reports/tables/05_suspicious_values.csv",
+    "reports/tables/05_extreme_target_context.csv",
+    "reports/tables/05_outlier_decision_summary.csv",
+    "reports/tables/05_proposal_consistency.csv",
+    "reports/figures/outliers/05_iqr_flagged_percentages.png",
+    "reports/figures/outliers/05_numeric_boxplots.png",
+    "reports/figures/outliers/05_rainfall_distribution_tail.png",
+    "reports/figures/outliers/05_cloud9_occurrences.png",
+    "reports/figures/outliers/05_evaporation_extremes.png",
+    "reports/figures/outliers/05_wind_extremes.png",
+)
+
 EXPECTED_TASKS = (
     ("T00", "Project Setup"),
     ("T01", "Dataset Verification"),
@@ -205,6 +229,24 @@ T04_EVIDENCE_HEADINGS = (
     "## Future considerations",
     "## Files created/modified",
     "## Checks/tests executed",
+    "## Unresolved questions",
+    "## Final status",
+)
+
+T05_EVIDENCE_HEADINGS = (
+    "## Task objective",
+    "## Analyses performed",
+    "## IQR findings",
+    "## Skewness findings",
+    "## Suspicious-value findings",
+    "## Cloud value 9 investigation",
+    "## Humidity boundary findings",
+    "## Rainfall/evaporation/wind findings",
+    "## Proposal consistency result",
+    "## Classification of unusual values",
+    "## Future preprocessing considerations",
+    "## Files created/modified",
+    "## Tests/checks executed",
     "## Unresolved questions",
     "## Final status",
 )
@@ -886,6 +928,169 @@ def run_t04_checks() -> list[str]:
     return failures
 
 
+def _check_t05_table_structures(failures: list[str]) -> None:
+    expectations: dict[str, tuple[set[str], int]] = {
+        "reports/tables/05_percentile_summary.csv": (
+            {"Feature", "Non-missing count", "Minimum", "1st percentile", "5th percentile", "25th percentile", "Median", "75th percentile", "95th percentile", "99th percentile", "Maximum", "IQR", "Skewness"},
+            16,
+        ),
+        "reports/tables/05_outlier_summary.csv": (
+            {"Feature", "Q1", "Q3", "IQR", "Lower fence", "Upper fence", "Count below lower fence", "Count above upper fence", "Total IQR-flagged", "Percentage IQR-flagged"},
+            16,
+        ),
+        "reports/tables/05_cloud9_investigation.csv": (
+            {"Feature", "Value", "Date", "Location", "Year", "Month", "Pattern assessment"},
+            3,
+        ),
+        "reports/tables/05_humidity_boundary_summary.csv": (
+            {"Feature", "Minimum", "Maximum", "Count below 0", "Count equal to 0", "Count equal to 100", "Count above 100", "Outside 0–100 range"},
+            2,
+        ),
+        "reports/tables/05_rainfall_skewness.csv": (
+            {"Rainfall metric", "Value", "Context"},
+            13,
+        ),
+        "reports/tables/05_extreme_pattern_summary.csv": (
+            {"Feature", "99th-percentile threshold", "Count at/above threshold", "Locations represented", "Years represented", "Observed maximum", "Maximum occurrence count", "Pattern assessment"},
+            4,
+        ),
+        "reports/tables/05_extreme_weather_context.csv": (
+            {"Selected feature", "Selected rule", "Selected value", "Date", "Location", "RainTomorrow"},
+            6,
+        ),
+        "reports/tables/05_suspicious_values.csv": (
+            {"Feature", "Trigger", "Value", "Date", "Location", "RainTomorrow", "Classification"},
+            14,
+        ),
+        "reports/tables/05_extreme_target_context.csv": (
+            {"Feature", "Trigger", "Selected_record_count", "Labelled_target_count", "Yes_count", "No_count", "Yes percentage among labelled"},
+            8,
+        ),
+        "reports/tables/05_outlier_decision_summary.csv": (
+            {"Feature", "Observed unusual value / rule", "Number affected", "Percentage affected", "Statistical outlier?", "Domain-plausible?", "Classification", "Recommended future handling", "Reason"},
+            18,
+        ),
+        "reports/tables/05_proposal_consistency.csv": (
+            {"Claim", "Expected", "Actual", "Match / Mismatch", "Comment"},
+            6,
+        ),
+    }
+    for relative_path, (required_columns, expected_rows) in expectations.items():
+        rows = _read_csv_rows(relative_path, failures)
+        if not rows:
+            if (PROJECT_ROOT / relative_path).is_file():
+                failures.append(f"T05 table is empty: {relative_path}")
+            continue
+        if not required_columns.issubset(rows[0]):
+            failures.append(f"T05 table missing required columns: {relative_path}")
+        if len(rows) != expected_rows:
+            failures.append(
+                f"T05 table {relative_path} has {len(rows)} rows; expected {expected_rows}"
+            )
+
+    decisions = _read_csv_rows("reports/tables/05_outlier_decision_summary.csv", failures)
+    allowed = {
+        "likely valid extreme",
+        "suspicious / investigate later",
+        "likely invalid",
+        "unresolved",
+    }
+    if any(row.get("Classification") not in allowed for row in decisions):
+        failures.append("T05 decision table contains an invalid classification")
+    proposal = _read_csv_rows("reports/tables/05_proposal_consistency.csv", failures)
+    if any(row.get("Match / Mismatch") not in {"Match", "Mismatch"} for row in proposal):
+        failures.append("T05 proposal table contains an invalid comparison result")
+
+
+def _check_t05_figures(failures: list[str]) -> None:
+    for relative_path in [path for path in T05_REQUIRED_FILES if path.endswith(".png")]:
+        path = PROJECT_ROOT / relative_path
+        if path.is_file() and path.stat().st_size < 10_000:
+            failures.append(f"T05 figure appears empty or incomplete: {relative_path}")
+
+
+def _check_t05_helper_outputs(failures: list[str]) -> None:
+    try:
+        from fdm_rainfall.data import load_weather_data
+        from fdm_rainfall.outliers import (
+            ALLOWED_CLASSIFICATIONS,
+            cloud_nine_investigation,
+            extreme_pattern_summary,
+            extreme_weather_context,
+            humidity_boundary_summary,
+            iqr_outlier_summary,
+            outlier_decision_summary,
+            percentile_summary,
+            proposal_consistency,
+            rainfall_skewness_summary,
+            suspicious_value_details,
+        )
+
+        frame = load_weather_data(PROJECT_ROOT / "data/raw/weatherAUS.csv")
+        percentiles = percentile_summary(frame)
+        iqr = iqr_outlier_summary(frame)
+        cloud = cloud_nine_investigation(frame)
+        humidity = humidity_boundary_summary(frame)
+        rainfall = rainfall_skewness_summary(frame)
+        patterns = extreme_pattern_summary(frame)
+        context = extreme_weather_context(frame)
+        suspicious = suspicious_value_details(frame)
+        decisions = outlier_decision_summary(frame)
+        proposal = proposal_consistency(frame)
+    except Exception as exc:
+        failures.append(f"T05 reusable analysis failed: {exc}")
+        return
+
+    expected_counts = {
+        "percentile summary": (len(percentiles), 16),
+        "IQR summary": (len(iqr), 16),
+        "cloud value-9 details": (len(cloud), 3),
+        "humidity boundary summary": (len(humidity), 2),
+        "rainfall summary": (len(rainfall), 13),
+        "extreme pattern summary": (len(patterns), 4),
+        "specific extreme context": (len(context), 6),
+        "suspicious-value details": (len(suspicious), 14),
+        "decision summary": (len(decisions), 18),
+        "proposal comparison": (len(proposal), 6),
+    }
+    for label, (actual, expected) in expected_counts.items():
+        if actual != expected:
+            failures.append(f"T05 {label} has {actual} rows; expected {expected}")
+
+    if frame.shape != (145_460, 23):
+        failures.append(f"T05 raw dataset shape changed unexpectedly: {frame.shape}")
+    if int(humidity["Outside 0–100 range"].sum()) != 0:
+        failures.append("T05 humidity boundary result unexpectedly contains out-of-range values")
+    if int((cloud["Feature"] == "Cloud9am").sum()) != 2 or int((cloud["Feature"] == "Cloud3pm").sum()) != 1:
+        failures.append("T05 cloud value-9 counts do not match the dataset")
+    if not set(decisions["Classification"]).issubset(ALLOWED_CLASSIFICATIONS):
+        failures.append("T05 helper returned an invalid unusual-value classification")
+    if decisions["Classification"].eq("likely invalid").any():
+        failures.append("T05 classified a value as likely invalid without the documented evidence threshold")
+
+
+def _check_t05_evidence(failures: list[str]) -> None:
+    evidence_path = PROJECT_ROOT / "reports/evidence/05_outliers.md"
+    if not evidence_path.is_file():
+        return
+    evidence_text = evidence_path.read_text(encoding="utf-8")
+    for heading in T05_EVIDENCE_HEADINGS:
+        if heading not in evidence_text:
+            failures.append(f"T05 evidence missing heading: {heading}")
+
+
+def run_t05_checks() -> list[str]:
+    """Return descriptions of failed T05 checks."""
+
+    failures = _missing_files(T05_REQUIRED_FILES)
+    _check_notebook_execution("notebooks/04_outlier_analysis.ipynb", "T05", failures)
+    _check_t05_table_structures(failures)
+    _check_t05_figures(failures)
+    _check_t05_helper_outputs(failures)
+    _check_t05_evidence(failures)
+    return failures
+
+
 def _print_result(task: str, failures: list[str]) -> None:
     if failures:
         print(f"FAIL: {task}")
@@ -896,20 +1101,22 @@ def _print_result(task: str, failures: list[str]) -> None:
 
 
 def main() -> int:
-    """Print T00 through T04 verification results and return an exit code."""
+    """Print T00 through T05 verification results and return an exit code."""
 
     t00_failures = run_t00_checks()
     t01_failures = run_t01_checks()
     t02_failures = run_t02_checks()
     t03_failures = run_t03_checks()
     t04_failures = run_t04_checks()
+    t05_failures = run_t05_checks()
     _print_result("T00 Project Setup", t00_failures)
     _print_result("T01 Dataset Verification", t01_failures)
     _print_result("T02 Data Understanding", t02_failures)
     _print_result("T03 Missing-Value Analysis", t03_failures)
     _print_result("T04 Target and Feature Relationship EDA", t04_failures)
+    _print_result("T05 Outlier and Suspicious-Value Analysis", t05_failures)
 
-    if t00_failures or t01_failures or t02_failures or t03_failures or t04_failures:
+    if t00_failures or t01_failures or t02_failures or t03_failures or t04_failures or t05_failures:
         return 1
 
     print(
@@ -918,7 +1125,8 @@ def main() -> int:
         f"{len(T01_REQUIRED_FILES)} T01 artifacts, and "
         f"{len(T02_REQUIRED_FILES)} T02 artifacts, and "
         f"{len(T03_REQUIRED_FILES)} T03 artifacts, and "
-        f"{len(T04_REQUIRED_FILES)} T04 artifacts."
+        f"{len(T04_REQUIRED_FILES)} T04 artifacts, and "
+        f"{len(T05_REQUIRED_FILES)} T05 artifacts."
     )
     return 0
 

@@ -1,0 +1,7 @@
+Claim,Expected,Actual,Match / Mismatch,Comment
+Rainfall is strongly skewed and has many IQR-flagged observations,Strong right skew and substantial IQR flags,Skewness 9.836225; 17.9875% IQR-flagged,Match,The zero mass and long positive tail naturally make IQR screening flag many wet days.
+Maximum Rainfall is 371 mm,371 mm,371 mm,Match,One observed record; retained for contextual review.
+Evaporation and wind contain some extreme values,Extreme upper-tail values present,Evaporation max 145 mm; gust max 135 km/h; 9am wind max 130 km/h,Match,Upper tails were quantified without changing values.
+Extremes may be genuine weather events rather than errors,Do not equate statistical outliers with errors,Rainfall and gust maxima have supporting weather context; evaporation 145 and 9am wind 130 remain suspicious,Match,"The dataset supports mixed, cautious classifications rather than blanket deletion."
+Humidity lies within 0–100%,No values below 0 or above 100,0 values outside 0–100%,Match,Rare 0% boundary values remain unresolved but are not outside the range.
+Cloud data include value 9 despite a documented 0–8 scale,At least one cloud value 9,3 rows across Cloud9am/Cloud3pm,Match,Three sporadic records require source-code clarification; none were recoded.

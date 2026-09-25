@@ -1,0 +1,17 @@
+Feature,Non-missing count,Q1,Q3,IQR,Lower fence,Upper fence,Count below lower fence,Count above upper fence,Total IQR-flagged,Percentage IQR-flagged,Interpretation
+MinTemp,143975,7.6,16.9,9.3,-6.35,30.85,46,8,54,0.0375,Statistical screening only; an IQR flag is not a domain error.
+MaxTemp,144199,17.9,28.2,10.3,2.45,43.65,320,169,489,0.3391,Statistical screening only; an IQR flag is not a domain error.
+Rainfall,142199,0.0,0.8,0.8,-1.2,2.0,0,25578,25578,17.9875,Statistical screening only; an IQR flag is not a domain error.
+Evaporation,82670,2.6,7.4,4.8,-4.6,14.6,0,1995,1995,2.4132,Statistical screening only; an IQR flag is not a domain error.
+Sunshine,75625,4.8,10.6,5.8,-3.9,19.3,0,0,0,0.0,Statistical screening only; an IQR flag is not a domain error.
+WindGustSpeed,135197,31.0,48.0,17.0,5.5,73.5,0,3092,3092,2.287,Statistical screening only; an IQR flag is not a domain error.
+WindSpeed9am,143693,7.0,19.0,12.0,-11.0,37.0,0,1817,1817,1.2645,Statistical screening only; an IQR flag is not a domain error.
+WindSpeed3pm,142398,13.0,24.0,11.0,-3.5,40.5,0,2523,2523,1.7718,Statistical screening only; an IQR flag is not a domain error.
+Humidity9am,142806,57.0,83.0,26.0,18.0,122.0,1425,0,1425,0.9979,Statistical screening only; an IQR flag is not a domain error.
+Humidity3pm,140953,37.0,66.0,29.0,-6.5,109.5,0,0,0,0.0,Statistical screening only; an IQR flag is not a domain error.
+Pressure9am,130395,1012.9,1022.4,9.5,998.65,1036.65,878,313,1191,0.9134,Statistical screening only; an IQR flag is not a domain error.
+Pressure3pm,130432,1010.4,1020.0,9.6,996.0,1034.4,631,288,919,0.7046,Statistical screening only; an IQR flag is not a domain error.
+Cloud9am,89572,1.0,7.0,6.0,-8.0,16.0,0,0,0,0.0,Statistical screening only; an IQR flag is not a domain error.
+Cloud3pm,86102,2.0,7.0,5.0,-5.5,14.5,0,0,0,0.0,Statistical screening only; an IQR flag is not a domain error.
+Temp9am,143693,12.3,21.6,9.3,-1.65,35.55,175,87,262,0.1823,Statistical screening only; an IQR flag is not a domain error.
+Temp3pm,141851,16.6,26.4,9.8,1.9,41.1,384,380,764,0.5386,Statistical screening only; an IQR flag is not a domain error.

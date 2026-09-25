@@ -53,4 +53,6 @@ reports/tables/*
 !reports/figures/target_analysis/*.png
 !reports/figures/relationships/
 !reports/figures/relationships/*.png
+!reports/figures/outliers/
+!reports/figures/outliers/*.png
 !reports/tables/*.csv

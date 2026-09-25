@@ -1,0 +1,3 @@
+Feature,Non-missing count,Minimum,Maximum,Count below 0,Count equal to 0,Count equal to 100,Count above 100,Outside 0–100 range,Assessment
+Humidity9am,142806,0.0,100.0,0,1,2863,0,0,Within the physical 0–100% bounds; boundary values retained for review.
+Humidity3pm,140953,0.0,100.0,0,4,400,0,0,Within the physical 0–100% bounds; boundary values retained for review.

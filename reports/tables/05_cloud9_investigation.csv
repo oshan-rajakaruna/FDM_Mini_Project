@@ -1,0 +1,4 @@
+Feature,Value,Date,Location,Year,Month,Other cloud value,Rainfall,Humidity9am,Humidity3pm,RainTomorrow,Pattern assessment
+Cloud9am,9,2009-09-23,Sydney,2009,9,3.0,4.4,40.0,36.0,No,Sporadic: isolated across different locations/dates in the observed data.
+Cloud9am,9,2012-05-27,Canberra,2012,5,,0.0,99.0,41.0,No,Sporadic: isolated across different locations/dates in the observed data.
+Cloud3pm,9,2012-11-02,Woomera,2012,11,6.0,0.2,45.0,13.0,No,Sporadic: isolated across different locations/dates in the observed data.

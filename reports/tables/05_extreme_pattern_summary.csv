@@ -1,0 +1,5 @@
+Feature,99th-percentile threshold,Count at/above threshold,Locations represented,Years represented,First date,Last date,Observed maximum,Maximum occurrence count,Co-occurring positive Rainfall count,RainTomorrow Yes rate among labelled extremes,Pattern assessment
+Evaporation,18.4,841,26,10,2008-10-13,2017-04-24,145.0,1,191,11.8501,Upper tail repeats across multiple stations/years
+WindGustSpeed,81.0,1368,47,11,2007-11-03,2017-06-20,135.0,3,711,57.7761,Upper tail repeats across multiple stations/years
+WindSpeed9am,39.0,1817,42,11,2007-12-22,2017-06-13,130.0,1,845,40.9431,Upper tail repeats across multiple stations/years
+WindSpeed3pm,43.0,1867,45,11,2007-12-27,2017-06-19,87.0,1,871,44.0044,Upper tail repeats across multiple stations/years

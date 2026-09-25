@@ -1,0 +1,14 @@
+Rainfall metric,Value,Context
+Non-missing Rainfall count,142199.0,rows
+Zero-rain count,91080.0,rows
+Zero-rain percentage,64.0511,percentage of non-missing
+Positive-rain count,51119.0,rows
+All-value skewness,9.836225,sample skewness
+Positive-only skewness,6.387431,sample skewness
+99th percentile,37.4,mm
+99.9th percentile,102.0,mm
+Maximum,371.0,mm
+Count >= 100 mm,151.0,rows
+Count >= 200 mm,14.0,rows
+IQR-flagged count,25578.0,rows
+IQR-flagged percentage,17.9875,percentage of non-missing
