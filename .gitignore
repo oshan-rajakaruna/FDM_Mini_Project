@@ -55,4 +55,6 @@ reports/tables/*
 !reports/figures/relationships/*.png
 !reports/figures/outliers/
 !reports/figures/outliers/*.png
+!reports/figures/leakage_split/
+!reports/figures/leakage_split/*.png
 !reports/tables/*.csv

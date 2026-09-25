@@ -1,4 +1,4 @@
-"""Verify the completed T00 through T05 stage requirements."""
+"""Verify the completed T00 through T06 stage requirements."""
 
 from __future__ import annotations
 
@@ -151,6 +151,23 @@ T05_REQUIRED_FILES = (
     "reports/figures/outliers/05_wind_extremes.png",
 )
 
+T06_REQUIRED_FILES = (
+    "notebooks/05_leakage_and_split_strategy.ipynb",
+    "src/fdm_rainfall/data.py",
+    "src/fdm_rainfall/validation.py",
+    "tests/test_splitting.py",
+    "docs/decisions/preprocessing_decisions.md",
+    "reports/evidence/06_leakage_and_split.md",
+    "reports/tables/06_split_summary.csv",
+    "reports/tables/06_split_target_distribution.csv",
+    "reports/tables/06_location_split_coverage.csv",
+    "reports/tables/06_location_split_counts.csv",
+    "reports/tables/06_leakage_risk_register.csv",
+    "reports/tables/06_split_validation.csv",
+    "reports/figures/leakage_split/06_chronological_split_timeline.png",
+    "reports/figures/leakage_split/06_split_target_yes_rate.png",
+)
+
 EXPECTED_TASKS = (
     ("T00", "Project Setup"),
     ("T01", "Dataset Verification"),
@@ -248,6 +265,25 @@ T05_EVIDENCE_HEADINGS = (
     "## Files created/modified",
     "## Tests/checks executed",
     "## Unresolved questions",
+    "## Final status",
+)
+
+T06_EVIDENCE_HEADINGS = (
+    "## Task objective",
+    "## Labelled analysis population",
+    "## Leakage risks identified",
+    "## Why chronological splitting was chosen",
+    "## Split method",
+    "## Exact split boundaries",
+    "## Actual row proportions",
+    "## Target distribution by split",
+    "## Location coverage findings",
+    "## Split validation results",
+    "## Limitations",
+    "## Controls planned for later preprocessing/modelling",
+    "## Files created/modified",
+    "## Tests/checks executed",
+    "## Unresolved issues",
     "## Final status",
 )
 
@@ -1091,6 +1127,187 @@ def run_t05_checks() -> list[str]:
     return failures
 
 
+def _check_t06_table_structures(failures: list[str]) -> None:
+    expectations: dict[str, tuple[set[str], int]] = {
+        "reports/tables/06_split_summary.csv": (
+            {
+                "Split",
+                "First date",
+                "Last date",
+                "Rows",
+                "Percentage of labelled rows",
+                "Unique dates",
+                "Locations",
+                "RainTomorrow No count",
+                "RainTomorrow Yes count",
+                "Yes percentage",
+                "Missing target count",
+            },
+            3,
+        ),
+        "reports/tables/06_split_target_distribution.csv": (
+            {
+                "Split",
+                "Rows",
+                "RainTomorrow No count",
+                "RainTomorrow Yes count",
+                "Yes percentage",
+                "Missing target count",
+            },
+            3,
+        ),
+        "reports/tables/06_location_split_coverage.csv": (
+            {
+                "Location",
+                "First labelled date",
+                "Last labelled date",
+                "Present in Train",
+                "Present in Validation",
+                "Present in Test",
+                "Present in all three",
+            },
+            49,
+        ),
+        "reports/tables/06_location_split_counts.csv": (
+            {"Location", "Train", "Validation", "Test"},
+            49,
+        ),
+        "reports/tables/06_leakage_risk_register.csv": (
+            {
+                "Risk",
+                "Example in this project",
+                "Potential consequence",
+                "Control / prevention",
+                "Stage where controlled",
+                "Status",
+            },
+            10,
+        ),
+        "reports/tables/06_split_validation.csv": (
+            {"Check", "Result", "Details"},
+            9,
+        ),
+    }
+    for relative_path, (required_columns, expected_rows) in expectations.items():
+        rows = _read_csv_rows(relative_path, failures)
+        if not rows:
+            if (PROJECT_ROOT / relative_path).is_file():
+                failures.append(f"T06 table is empty: {relative_path}")
+            continue
+        if not required_columns.issubset(rows[0]):
+            failures.append(f"T06 table missing required columns: {relative_path}")
+        if len(rows) != expected_rows:
+            failures.append(
+                f"T06 table {relative_path} has {len(rows)} rows; expected {expected_rows}"
+            )
+
+    validation_rows = _read_csv_rows("reports/tables/06_split_validation.csv", failures)
+    if any(row.get("Result") != "PASS" for row in validation_rows):
+        failures.append("T06 saved split validation contains a failed check")
+
+    risk_rows = _read_csv_rows("reports/tables/06_leakage_risk_register.csv", failures)
+    required_risks = {
+        "Target leakage",
+        "RISK_MM leakage",
+        "Imputation leakage",
+        "Encoding leakage",
+        "Scaling leakage",
+        "Feature-selection leakage",
+        "Resampling leakage",
+        "Temporal leakage",
+        "Future-derived feature leakage",
+        "Test-set reuse / tuning leakage",
+    }
+    if {row.get("Risk") for row in risk_rows} != required_risks:
+        failures.append("T06 leakage register does not contain the required risks")
+
+
+def _check_t06_figures(failures: list[str]) -> None:
+    for relative_path in [path for path in T06_REQUIRED_FILES if path.endswith(".png")]:
+        path = PROJECT_ROOT / relative_path
+        if path.is_file() and path.stat().st_size < 10_000:
+            failures.append(f"T06 figure appears empty or incomplete: {relative_path}")
+
+
+def _check_t06_helper_outputs(failures: list[str]) -> None:
+    try:
+        from fdm_rainfall.data import (
+            chronological_train_validation_test_split,
+            load_weather_data,
+            location_split_tables,
+        )
+        from fdm_rainfall.validation import (
+            leakage_risk_register,
+            validate_chronological_split,
+            verify_weather_dataset,
+        )
+
+        frame = load_weather_data(PROJECT_ROOT / "data/raw/weatherAUS.csv")
+        dataset_check = verify_weather_dataset(frame)
+        split = chronological_train_validation_test_split(frame)
+        split_validation = validate_chronological_split(
+            split.train,
+            split.validation,
+            split.test,
+            labelled_population_size=dataset_check.rain_tomorrow_labelled_count,
+        )
+        location_coverage, location_counts = location_split_tables(split)
+        risks = leakage_risk_register()
+    except Exception as exc:
+        failures.append(f"T06 reusable split analysis failed: {exc}")
+        return
+
+    if frame.shape != (145_460, 23):
+        failures.append(f"T06 raw dataset shape changed unexpectedly: {frame.shape}")
+    if dataset_check.rain_tomorrow_labelled_count != 142_193:
+        failures.append(
+            "T06 labelled population is "
+            f"{dataset_check.rain_tomorrow_labelled_count}; expected 142193"
+        )
+    if int(split.summary["Rows"].sum()) != dataset_check.rain_tomorrow_labelled_count:
+        failures.append("T06 split rows do not sum to the labelled population")
+    if split.summary["Split"].tolist() != ["Train", "Validation", "Test"]:
+        failures.append("T06 split summary is not in chronological subset order")
+    if split.summary["Last date"].tolist()[:2] != ["2015-01-12", "2016-04-08"]:
+        failures.append("T06 split boundaries differ from the verified whole-date boundaries")
+    if not split_validation["Result"].eq("PASS").all():
+        failures.append("T06 reusable split validation returned a failed check")
+    if len(location_coverage) != 49 or len(location_counts) != 49:
+        failures.append("T06 location coverage does not include all 49 locations")
+    if int(location_coverage["Present in all three"].sum()) != 48:
+        failures.append("T06 all-three-split location count differs from the verified value 48")
+    if len(risks) != 10:
+        failures.append("T06 leakage register does not contain 10 required risks")
+
+
+def _check_t06_documentation(failures: list[str]) -> None:
+    evidence_path = PROJECT_ROOT / "reports/evidence/06_leakage_and_split.md"
+    if evidence_path.is_file():
+        evidence_text = evidence_path.read_text(encoding="utf-8")
+        for heading in T06_EVIDENCE_HEADINGS:
+            if heading not in evidence_text:
+                failures.append(f"T06 evidence missing heading: {heading}")
+
+    decision_path = PROJECT_ROOT / "docs/decisions/preprocessing_decisions.md"
+    if decision_path.is_file():
+        decision_text = decision_path.read_text(encoding="utf-8")
+        if "## Chronological Split and Leakage Prevention" not in decision_text:
+            failures.append("T06 decision document is missing the required section")
+
+
+def run_t06_checks() -> list[str]:
+    """Return descriptions of failed T06 checks."""
+
+    failures = _missing_files(T06_REQUIRED_FILES)
+    _check_notebook_execution("notebooks/05_leakage_and_split_strategy.ipynb", "T06", failures)
+    _check_t06_table_structures(failures)
+    _check_t06_figures(failures)
+    _check_t06_helper_outputs(failures)
+    _check_t06_documentation(failures)
+    _check_unit_tests(failures)
+    return failures
+
+
 def _print_result(task: str, failures: list[str]) -> None:
     if failures:
         print(f"FAIL: {task}")
@@ -1101,7 +1318,7 @@ def _print_result(task: str, failures: list[str]) -> None:
 
 
 def main() -> int:
-    """Print T00 through T05 verification results and return an exit code."""
+    """Print T00 through T06 verification results and return an exit code."""
 
     t00_failures = run_t00_checks()
     t01_failures = run_t01_checks()
@@ -1109,14 +1326,24 @@ def main() -> int:
     t03_failures = run_t03_checks()
     t04_failures = run_t04_checks()
     t05_failures = run_t05_checks()
+    t06_failures = run_t06_checks()
     _print_result("T00 Project Setup", t00_failures)
     _print_result("T01 Dataset Verification", t01_failures)
     _print_result("T02 Data Understanding", t02_failures)
     _print_result("T03 Missing-Value Analysis", t03_failures)
     _print_result("T04 Target and Feature Relationship EDA", t04_failures)
     _print_result("T05 Outlier and Suspicious-Value Analysis", t05_failures)
+    _print_result("T06 Leakage and Chronological Split Strategy", t06_failures)
 
-    if t00_failures or t01_failures or t02_failures or t03_failures or t04_failures or t05_failures:
+    if (
+        t00_failures
+        or t01_failures
+        or t02_failures
+        or t03_failures
+        or t04_failures
+        or t05_failures
+        or t06_failures
+    ):
         return 1
 
     print(
@@ -1126,7 +1353,8 @@ def main() -> int:
         f"{len(T02_REQUIRED_FILES)} T02 artifacts, and "
         f"{len(T03_REQUIRED_FILES)} T03 artifacts, and "
         f"{len(T04_REQUIRED_FILES)} T04 artifacts, and "
-        f"{len(T05_REQUIRED_FILES)} T05 artifacts."
+        f"{len(T05_REQUIRED_FILES)} T05 artifacts, and "
+        f"{len(T06_REQUIRED_FILES)} T06 artifacts."
     )
     return 0
 

@@ -1,0 +1,10 @@
+Check,Result,Details
+"Train, validation and test are non-empty",PASS,"Train=99546, Validation=21342, Test=21305"
+Date values parse successfully,PASS,All split dates must be valid before temporal comparisons.
+No source-row index overlap,PASS,Each labelled source index must occur in exactly one subset.
+No calendar-date overlap,PASS,A calendar date must not occur in more than one subset.
+Chronological boundaries are strictly ordered,PASS,max(Train) < min(Validation) and max(Validation) < min(Test).
+Split rows equal labelled population,PASS,Split rows=142193; labelled population=142193.
+RainTomorrow exists in every split,PASS,The target is retained for later supervised modelling.
+RainTomorrow has no missing values in supervised splits,PASS,Missing target values across splits=0.
+RISK_MM is absent from every split,PASS,RISK_MM would directly reveal next-day rainfall and cause target leakage.

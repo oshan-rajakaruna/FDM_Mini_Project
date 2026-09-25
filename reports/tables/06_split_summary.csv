@@ -1,0 +1,4 @@
+Split,First date,Last date,Rows,Percentage of labelled rows,Unique dates,Locations,RainTomorrow No count,RainTomorrow Yes count,Yes percentage,Missing target count
+Train,2007-11-01,2015-01-12,99546,70.007666,2541,49,77087,22459,22.561429,0
+Validation,2015-01-13,2016-04-08,21342,15.009178,452,48,16990,4352,20.391716,0
+Test,2016-04-09,2017-06-25,21305,14.983157,443,49,16239,5066,23.778456,0

@@ -1,0 +1,4 @@
+Split,Rows,RainTomorrow No count,RainTomorrow Yes count,Yes percentage,Missing target count
+Train,99546,77087,22459,22.561429,0
+Validation,21342,16990,4352,20.391716,0
+Test,21305,16239,5066,23.778456,0
