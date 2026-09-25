@@ -1,0 +1,2 @@
+# Project dependencies will be added when their corresponding tasks begin.
+# T00 uses only the Python standard library.
