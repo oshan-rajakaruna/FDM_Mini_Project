@@ -1,8 +1,9 @@
-"""Verify the completed T00 through T06 stage requirements."""
+"""Verify the completed T00 through T07 stage requirements."""
 
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import subprocess
 import sys
@@ -168,6 +169,25 @@ T06_REQUIRED_FILES = (
     "reports/figures/leakage_split/06_split_target_yes_rate.png",
 )
 
+T07_REQUIRED_FILES = (
+    "notebooks/06_preprocessing.ipynb",
+    "src/fdm_rainfall/preprocessing.py",
+    "tests/test_preprocessing.py",
+    "docs/decisions/preprocessing_decisions.md",
+    "reports/evidence/07_preprocessing.md",
+    "reports/tables/07_preprocessing_decisions.csv",
+    "reports/tables/07_numeric_imputation_strategy.csv",
+    "reports/tables/07_structural_imputation_summary.csv",
+    "reports/tables/07_categorical_preprocessing_summary.csv",
+    "reports/tables/07_missing_before_after.csv",
+    "reports/tables/07_encoding_summary.csv",
+    "reports/tables/07_scaling_summary.csv",
+    "reports/tables/07_leakage_preprocessing_checks.csv",
+    "reports/tables/07_processed_schema_summary.csv",
+    "reports/figures/preprocessing/07_missingness_before_after.png",
+    "reports/figures/preprocessing/07_structural_imputation_sources.png",
+)
+
 EXPECTED_TASKS = (
     ("T00", "Project Setup"),
     ("T01", "Dataset Verification"),
@@ -283,6 +303,27 @@ T06_EVIDENCE_HEADINGS = (
     "## Controls planned for later preprocessing/modelling",
     "## Files created/modified",
     "## Tests/checks executed",
+    "## Unresolved issues",
+    "## Final status",
+)
+
+T07_EVIDENCE_HEADINGS = (
+    "## Task objective",
+    "## Input split sizes",
+    "## Preprocessing decisions",
+    "## Numerical missing-value strategy",
+    "## Structural missingness strategy",
+    "## Categorical strategy",
+    "## Encoding strategy",
+    "## Outlier decision",
+    "## Scaling strategy",
+    "## Leakage controls",
+    "## Before/after missingness results",
+    "## Processed feature counts",
+    "## Tests/checks executed",
+    "## Limitations",
+    "## Items deferred to T08",
+    "## Files created/modified",
     "## Unresolved issues",
     "## Final status",
 )
@@ -1308,6 +1349,276 @@ def run_t06_checks() -> list[str]:
     return failures
 
 
+def _check_t07_table_structures(failures: list[str]) -> None:
+    expectations: dict[str, tuple[set[str], int]] = {
+        "reports/tables/07_preprocessing_decisions.csv": (
+            {
+                "Feature / Feature group",
+                "Issue",
+                "Evidence",
+                "Options considered",
+                "Chosen preprocessing",
+                "Why chosen",
+                "Train-only fitted?",
+                "Future consideration",
+            },
+            10,
+        ),
+        "reports/tables/07_numeric_imputation_strategy.csv": (
+            {
+                "Feature",
+                "Raw missing %",
+                "Train missing %",
+                "Missingness pattern",
+                "Chosen strategy",
+                "Statistic/grouping used",
+                "Train-only fitted?",
+                "Missing indicator added?",
+                "Reason",
+            },
+            16,
+        ),
+        "reports/tables/07_structural_imputation_summary.csv": (
+            {
+                "Split",
+                "Feature",
+                "Missing rows",
+                "Location-median imputations",
+                "Global-fallback imputations",
+                "Train global median",
+            },
+            12,
+        ),
+        "reports/tables/07_categorical_preprocessing_summary.csv": (
+            {
+                "Feature",
+                "Missing-value treatment",
+                "Encoder",
+                "Encoded columns",
+                "Validation unknown rows",
+                "Test unknown rows",
+                "Train-only fitted?",
+            },
+            5,
+        ),
+        "reports/tables/07_missing_before_after.csv": (
+            {
+                "Split",
+                "Rows before",
+                "Rows after",
+                "Predictor missing cells before",
+                "Unscaled missing cells after",
+                "Scaled missing cells after",
+                "Target rows aligned",
+            },
+            3,
+        ),
+        "reports/tables/07_encoding_summary.csv": (
+            {"Feature", "Encoded columns", "Validation unknown rows", "Test unknown rows"},
+            5,
+        ),
+        "reports/tables/07_scaling_summary.csv": (
+            {
+                "Feature",
+                "Train-fitted mean",
+                "Train-fitted scale",
+                "Fit rows",
+                "Validation/Test used in fit?",
+                "Scaled path",
+                "Unscaled path available?",
+            },
+            16,
+        ),
+        "reports/tables/07_leakage_preprocessing_checks.csv": (
+            {"Check", "Passed", "Evidence", "Result"},
+            13,
+        ),
+        "reports/tables/07_processed_schema_summary.csv": (
+            {
+                "Processed feature",
+                "Role",
+                "Present in unscaled path",
+                "Present in scaled path",
+                "Scaled in scaled path",
+            },
+            124,
+        ),
+    }
+    for relative_path, (required_columns, expected_rows) in expectations.items():
+        rows = _read_csv_rows(relative_path, failures)
+        if not rows:
+            if (PROJECT_ROOT / relative_path).is_file():
+                failures.append(f"T07 table is empty: {relative_path}")
+            continue
+        if not required_columns.issubset(rows[0]):
+            failures.append(f"T07 table missing required columns: {relative_path}")
+        if len(rows) != expected_rows:
+            failures.append(
+                f"T07 table {relative_path} has {len(rows)} rows; expected {expected_rows}"
+            )
+
+    leakage_rows = _read_csv_rows(
+        "reports/tables/07_leakage_preprocessing_checks.csv", failures
+    )
+    if any(row.get("Result") != "PASS" for row in leakage_rows):
+        failures.append("T07 saved leakage table contains a failed check")
+
+    missing_rows = _read_csv_rows("reports/tables/07_missing_before_after.csv", failures)
+    for row in missing_rows:
+        if row.get("Rows before") != row.get("Rows after"):
+            failures.append("T07 preprocessing changed a split row count")
+        if row.get("Unscaled missing cells after") != "0":
+            failures.append("T07 unscaled output contains missing values")
+        if row.get("Scaled missing cells after") != "0":
+            failures.append("T07 scaled output contains missing values")
+
+
+def _check_t07_figures(failures: list[str]) -> None:
+    for relative_path in [path for path in T07_REQUIRED_FILES if path.endswith(".png")]:
+        path = PROJECT_ROOT / relative_path
+        if path.is_file() and path.stat().st_size < 10_000:
+            failures.append(f"T07 figure appears empty or incomplete: {relative_path}")
+
+
+def _check_t07_helper_outputs(failures: list[str]) -> None:
+    try:
+        import numpy as np
+
+        from fdm_rainfall.data import (
+            chronological_train_validation_test_split,
+            load_weather_data,
+        )
+        from fdm_rainfall.preprocessing import (
+            CATEGORICAL_PREDICTORS,
+            NUMERICAL_PREDICTORS,
+            STRUCTURAL_NUMERICAL_PREDICTORS,
+            RainfallPreprocessor,
+            separate_supervised_components,
+        )
+
+        frame = load_weather_data(PROJECT_ROOT / "data/raw/weatherAUS.csv")
+        split = chronological_train_validation_test_split(frame)
+        components = {
+            name: separate_supervised_components(part)
+            for name, part in split.frames.items()
+        }
+        unscaled = RainfallPreprocessor(scale_numeric=False).fit(components["Train"].X)
+        scaled = RainfallPreprocessor(scale_numeric=True).fit(components["Train"].X)
+    except Exception as exc:
+        failures.append(f"T07 reusable preprocessing failed: {exc}")
+        return
+
+    expected_rows = {"Train": 99_546, "Validation": 21_342, "Test": 21_305}
+    for name, part in components.items():
+        try:
+            unscaled_output = unscaled.transform(part.X)
+            scaled_output = scaled.transform(part.X)
+        except Exception as exc:
+            failures.append(f"T07 {name} transformation failed: {exc}")
+            continue
+        if len(unscaled_output) != expected_rows[name] or len(scaled_output) != expected_rows[name]:
+            failures.append(f"T07 {name} transformation changed row count")
+        if not unscaled_output.index.equals(part.y.index):
+            failures.append(f"T07 {name} target alignment changed")
+        if unscaled_output.isna().any().any() or scaled_output.isna().any().any():
+            failures.append(f"T07 {name} output contains missing values")
+        if {"RainTomorrow", "Date", "RISK_MM"}.intersection(unscaled_output.columns):
+            failures.append(f"T07 {name} output contains a leakage/temporal column")
+
+    if split.summary["Last date"].tolist()[:2] != ["2015-01-12", "2016-04-08"]:
+        failures.append("T07 changed the verified T06 split boundaries")
+    if unscaled.fit_row_count_ != 99_546 or scaled.fit_row_count_ != 99_546:
+        failures.append("T07 preprocessors were not fitted on exactly the Train rows")
+    if len(unscaled.get_feature_names_out()) != 124:
+        failures.append("T07 processed schema does not contain 124 features")
+    if len(unscaled.encoded_feature_names_) != 104:
+        failures.append("T07 one-hot encoding does not contain 104 columns")
+    if len(unscaled.indicator_feature_names_) != 4:
+        failures.append("T07 structural preprocessing does not contain four indicators")
+
+    train_medians = components["Train"].X.loc[:, NUMERICAL_PREDICTORS].median()
+    if not unscaled.numeric_medians_.equals(train_medians):
+        failures.append("T07 numeric medians differ from independent Train calculations")
+    for feature in STRUCTURAL_NUMERICAL_PREDICTORS:
+        expected = components["Train"].X.groupby("Location", dropna=False)[feature].median()
+        if not unscaled.structural_location_medians_[feature].equals(expected):
+            failures.append(f"T07 {feature} Location medians differ from Train calculations")
+
+    imputed_train, _ = scaled.impute_numeric(components["Train"].X)
+    expected_mean = imputed_train.loc[:, NUMERICAL_PREDICTORS].mean().to_numpy()
+    if not np.allclose(scaled.scaler_.mean_, expected_mean):
+        failures.append("T07 scaler mean differs from the imputed Train mean")
+
+    encoded_counts = {
+        feature: sum(name.startswith(f"{feature}_") for name in unscaled.encoded_feature_names_)
+        for feature in CATEGORICAL_PREDICTORS
+    }
+    if encoded_counts != {
+        "Location": 50,
+        "WindGustDir": 17,
+        "WindDir9am": 17,
+        "WindDir3pm": 17,
+        "RainToday": 3,
+    }:
+        failures.append(f"T07 encoded category counts are unexpected: {encoded_counts}")
+
+    unseen = components["Validation"].X.iloc[[0]].copy()
+    unseen["Location"] = "UNSEEN_VALIDATION_LOCATION"
+    try:
+        unscaled.transform(unseen)
+    except Exception as exc:
+        failures.append(f"T07 unknown-category handling failed: {exc}")
+
+    raw_hash = hashlib.sha256((PROJECT_ROOT / "data/raw/weatherAUS.csv").read_bytes()).hexdigest().upper()
+    expected_hash = "573FD715CD69FCACC4DF32024D823B450AE3EDAAE7E8FF2EEB623ADBED424014"
+    if raw_hash != expected_hash:
+        failures.append(f"T07 raw dataset checksum changed: {raw_hash}")
+
+
+def _check_t07_documentation(failures: list[str]) -> None:
+    evidence_path = PROJECT_ROOT / "reports/evidence/07_preprocessing.md"
+    if evidence_path.is_file():
+        evidence_text = evidence_path.read_text(encoding="utf-8")
+        for heading in T07_EVIDENCE_HEADINGS:
+            if heading not in evidence_text:
+                failures.append(f"T07 evidence missing heading: {heading}")
+
+    decision_path = PROJECT_ROOT / "docs/decisions/preprocessing_decisions.md"
+    if decision_path.is_file():
+        decision_text = decision_path.read_text(encoding="utf-8")
+        required_sections = (
+            "## Chronological Split and Leakage Prevention",
+            "## T07 Data Preprocessing Decisions",
+            "### Target handling",
+            "### Duplicate handling",
+            "### Missing numerical data",
+            "### Structural missingness",
+            "### Categorical missing data",
+            "### Categorical encoding",
+            "### Outlier handling",
+            "### Scaling strategy",
+            "### Leakage prevention",
+            "### RainToday/Rainfall redundancy",
+            "### Limitations and decisions deferred to T08 or modelling",
+        )
+        for section in required_sections:
+            if section not in decision_text:
+                failures.append(f"T07 decision document missing section: {section}")
+
+
+def run_t07_checks() -> list[str]:
+    """Return descriptions of failed T07 checks."""
+
+    failures = _missing_files(T07_REQUIRED_FILES)
+    _check_notebook_execution("notebooks/06_preprocessing.ipynb", "T07", failures)
+    _check_t07_table_structures(failures)
+    _check_t07_figures(failures)
+    _check_t07_helper_outputs(failures)
+    _check_t07_documentation(failures)
+    _check_unit_tests(failures)
+    return failures
+
+
 def _print_result(task: str, failures: list[str]) -> None:
     if failures:
         print(f"FAIL: {task}")
@@ -1318,7 +1629,7 @@ def _print_result(task: str, failures: list[str]) -> None:
 
 
 def main() -> int:
-    """Print T00 through T06 verification results and return an exit code."""
+    """Print T00 through T07 verification results and return an exit code."""
 
     t00_failures = run_t00_checks()
     t01_failures = run_t01_checks()
@@ -1327,6 +1638,7 @@ def main() -> int:
     t04_failures = run_t04_checks()
     t05_failures = run_t05_checks()
     t06_failures = run_t06_checks()
+    t07_failures = run_t07_checks()
     _print_result("T00 Project Setup", t00_failures)
     _print_result("T01 Dataset Verification", t01_failures)
     _print_result("T02 Data Understanding", t02_failures)
@@ -1334,6 +1646,7 @@ def main() -> int:
     _print_result("T04 Target and Feature Relationship EDA", t04_failures)
     _print_result("T05 Outlier and Suspicious-Value Analysis", t05_failures)
     _print_result("T06 Leakage and Chronological Split Strategy", t06_failures)
+    _print_result("T07 Data Preprocessing", t07_failures)
 
     if (
         t00_failures
@@ -1343,6 +1656,7 @@ def main() -> int:
         or t04_failures
         or t05_failures
         or t06_failures
+        or t07_failures
     ):
         return 1
 
@@ -1354,7 +1668,8 @@ def main() -> int:
         f"{len(T03_REQUIRED_FILES)} T03 artifacts, and "
         f"{len(T04_REQUIRED_FILES)} T04 artifacts, and "
         f"{len(T05_REQUIRED_FILES)} T05 artifacts, and "
-        f"{len(T06_REQUIRED_FILES)} T06 artifacts."
+        f"{len(T06_REQUIRED_FILES)} T06 artifacts, and "
+        f"{len(T07_REQUIRED_FILES)} T07 artifacts."
     )
     return 0
 

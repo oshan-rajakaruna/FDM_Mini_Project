@@ -21,6 +21,6 @@ This repository contains the IT3051 Fundamentals of Data Mining mini project,
 
 ## Current boundary
 
-Work is complete through T06 Leakage and Chronological Split Strategy. Do not begin
-T07 or any later preprocessing, feature engineering, or model training
+Work is complete through T07 Data Preprocessing. Do not begin T08 feature
+engineering or any later analysis or model training
 unless the user explicitly requests it in a later turn.

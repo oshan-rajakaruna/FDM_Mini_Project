@@ -1,0 +1,125 @@
+Processed feature,Role,Present in unscaled path,Present in scaled path,Scaled in scaled path
+MinTemp,Imputed numerical predictor,True,True,True
+MaxTemp,Imputed numerical predictor,True,True,True
+Rainfall,Imputed numerical predictor,True,True,True
+Evaporation,Imputed numerical predictor,True,True,True
+Sunshine,Imputed numerical predictor,True,True,True
+WindGustSpeed,Imputed numerical predictor,True,True,True
+WindSpeed9am,Imputed numerical predictor,True,True,True
+WindSpeed3pm,Imputed numerical predictor,True,True,True
+Humidity9am,Imputed numerical predictor,True,True,True
+Humidity3pm,Imputed numerical predictor,True,True,True
+Pressure9am,Imputed numerical predictor,True,True,True
+Pressure3pm,Imputed numerical predictor,True,True,True
+Cloud9am,Imputed numerical predictor,True,True,True
+Cloud3pm,Imputed numerical predictor,True,True,True
+Temp9am,Imputed numerical predictor,True,True,True
+Temp3pm,Imputed numerical predictor,True,True,True
+Sunshine_missing,Structural missingness indicator,True,True,False
+Evaporation_missing,Structural missingness indicator,True,True,False
+Cloud9am_missing,Structural missingness indicator,True,True,False
+Cloud3pm_missing,Structural missingness indicator,True,True,False
+Location_Adelaide,One-hot encoded original category,True,True,False
+Location_Albany,One-hot encoded original category,True,True,False
+Location_Albury,One-hot encoded original category,True,True,False
+Location_AliceSprings,One-hot encoded original category,True,True,False
+Location_BadgerysCreek,One-hot encoded original category,True,True,False
+Location_Ballarat,One-hot encoded original category,True,True,False
+Location_Bendigo,One-hot encoded original category,True,True,False
+Location_Brisbane,One-hot encoded original category,True,True,False
+Location_Cairns,One-hot encoded original category,True,True,False
+Location_Canberra,One-hot encoded original category,True,True,False
+Location_Cobar,One-hot encoded original category,True,True,False
+Location_CoffsHarbour,One-hot encoded original category,True,True,False
+Location_Dartmoor,One-hot encoded original category,True,True,False
+Location_Darwin,One-hot encoded original category,True,True,False
+Location_GoldCoast,One-hot encoded original category,True,True,False
+Location_Hobart,One-hot encoded original category,True,True,False
+Location_Katherine,One-hot encoded original category,True,True,False
+Location_Launceston,One-hot encoded original category,True,True,False
+Location_Melbourne,One-hot encoded original category,True,True,False
+Location_MelbourneAirport,One-hot encoded original category,True,True,False
+Location_Mildura,One-hot encoded original category,True,True,False
+Location_Missing,One-hot encoded original category,True,True,False
+Location_Moree,One-hot encoded original category,True,True,False
+Location_MountGambier,One-hot encoded original category,True,True,False
+Location_MountGinini,One-hot encoded original category,True,True,False
+Location_Newcastle,One-hot encoded original category,True,True,False
+Location_Nhil,One-hot encoded original category,True,True,False
+Location_NorahHead,One-hot encoded original category,True,True,False
+Location_NorfolkIsland,One-hot encoded original category,True,True,False
+Location_Nuriootpa,One-hot encoded original category,True,True,False
+Location_PearceRAAF,One-hot encoded original category,True,True,False
+Location_Penrith,One-hot encoded original category,True,True,False
+Location_Perth,One-hot encoded original category,True,True,False
+Location_PerthAirport,One-hot encoded original category,True,True,False
+Location_Portland,One-hot encoded original category,True,True,False
+Location_Richmond,One-hot encoded original category,True,True,False
+Location_Sale,One-hot encoded original category,True,True,False
+Location_SalmonGums,One-hot encoded original category,True,True,False
+Location_Sydney,One-hot encoded original category,True,True,False
+Location_SydneyAirport,One-hot encoded original category,True,True,False
+Location_Townsville,One-hot encoded original category,True,True,False
+Location_Tuggeranong,One-hot encoded original category,True,True,False
+Location_Uluru,One-hot encoded original category,True,True,False
+Location_WaggaWagga,One-hot encoded original category,True,True,False
+Location_Walpole,One-hot encoded original category,True,True,False
+Location_Watsonia,One-hot encoded original category,True,True,False
+Location_Williamtown,One-hot encoded original category,True,True,False
+Location_Witchcliffe,One-hot encoded original category,True,True,False
+Location_Wollongong,One-hot encoded original category,True,True,False
+Location_Woomera,One-hot encoded original category,True,True,False
+WindGustDir_E,One-hot encoded original category,True,True,False
+WindGustDir_ENE,One-hot encoded original category,True,True,False
+WindGustDir_ESE,One-hot encoded original category,True,True,False
+WindGustDir_Missing,One-hot encoded original category,True,True,False
+WindGustDir_N,One-hot encoded original category,True,True,False
+WindGustDir_NE,One-hot encoded original category,True,True,False
+WindGustDir_NNE,One-hot encoded original category,True,True,False
+WindGustDir_NNW,One-hot encoded original category,True,True,False
+WindGustDir_NW,One-hot encoded original category,True,True,False
+WindGustDir_S,One-hot encoded original category,True,True,False
+WindGustDir_SE,One-hot encoded original category,True,True,False
+WindGustDir_SSE,One-hot encoded original category,True,True,False
+WindGustDir_SSW,One-hot encoded original category,True,True,False
+WindGustDir_SW,One-hot encoded original category,True,True,False
+WindGustDir_W,One-hot encoded original category,True,True,False
+WindGustDir_WNW,One-hot encoded original category,True,True,False
+WindGustDir_WSW,One-hot encoded original category,True,True,False
+WindDir9am_E,One-hot encoded original category,True,True,False
+WindDir9am_ENE,One-hot encoded original category,True,True,False
+WindDir9am_ESE,One-hot encoded original category,True,True,False
+WindDir9am_Missing,One-hot encoded original category,True,True,False
+WindDir9am_N,One-hot encoded original category,True,True,False
+WindDir9am_NE,One-hot encoded original category,True,True,False
+WindDir9am_NNE,One-hot encoded original category,True,True,False
+WindDir9am_NNW,One-hot encoded original category,True,True,False
+WindDir9am_NW,One-hot encoded original category,True,True,False
+WindDir9am_S,One-hot encoded original category,True,True,False
+WindDir9am_SE,One-hot encoded original category,True,True,False
+WindDir9am_SSE,One-hot encoded original category,True,True,False
+WindDir9am_SSW,One-hot encoded original category,True,True,False
+WindDir9am_SW,One-hot encoded original category,True,True,False
+WindDir9am_W,One-hot encoded original category,True,True,False
+WindDir9am_WNW,One-hot encoded original category,True,True,False
+WindDir9am_WSW,One-hot encoded original category,True,True,False
+WindDir3pm_E,One-hot encoded original category,True,True,False
+WindDir3pm_ENE,One-hot encoded original category,True,True,False
+WindDir3pm_ESE,One-hot encoded original category,True,True,False
+WindDir3pm_Missing,One-hot encoded original category,True,True,False
+WindDir3pm_N,One-hot encoded original category,True,True,False
+WindDir3pm_NE,One-hot encoded original category,True,True,False
+WindDir3pm_NNE,One-hot encoded original category,True,True,False
+WindDir3pm_NNW,One-hot encoded original category,True,True,False
+WindDir3pm_NW,One-hot encoded original category,True,True,False
+WindDir3pm_S,One-hot encoded original category,True,True,False
+WindDir3pm_SE,One-hot encoded original category,True,True,False
+WindDir3pm_SSE,One-hot encoded original category,True,True,False
+WindDir3pm_SSW,One-hot encoded original category,True,True,False
+WindDir3pm_SW,One-hot encoded original category,True,True,False
+WindDir3pm_W,One-hot encoded original category,True,True,False
+WindDir3pm_WNW,One-hot encoded original category,True,True,False
+WindDir3pm_WSW,One-hot encoded original category,True,True,False
+RainToday_Missing,One-hot encoded original category,True,True,False
+RainToday_No,One-hot encoded original category,True,True,False
+RainToday_Yes,One-hot encoded original category,True,True,False

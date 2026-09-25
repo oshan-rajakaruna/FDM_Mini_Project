@@ -1,0 +1,14 @@
+Check,Passed,Evidence,Result
+RainTomorrow excluded from X,True,Target separated before fit,PASS
+Date excluded from transformer,True,Date retained separately for T08,PASS
+RISK_MM absent,True,Checked in raw data and preprocessing API,PASS
+Numerical medians equal Train calculations,True,No Validation/Test statistics,PASS
+Location medians equal Train calculations,True,Four structural features grouped on Train,PASS
+Categorical vocabulary equals Train plus reserved Missing,True,Encoder fit on Train only,PASS
+Scaler mean equals imputed Train mean,True,Scaler fit on Train only,PASS
+"Both preprocessors fitted on 99,546 Train rows",True,Validation/Test transform-only,PASS
+Rows preserved and targets aligned,True,No predictor-row deletion,PASS
+No missing processed predictors,True,All split/path combinations checked,PASS
+T06 split boundaries unchanged,True,Existing chronological splitter reused,PASS
+Unknown categories handled safely,True,Observed later unknowns are zero; API test injects unseen values,PASS
+No feature engineering,True,Only requested missing indicators and one-hot expansion,PASS

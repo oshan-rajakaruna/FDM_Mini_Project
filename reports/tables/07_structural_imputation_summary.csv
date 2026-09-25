@@ -1,0 +1,13 @@
+Split,Feature,Rows,Observed rows,Missing rows,Location-median imputations,Global-fallback imputations,Train global median
+Train,Sunshine,99546,58563,40983,5657,35326,8.4
+Train,Evaporation,99546,62166,37380,7194,30186,4.6
+Train,Cloud9am,99546,63565,35981,12513,23468,5.0
+Train,Cloud3pm,99546,62564,36982,13514,23468,5.0
+Validation,Sunshine,21342,9992,11350,2892,8458,8.4
+Validation,Evaporation,21342,10852,10490,3385,7105,4.6
+Validation,Cloud9am,21342,13161,8181,2850,5331,5.0
+Validation,Cloud3pm,21342,12390,8952,3621,5331,5.0
+Test,Sunshine,21305,5822,15483,7196,8287,8.4
+Test,Evaporation,21305,8332,12973,6003,6970,4.6
+Test,Cloud9am,21305,11810,9495,4260,5235,5.0
+Test,Cloud3pm,21305,10145,11160,5925,5235,5.0

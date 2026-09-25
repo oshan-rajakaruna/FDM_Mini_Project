@@ -1,0 +1,17 @@
+Feature,Raw missing %,Train missing %,Missingness pattern,Chosen strategy,Statistic/grouping used,Train-only fitted?,Missing indicator added?,Reason
+MinTemp,1.0209,0.436984,Low missingness,Train global median,Global Train median,True,False,Robust central value without row deletion
+MaxTemp,0.8669,0.198903,Low missingness,Train global median,Global Train median,True,False,Robust central value without row deletion
+Rainfall,2.2419,1.011593,Low missingness,Train global median,Global Train median,True,False,Robust central value without row deletion
+Evaporation,43.1665,37.550479,Likely both station and time dependent,"Train Location median, then Train global median",Location and global Train medians,True,True,Station-dependent structural missingness
+Sunshine,48.0098,41.169911,Likely both station and time dependent,"Train Location median, then Train global median",Location and global Train medians,True,True,Station-dependent structural missingness
+WindGustSpeed,7.0555,6.965624,Likely both station and time dependent,Train global median,Global Train median,True,False,Robust central value without row deletion
+WindSpeed9am,1.2148,1.140176,Low missingness,Train global median,Global Train median,True,False,Robust central value without row deletion
+WindSpeed3pm,2.105,1.148213,Low missingness,Train global median,Global Train median,True,False,Robust central value without row deletion
+Humidity9am,1.8246,1.271774,Low missingness,Train global median,Global Train median,True,False,Robust central value without row deletion
+Humidity3pm,3.0984,1.194423,Low missingness,Train global median,Global Train median,True,False,Robust central value without row deletion
+Pressure9am,10.3568,9.447893,Likely both station and time dependent,Train global median,Global Train median,True,False,Robust central value without row deletion
+Pressure3pm,10.3314,9.411729,Likely both station and time dependent,Train global median,Global Train median,True,False,Robust central value without row deletion
+Cloud9am,38.4216,36.145099,Likely both station and time dependent,"Train Location median, then Train global median",Location and global Train medians,True,True,Station-dependent structural missingness
+Cloud3pm,40.8071,37.150664,Likely both station and time dependent,"Train Location median, then Train global median",Location and global Train medians,True,True,Station-dependent structural missingness
+Temp9am,1.2148,0.787576,Low missingness,Train global median,Global Train median,True,False,Robust central value without row deletion
+Temp3pm,2.4811,0.669037,Low missingness,Train global median,Global Train median,True,False,Robust central value without row deletion

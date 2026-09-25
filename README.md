@@ -7,9 +7,8 @@ rainfall and presenting weather-risk information for decision support.
 
 ## Current scope
 
-T00 Project Setup through T06 Leakage and Chronological Split Strategy have been
-completed. Final data preparation, feature engineering, and model development
-have not started.
+T00 Project Setup through T07 Data Preprocessing have been completed. Feature
+engineering and model development have not started.
 
 ## RainToday threshold clarification
 
@@ -44,4 +43,4 @@ python scripts/verify_stage1.py
 ```
 
 The command exits with status code `0` and prints PASS results for T00 through
-T06 when the completed-stage requirements are satisfied.
+T07 when the completed-stage requirements are satisfied.

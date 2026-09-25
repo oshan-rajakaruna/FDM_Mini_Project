@@ -1,0 +1,4 @@
+Split,Rows before,Rows after,Predictor missing cells before,Numerical missing cells before,Categorical missing cells before,Unscaled missing cells after,Scaled missing cells after,Target rows aligned
+Train,99546,99546,202214,184857,17357,0,0,True
+Validation,21342,21342,51352,47946,3406,0,0,True
+Test,21305,21305,62993,59229,3764,0,0,True

@@ -1,0 +1,6 @@
+Feature,Encoded columns,Validation unknown rows,Test unknown rows
+Location,50,0,0
+WindGustDir,17,0,0
+WindDir9am,17,0,0
+WindDir3pm,17,0,0
+RainToday,3,0,0
