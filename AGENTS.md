@@ -21,6 +21,6 @@ This repository contains the IT3051 Fundamentals of Data Mining mini project,
 
 ## Current boundary
 
-T00 Project Setup is the only authorized task. Do not begin T01 or any dataset
-analysis, EDA, preprocessing, feature engineering, or model training unless the
-user explicitly requests it in a later turn.
+Work is complete through T02 Data Understanding. Do not begin T03 or any later
+analysis, preprocessing, feature engineering, or model training unless the user
+explicitly requests it in a later turn.
