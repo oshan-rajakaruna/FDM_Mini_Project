@@ -7,9 +7,9 @@ rainfall and presenting weather-risk information for decision support.
 
 ## Current scope
 
-Only the initial project structure (T00 Project Setup) has been completed.
-Dataset verification, exploratory analysis, preprocessing, feature engineering,
-and model development have not started.
+T00 Project Setup and T01 Dataset Verification have been completed. Data
+understanding and exploratory analysis, preprocessing, feature engineering, and
+model development have not started.
 
 ## Project structure
 
@@ -29,7 +29,7 @@ reports/
 scripts/              Project utility and verification scripts
 ```
 
-## Verify T00
+## Verify the completed stage
 
 From the repository root, run:
 
@@ -37,5 +37,5 @@ From the repository root, run:
 python scripts/verify_stage1.py
 ```
 
-The command exits with status code `0` and prints `PASS: T00 Project Setup`
-when the required initial structure is present.
+The command exits with status code `0` and prints PASS results for T00 and T01
+when the completed-stage requirements are satisfied.

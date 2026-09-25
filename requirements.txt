@@ -1,2 +1,7 @@
-# Project dependencies will be added when their corresponding tasks begin.
-# T00 uses only the Python standard library.
+# Dataset loading and verification
+pandas>=3.0,<4.0
+
+# Notebook execution
+ipykernel>=7.0,<8.0
+nbconvert>=7.0,<8.0
+nbformat>=5.0,<6.0

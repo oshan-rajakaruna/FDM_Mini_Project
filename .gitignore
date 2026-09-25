@@ -13,6 +13,7 @@ env/
 
 # Notebook checkpoints
 .ipynb_checkpoints/
+.jupyter_runtime/
 
 # IDE and operating-system files
 .vscode/

@@ -17,7 +17,7 @@ A task may be marked `DONE` only if:
 | ID | Task | Status | Verification evidence |
 |---|---|---|---|
 | T00 | Project Setup | DONE | `python scripts/verify_stage1.py` passed (8 files and 14 directories verified); see `reports/evidence/00_project_setup.md`. |
-| T01 | Dataset Verification | TODO | Not started. |
+| T01 | Dataset Verification | DONE | Dataset loaded; all required checks completed; notebook executed without errors; 4 unit tests and `python scripts/verify_stage1.py` passed. See `reports/evidence/01_dataset_verification.md`. |
 | T02 | Data Understanding | TODO | Not started. |
 | T03 | Missing-Value Analysis | TODO | Not started. |
 | T04 | Target and Feature Relationship EDA | TODO | Not started. |
