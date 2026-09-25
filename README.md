@@ -7,9 +7,15 @@ rainfall and presenting weather-risk information for decision support.
 
 ## Current scope
 
-T00 Project Setup through T03 Missing-Value Analysis have been completed.
-Target/feature relationship EDA, outlier analysis, data preparation, feature
-engineering, and model development have not started.
+T00 Project Setup through T04 Target and Feature Relationship EDA have been
+completed. Outlier analysis, data preparation, feature engineering, and model
+development have not started.
+
+## RainToday threshold clarification
+
+The proposal describes `RainToday = Yes` as rainfall of "1 mm or more". T04
+found that the usable dataset pairs follow the strict convention
+`Rainfall > 1.0 mm`: values exactly equal to 1.0 mm are labelled `RainToday = No`.
 
 ## Project structure
 
@@ -38,4 +44,4 @@ python scripts/verify_stage1.py
 ```
 
 The command exits with status code `0` and prints PASS results for T00 through
-T03 when the completed-stage requirements are satisfied.
+T04 when the completed-stage requirements are satisfied.

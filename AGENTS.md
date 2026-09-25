@@ -21,6 +21,6 @@ This repository contains the IT3051 Fundamentals of Data Mining mini project,
 
 ## Current boundary
 
-Work is complete through T03 Missing-Value Analysis. Do not begin T04 or any
-later analysis, preprocessing, feature engineering, or model training unless
-the user explicitly requests it in a later turn.
+Work is complete through T04 Target and Feature Relationship EDA. Do not begin
+T05 or any later analysis, preprocessing, feature engineering, or model training
+unless the user explicitly requests it in a later turn.

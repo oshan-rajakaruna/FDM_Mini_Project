@@ -1,0 +1,16 @@
+Metric,Value,Context
+Total dataset rows,145460,All records
+Usable Rainfall/RainToday comparisons,142199,Both fields available
+Target-labelled usable comparisons,140787,Both fields and RainTomorrow available
+Rows with one or both fields missing,3261,"Excluded pairwise, not removed"
+Both fields missing,3261,Missing-value effect
+Rainfall-only missing,0,Missing-value effect
+RainToday-only missing,0,Missing-value effect
+Agreement count using Rainfall >= 1 mm,140440,Proposal threshold convention
+Agreement percentage using Rainfall >= 1 mm,98.763,Percentage of usable pairs
+Disagreement count using Rainfall >= 1 mm,1759,Usable pairs
+Disagreements at exactly 1.0 mm,1759,All such records are RainToday=No in this dataset
+Agreement count using Rainfall > 1 mm,142199,Alternative strict-threshold check
+Agreement percentage using Rainfall > 1 mm,100.0,Percentage of usable pairs
+Proposal claim (approximately 98.8%),Match,Compared after rounding actual agreement to one decimal place
+Proposal threshold definition,Minor mismatch / boundary clarification,Proposal says 1 mm or more (>= 1.0 mm); usable dataset pairs match RainToday when Rainfall > 1.0 mm.

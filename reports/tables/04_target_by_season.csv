@@ -1,0 +1,5 @@
+Season,Total record count,Labelled record count,Yes count,No count,Missing target count,Rain rate (Yes percentage),EDA-only derivation note
+Summer,35122,34256,6955,27301,866,20.303,Southern Hemisphere season derived from Date for T04 description only; not an approved model feature.
+Autumn,38264,37397,8185,29212,867,21.8868,Southern Hemisphere season derived from Date for T04 description only; not an approved model feature.
+Winter,36737,35930,9385,26545,807,26.1202,Southern Hemisphere season derived from Date for T04 description only; not an approved model feature.
+Spring,35337,34610,7352,27258,727,21.2424,Southern Hemisphere season derived from Date for T04 description only; not an approved model feature.

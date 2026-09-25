@@ -1,4 +1,4 @@
-"""Verify the completed T00 through T03 stage requirements."""
+"""Verify the completed T00 through T04 stage requirements."""
 
 from __future__ import annotations
 
@@ -102,6 +102,31 @@ T03_REQUIRED_FILES = (
     "reports/figures/missing_values/03_temporal_missingness_major_features.png",
 )
 
+T04_REQUIRED_FILES = (
+    "notebooks/03_eda_target_relationships.ipynb",
+    "src/fdm_rainfall/relationships.py",
+    "tests/test_relationships.py",
+    "reports/evidence/04_target_relationships.md",
+    "reports/tables/04_target_distribution.csv",
+    "reports/tables/04_target_by_month.csv",
+    "reports/tables/04_target_by_year.csv",
+    "reports/tables/04_target_by_season.csv",
+    "reports/tables/04_target_by_location.csv",
+    "reports/tables/04_numeric_target_summary.csv",
+    "reports/tables/04_categorical_target_summary.csv",
+    "reports/tables/04_correlation_matrix.csv",
+    "reports/tables/04_correlation_pairs.csv",
+    "reports/tables/04_raintoday_rainfall_relationship.csv",
+    "reports/tables/04_target_association_summary.csv",
+    "reports/tables/04_relationship_interpretations.csv",
+    "reports/figures/target_analysis/04_target_distribution.png",
+    "reports/figures/target_analysis/04_temporal_target_patterns.png",
+    "reports/figures/target_analysis/04_location_rain_rates.png",
+    "reports/figures/relationships/04_numeric_target_boxplots.png",
+    "reports/figures/relationships/04_categorical_target_rates.png",
+    "reports/figures/relationships/04_numeric_correlation_heatmap.png",
+)
+
 EXPECTED_TASKS = (
     ("T00", "Project Setup"),
     ("T01", "Dataset Verification"),
@@ -161,6 +186,25 @@ T03_EVIDENCE_HEADINGS = (
     "## Future preprocessing considerations",
     "## Files created/modified",
     "## Tests/checks executed",
+    "## Unresolved questions",
+    "## Final status",
+)
+
+T04_EVIDENCE_HEADINGS = (
+    "## Task objective",
+    "## Analyses performed",
+    "## Target distribution findings",
+    "## Temporal findings",
+    "## Location findings",
+    "## Major numerical relationships",
+    "## Major categorical relationships",
+    "## Correlation/redundancy findings",
+    "## RainToday/Rainfall verification",
+    "## Class-imbalance findings",
+    "## Limitations caused by missingness",
+    "## Future considerations",
+    "## Files created/modified",
+    "## Checks/tests executed",
     "## Unresolved questions",
     "## Final status",
 )
@@ -689,6 +733,159 @@ def run_t03_checks() -> list[str]:
     return failures
 
 
+def _check_t04_table_structures(failures: list[str]) -> None:
+    expectations: dict[str, tuple[set[str], int]] = {
+        "reports/tables/04_target_distribution.csv": (
+            {"Metric", "Value", "Context"},
+            8,
+        ),
+        "reports/tables/04_target_by_month.csv": (
+            {"Month number", "Month", "Labelled record count", "Yes count", "No count", "Rain rate (Yes percentage)"},
+            12,
+        ),
+        "reports/tables/04_target_by_year.csv": (
+            {"Year", "Labelled record count", "Yes count", "No count", "Rain rate (Yes percentage)"},
+            11,
+        ),
+        "reports/tables/04_target_by_season.csv": (
+            {"Season", "Labelled record count", "Rain rate (Yes percentage)", "EDA-only derivation note"},
+            4,
+        ),
+        "reports/tables/04_target_by_location.csv": (
+            {"Location", "Labelled record count", "Yes count", "No count", "Rain rate (Yes percentage)", "Observation-count flag", "Rain-rate position"},
+            49,
+        ),
+        "reports/tables/04_numeric_target_summary.csv": (
+            {"Feature", "RainTomorrow", "Available count", "Missing within class", "Mean", "Standard deviation", "25th percentile", "Median", "75th percentile"},
+            32,
+        ),
+        "reports/tables/04_categorical_target_summary.csv": (
+            {"Feature", "Category", "Category frequency among labelled rows", "Yes count", "No count", "RainTomorrow Yes rate"},
+            103,
+        ),
+        "reports/tables/04_correlation_matrix.csv": (
+            {"Feature", "MinTemp", "MaxTemp", "Humidity9am", "Humidity3pm", "Pressure9am", "Pressure3pm"},
+            16,
+        ),
+        "reports/tables/04_correlation_pairs.csv": (
+            {"Feature A", "Feature B", "Pearson correlation", "Absolute correlation", "Pairwise available count", "Descriptive strength"},
+            120,
+        ),
+        "reports/tables/04_raintoday_rainfall_relationship.csv": (
+            {"Metric", "Value", "Context"},
+            15,
+        ),
+        "reports/tables/04_target_association_summary.csv": (
+            {"Feature", "Feature type", "Observed relationship with RainTomorrow", "Descriptive association assessment", "Missingness concern", "Redundancy concern", "Future consideration"},
+            21,
+        ),
+        "reports/tables/04_relationship_interpretations.csv": (
+            {"Feature", "Observation", "Interpretation", "Future consideration"},
+            10,
+        ),
+    }
+    for relative_path, (required_columns, expected_rows) in expectations.items():
+        rows = _read_csv_rows(relative_path, failures)
+        if not rows:
+            if (PROJECT_ROOT / relative_path).is_file():
+                failures.append(f"T04 table is empty: {relative_path}")
+            continue
+        if not required_columns.issubset(rows[0]):
+            failures.append(f"T04 table missing required columns: {relative_path}")
+        if len(rows) != expected_rows:
+            failures.append(
+                f"T04 table {relative_path} has {len(rows)} rows; expected {expected_rows}"
+            )
+
+
+def _check_t04_figures(failures: list[str]) -> None:
+    for relative_path in [path for path in T04_REQUIRED_FILES if path.endswith(".png")]:
+        path = PROJECT_ROOT / relative_path
+        if path.is_file() and path.stat().st_size < 10_000:
+            failures.append(f"T04 figure appears empty or incomplete: {relative_path}")
+
+
+def _check_t04_helper_outputs(failures: list[str]) -> None:
+    try:
+        from fdm_rainfall.data import load_weather_data
+        from fdm_rainfall.relationships import (
+            categorical_target_summary,
+            correlation_analysis,
+            location_target_rates,
+            numeric_target_summary,
+            raintoday_rainfall_relationship,
+            relationship_interpretations,
+            target_association_summary,
+            target_distribution,
+            temporal_target_rates,
+        )
+
+        frame = load_weather_data(PROJECT_ROOT / "data/raw/weatherAUS.csv")
+        target = target_distribution(frame)
+        temporal = temporal_target_rates(frame)
+        location = location_target_rates(frame)
+        numeric = numeric_target_summary(frame)
+        categorical = categorical_target_summary(frame)
+        correlations = correlation_analysis(frame)
+        rain_pair = raintoday_rainfall_relationship(frame)
+        associations = target_association_summary(frame, numeric, categorical)
+        interpretations = relationship_interpretations(associations)
+    except Exception as exc:
+        failures.append(f"T04 reusable analysis failed: {exc}")
+        return
+
+    expected_counts = {
+        "target distribution": (len(target), 8),
+        "monthly target summary": (len(temporal.by_month), 12),
+        "yearly target summary": (len(temporal.by_year), 11),
+        "season target summary": (len(temporal.by_season), 4),
+        "location target summary": (len(location), 49),
+        "numerical target summary": (len(numeric), 32),
+        "categorical target summary": (len(categorical), 103),
+        "correlation matrix": (len(correlations.matrix), 16),
+        "correlation pairs": (len(correlations.pairs), 120),
+        "RainToday/Rainfall comparison": (len(rain_pair), 15),
+        "target association summary": (len(associations), 21),
+        "important relationship interpretations": (len(interpretations), 10),
+    }
+    for label, (actual, expected) in expected_counts.items():
+        if actual != expected:
+            failures.append(f"T04 {label} has {actual} rows; expected {expected}")
+
+    metrics = target.set_index("Metric")["Value"]
+    if int(float(metrics["Labelled total"])) + int(float(metrics["Missing target count"])) != len(frame):
+        failures.append("T04 labelled and missing target counts do not reconcile to dataset rows")
+    if int(location["Labelled record count"].sum()) != int(float(metrics["Labelled total"])):
+        failures.append("T04 location-labelled counts do not reconcile to labelled target rows")
+    rain_metrics = rain_pair.set_index("Metric")["Value"]
+    if rain_metrics["Proposal claim (approximately 98.8%)"] not in {"Match", "Mismatch"}:
+        failures.append("T04 RainToday/Rainfall proposal comparison is invalid")
+    if rain_metrics["Proposal threshold definition"] != "Minor mismatch / boundary clarification":
+        failures.append("T04 proposal threshold boundary clarification is missing or invalid")
+
+
+def _check_t04_evidence(failures: list[str]) -> None:
+    evidence_path = PROJECT_ROOT / "reports/evidence/04_target_relationships.md"
+    if not evidence_path.is_file():
+        return
+    evidence_text = evidence_path.read_text(encoding="utf-8")
+    for heading in T04_EVIDENCE_HEADINGS:
+        if heading not in evidence_text:
+            failures.append(f"T04 evidence missing heading: {heading}")
+
+
+def run_t04_checks() -> list[str]:
+    """Return descriptions of failed T04 checks."""
+
+    failures = _missing_files(T04_REQUIRED_FILES)
+    _check_notebook_execution("notebooks/03_eda_target_relationships.ipynb", "T04", failures)
+    _check_t04_table_structures(failures)
+    _check_t04_figures(failures)
+    _check_t04_helper_outputs(failures)
+    _check_t04_evidence(failures)
+    return failures
+
+
 def _print_result(task: str, failures: list[str]) -> None:
     if failures:
         print(f"FAIL: {task}")
@@ -699,18 +896,20 @@ def _print_result(task: str, failures: list[str]) -> None:
 
 
 def main() -> int:
-    """Print T00 through T03 verification results and return an exit code."""
+    """Print T00 through T04 verification results and return an exit code."""
 
     t00_failures = run_t00_checks()
     t01_failures = run_t01_checks()
     t02_failures = run_t02_checks()
     t03_failures = run_t03_checks()
+    t04_failures = run_t04_checks()
     _print_result("T00 Project Setup", t00_failures)
     _print_result("T01 Dataset Verification", t01_failures)
     _print_result("T02 Data Understanding", t02_failures)
     _print_result("T03 Missing-Value Analysis", t03_failures)
+    _print_result("T04 Target and Feature Relationship EDA", t04_failures)
 
-    if t00_failures or t01_failures or t02_failures or t03_failures:
+    if t00_failures or t01_failures or t02_failures or t03_failures or t04_failures:
         return 1
 
     print(
@@ -718,7 +917,8 @@ def main() -> int:
         f"{len(T00_REQUIRED_DIRECTORIES)} directories, and "
         f"{len(T01_REQUIRED_FILES)} T01 artifacts, and "
         f"{len(T02_REQUIRED_FILES)} T02 artifacts, and "
-        f"{len(T03_REQUIRED_FILES)} T03 artifacts."
+        f"{len(T03_REQUIRED_FILES)} T03 artifacts, and "
+        f"{len(T04_REQUIRED_FILES)} T04 artifacts."
     )
     return 0
 

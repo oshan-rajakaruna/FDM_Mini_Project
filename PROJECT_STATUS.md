@@ -20,7 +20,7 @@ A task may be marked `DONE` only if:
 | T01 | Dataset Verification | DONE | Dataset loaded; all required checks completed; notebook executed without errors; 4 unit tests and `python scripts/verify_stage1.py` passed. See `reports/evidence/01_dataset_verification.md`. |
 | T02 | Data Understanding | DONE | Complete 23-column inventory, feature groups, numerical/categorical/date/target/range summaries, and data dictionary created; notebook executed without errors; 10 tests and `python scripts/verify_stage1.py` passed. See `reports/evidence/02_data_understanding.md`. |
 | T03 | Missing-Value Analysis | DONE | Missingness notebook executed without errors; 15 tables and 4 figures created and checked; 16 tests and `python scripts/verify_stage1.py` passed (23 T03 artifacts verified). See `reports/evidence/03_missing_values.md`. |
-| T04 | Target and Feature Relationship EDA | TODO | Not started. |
+| T04 | Target and Feature Relationship EDA | DONE | Target, temporal, location, numerical, categorical, correlation, and RainToday/Rainfall analyses completed; notebook executed without errors; 12 tables and 6 figures created and checked; 24 tests and `python scripts/verify_stage1.py` passed (22 T04 artifacts verified). See `reports/evidence/04_target_relationships.md`. |
 | T05 | Outlier and Suspicious-Value Analysis | TODO | Not started. |
 | T06 | Leakage and Chronological Split Strategy | TODO | Not started. |
 | T07 | Data Preprocessing | TODO | Not started. |

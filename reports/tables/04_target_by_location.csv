@@ -1,0 +1,50 @@
+Location,Total record count,Labelled record count,Yes count,No count,Missing target count,Rain rate (Yes percentage),Observation-count flag,Rain-rate position
+Adelaide,3193,3090,688,2402,103,22.2654,Typical/higher count,Middle half
+Albany,3040,3016,902,2114,24,29.9072,Typical/higher count,Relatively high (upper quartile)
+Albury,3040,3011,618,2393,29,20.5247,Typical/higher count,Middle half
+AliceSprings,3040,3031,244,2787,9,8.0501,Typical/higher count,Relatively low (lower quartile)
+BadgerysCreek,3009,2928,583,2345,81,19.9112,Lower-quartile count; percentage may be less stable,Middle half
+Ballarat,3040,3028,781,2247,12,25.7926,Typical/higher count,Middle half
+Bendigo,3040,3034,562,2472,6,18.5234,Typical/higher count,Middle half
+Brisbane,3193,3161,709,2452,32,22.4296,Typical/higher count,Middle half
+Cairns,3040,2988,950,2038,52,31.7938,Typical/higher count,Relatively high (upper quartile)
+Canberra,3436,3418,629,2789,18,18.4026,Typical/higher count,Relatively low (lower quartile)
+Cobar,3009,2988,386,2602,21,12.9183,Typical/higher count,Relatively low (lower quartile)
+CoffsHarbour,3009,2953,869,2084,56,29.4277,Typical/higher count,Relatively high (upper quartile)
+Dartmoor,3009,2943,922,2021,66,31.3286,Lower-quartile count; percentage may be less stable,Relatively high (upper quartile)
+Darwin,3193,3192,852,2340,1,26.6917,Typical/higher count,Relatively high (upper quartile)
+GoldCoast,3040,2980,775,2205,60,26.0067,Typical/higher count,Middle half
+Hobart,3193,3188,761,2427,5,23.8708,Typical/higher count,Middle half
+Katherine,1578,1559,265,1294,19,16.9981,Lower-quartile count; percentage may be less stable,Relatively low (lower quartile)
+Launceston,3040,3028,699,2329,12,23.0845,Typical/higher count,Middle half
+Melbourne,3193,2435,636,1799,758,26.1191,Lower-quartile count; percentage may be less stable,Middle half
+MelbourneAirport,3009,3009,653,2356,0,21.7016,Typical/higher count,Middle half
+Mildura,3009,3007,327,2680,2,10.8746,Typical/higher count,Relatively low (lower quartile)
+Moree,3009,2854,394,2460,155,13.8052,Lower-quartile count; percentage may be less stable,Relatively low (lower quartile)
+MountGambier,3040,3030,920,2110,10,30.363,Typical/higher count,Relatively high (upper quartile)
+MountGinini,3040,2907,819,2088,133,28.1734,Lower-quartile count; percentage may be less stable,Relatively high (upper quartile)
+Newcastle,3039,2955,731,2224,84,24.7377,Typical/higher count,Middle half
+Nhil,1578,1569,242,1327,9,15.4238,Lower-quartile count; percentage may be less stable,Relatively low (lower quartile)
+NorahHead,3004,2929,808,2121,75,27.5862,Lower-quartile count; percentage may be less stable,Relatively high (upper quartile)
+NorfolkIsland,3009,2964,919,2045,45,31.0054,Typical/higher count,Relatively high (upper quartile)
+Nuriootpa,3009,3002,592,2410,7,19.7202,Typical/higher count,Middle half
+PearceRAAF,3009,2762,505,2257,247,18.2839,Lower-quartile count; percentage may be less stable,Relatively low (lower quartile)
+Penrith,3039,2964,595,2369,75,20.0742,Typical/higher count,Middle half
+Perth,3193,3193,645,2548,0,20.2004,Typical/higher count,Middle half
+PerthAirport,3009,3009,567,2442,0,18.8435,Typical/higher count,Middle half
+Portland,3009,2996,1095,1901,13,36.5487,Typical/higher count,Relatively high (upper quartile)
+Richmond,3009,2951,560,2391,58,18.9766,Lower-quartile count; percentage may be less stable,Middle half
+Sale,3009,3000,643,2357,9,21.4333,Typical/higher count,Middle half
+SalmonGums,3001,2955,472,2483,46,15.9729,Typical/higher count,Relatively low (lower quartile)
+Sydney,3344,3337,865,2472,7,25.9215,Typical/higher count,Middle half
+SydneyAirport,3009,3005,774,2231,4,25.7571,Typical/higher count,Middle half
+Townsville,3040,3033,519,2514,7,17.1118,Typical/higher count,Relatively low (lower quartile)
+Tuggeranong,3039,2998,568,2430,41,18.946,Typical/higher count,Middle half
+Uluru,1578,1521,116,1405,57,7.6266,Lower-quartile count; percentage may be less stable,Relatively low (lower quartile)
+WaggaWagga,3009,2976,536,2440,33,18.0108,Typical/higher count,Relatively low (lower quartile)
+Walpole,3006,2819,949,1870,187,33.6644,Lower-quartile count; percentage may be less stable,Relatively high (upper quartile)
+Watsonia,3009,2999,738,2261,10,24.6082,Typical/higher count,Middle half
+Williamtown,3009,2553,700,1853,456,27.4187,Lower-quartile count; percentage may be less stable,Relatively high (upper quartile)
+Witchcliffe,3009,2952,879,2073,57,29.7764,Typical/higher count,Relatively high (upper quartile)
+Wollongong,3040,2983,713,2270,57,23.9021,Typical/higher count,Middle half
+Woomera,3009,2990,202,2788,19,6.7559,Typical/higher count,Relatively low (lower quartile)

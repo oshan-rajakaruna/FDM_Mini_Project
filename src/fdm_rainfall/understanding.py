@@ -106,7 +106,7 @@ UNITS = {
     "Cloud3pm": "oktas (eighths of sky covered; documented scale 0–8)",
     "Temp9am": "degrees Celsius (°C)",
     "Temp3pm": "degrees Celsius (°C)",
-    "RainToday": "No/Yes category",
+    "RainToday": "No/Yes category; T04-observed convention is Rainfall > 1.0 mm",
     "RainTomorrow": "No/Yes category",
 }
 
@@ -132,7 +132,10 @@ DESCRIPTIONS = {
     "Cloud3pm": "Fraction of the sky obscured by cloud at 3pm.",
     "Temp9am": "Temperature at 9am.",
     "Temp3pm": "Temperature at 3pm.",
-    "RainToday": "Binary indicator of whether the source definition's daily rainfall threshold was exceeded.",
+    "RainToday": (
+        "Binary indicator whose observed dataset convention is Rainfall > 1.0 mm. "
+        "This differs at the exact 1.0 mm boundary from the proposal wording '1 mm or more'."
+    ),
     "RainTomorrow": "Target indicating whether rain was recorded on the following day.",
 }
 

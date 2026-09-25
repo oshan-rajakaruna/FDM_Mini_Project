@@ -1,0 +1,9 @@
+Metric,Value,Context
+No count,110316.0,rows
+Yes count,31877.0,rows
+No percentage,77.5819,percentage of labelled rows
+Yes percentage,22.4181,percentage of labelled rows
+Missing target count,3267.0,rows
+Labelled total,142193.0,rows
+Majority/minority ratio,3.4607,majority rows per minority row
+Baseline majority-class accuracy,77.5819,descriptive percentage; no model trained
