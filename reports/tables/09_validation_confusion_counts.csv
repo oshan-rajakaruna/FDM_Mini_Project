@@ -1,0 +1,5 @@
+Model,TN,FP,FN,TP
+Logistic Regression,16279,711,2383,1969
+Decision Tree,14721,2269,2144,2208
+Random Forest,16452,538,2441,1911
+Gradient Boosting,16339,651,2398,1954

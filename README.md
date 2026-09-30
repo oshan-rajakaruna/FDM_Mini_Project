@@ -7,15 +7,22 @@ rainfall and presenting weather-risk information for decision support.
 
 ## Current scope
 
-T00 Project Setup through T08 Feature Engineering have been completed. The
-Progress Evaluation 1 implementation stage ends here; model development has not
-started.
+T00 Project Setup through T09 Baseline Model Development have been completed.
+T09 fits exactly four untuned classifiers on the chronological Train subset and
+compares them only on Validation. The held-out Test subset remains unevaluated;
+no tuning, resampling, threshold optimization, feature selection, or final
+model selection has started.
 
 The T08 engineered default uses cyclical month, five within-day weather
 differences, and cyclical wind direction with explicit missing indicators. The
 original T07 preprocessing option remains available. Year and transformed
 rainfall are optional, and climate-zone grouping is deferred until an
 authoritative mapping is available.
+
+The T09 baselines are Logistic Regression (scaled engineered inputs), Decision
+Tree, Random Forest, and Gradient Boosting (unscaled engineered inputs). See
+`reports/evidence/09_baseline_models.md` for the Validation-only results and
+verification record.
 
 ## RainToday threshold clarification
 

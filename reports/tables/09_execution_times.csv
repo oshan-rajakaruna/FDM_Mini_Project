@@ -1,0 +1,7 @@
+Model,Fit seconds,Validation prediction and probability seconds
+Logistic Regression,1.0206191999604926,0.024002499994821846
+Decision Tree,2.6691562000196427,0.036568399984389544
+Random Forest,2.4734995999606326,0.18883200001437217
+Gradient Boosting,32.657172700040974,0.07900299993343651
+All four models,40.00830670003779,
+Scaled + unscaled preprocessing,1.5376324000535533,

@@ -61,4 +61,6 @@ reports/tables/*
 !reports/figures/preprocessing/*.png
 !reports/figures/feature_engineering/
 !reports/figures/feature_engineering/*.png
+!reports/figures/baseline_models/
+!reports/figures/baseline_models/*.png
 !reports/tables/*.csv
