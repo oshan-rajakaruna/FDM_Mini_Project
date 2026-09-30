@@ -1,0 +1,8 @@
+Stage,Seconds
+Fold preprocessing (scaled + unscaled),1.7919387000147253
+Logistic Regression Train-CV search,10.820740099996328
+Decision Tree Train-CV search,21.008858699933626
+Random Forest Train-CV search,55.14894009998534
+Gradient Boosting Train-CV search,96.33843229990453
+Complete Train preprocessing (scaled + unscaled),0.9817399999592453
+Total preprocessing and search,186.0906498997938

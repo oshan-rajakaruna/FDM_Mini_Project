@@ -1,0 +1,4 @@
+Fold,Train first date,Train last date,Validation first date,Validation last date,Train rows,Validation rows,Train unique dates,Validation unique dates,Row overlap,Date overlap,Strict chronology
+1,2007-11-01,2009-07-28,2009-07-29,2011-05-24,11819,28665,636,635,0,0,True
+2,2007-11-01,2011-05-24,2011-05-25,2013-04-17,40484,28720,1271,635,0,0,True
+3,2007-11-01,2013-04-17,2013-04-18,2015-01-12,69204,30342,1906,635,0,0,True

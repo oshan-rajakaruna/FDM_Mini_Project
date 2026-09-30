@@ -1,0 +1,5 @@
+Model,Final Train fit seconds,Validation prediction and probability seconds
+Logistic Regression,0.6907523999689147,0.014688199968077242
+Decision Tree,1.150849899975583,0.01682090002577752
+Random Forest,3.183274499955587,0.19422689999919385
+Gradient Boosting,23.142322800005786,0.04919319995678961

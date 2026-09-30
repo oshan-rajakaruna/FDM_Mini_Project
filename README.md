@@ -7,11 +7,16 @@ rainfall and presenting weather-risk information for decision support.
 
 ## Current scope
 
-T00 Project Setup through T09 Baseline Model Development have been completed.
-T09 fits exactly four untuned classifiers on the chronological Train subset and
-compares them only on Validation. The held-out Test subset remains unevaluated;
-no tuning, resampling, threshold optimization, feature selection, or final
-model selection has started.
+T00 Project Setup through T10 Leakage-Safe Hyperparameter Tuning have been
+completed. T10 tunes the four T09 classifier families using three whole-date,
+expanding Train-only cross-validation folds with fold-local preprocessing and
+PR-AUC as the sole performance metric for candidate selection. ROC-AUC, F1,
+recall, and balanced accuracy are interpretive only; exact PR-AUC ties use
+original candidate order as a neutral deterministic tie-break, and no current
+winner required it. Each selected configuration is refitted on complete Train
+and evaluated once on Validation. The held-out Test subset remains unevaluated;
+no resampling, threshold optimization, feature selection, or final-model
+selection has started.
 
 The T08 engineered default uses cyclical month, five within-day weather
 differences, and cyclical wind direction with explicit missing indicators. The
@@ -22,6 +27,8 @@ authoritative mapping is available.
 The T09 baselines are Logistic Regression (scaled engineered inputs), Decision
 Tree, Random Forest, and Gradient Boosting (unscaled engineered inputs). See
 `reports/evidence/09_baseline_models.md` for the Validation-only results and
+verification record. See `reports/evidence/10_hyperparameter_tuning.md` for the
+T10 search design, selected configurations, Validation-only comparison, and
 verification record.
 
 ## RainToday threshold clarification

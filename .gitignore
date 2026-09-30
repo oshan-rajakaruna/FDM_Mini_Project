@@ -63,4 +63,6 @@ reports/tables/*
 !reports/figures/feature_engineering/*.png
 !reports/figures/baseline_models/
 !reports/figures/baseline_models/*.png
+!reports/figures/hyperparameter_tuning/
+!reports/figures/hyperparameter_tuning/*.png
 !reports/tables/*.csv
