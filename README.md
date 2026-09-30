@@ -7,16 +7,16 @@ rainfall and presenting weather-risk information for decision support.
 
 ## Current scope
 
-T00 Project Setup through T10 Leakage-Safe Hyperparameter Tuning have been
-completed. T10 tunes the four T09 classifier families using three whole-date,
-expanding Train-only cross-validation folds with fold-local preprocessing and
-PR-AUC as the sole performance metric for candidate selection. ROC-AUC, F1,
-recall, and balanced accuracy are interpretive only; exact PR-AUC ties use
-original candidate order as a neutral deterministic tie-break, and no current
-winner required it. Each selected configuration is refitted on complete Train
-and evaluated once on Validation. The held-out Test subset remains unevaluated;
-no resampling, threshold optimization, feature selection, or final-model
-selection has started.
+T00 Project Setup through T11 Controlled Feature / Representation Optimization
+have been completed. T11 evaluates exactly four pre-declared T08
+representations for the four fixed T10-tuned model families using whole-date,
+expanding Train-only cross-validation and fold-local preprocessing. PR-AUC is
+the sole representation-selection metric. Logistic Regression selected the
+log-Rainfall replacement, Decision Tree and Random Forest retained the default,
+and Gradient Boosting selected Year; the observed changes were small and mixed.
+The held-out Test subset remains unevaluated, and no final model has been
+selected. Final selection and one-time Test evaluation remain reserved for
+T12.
 
 The T08 engineered default uses cyclical month, five within-day weather
 differences, and cyclical wind direction with explicit missing indicators. The
@@ -29,7 +29,9 @@ Tree, Random Forest, and Gradient Boosting (unscaled engineered inputs). See
 `reports/evidence/09_baseline_models.md` for the Validation-only results and
 verification record. See `reports/evidence/10_hyperparameter_tuning.md` for the
 T10 search design, selected configurations, Validation-only comparison, and
-verification record.
+verification record. See `reports/evidence/11_feature_optimization.md` for the
+controlled feature-variant experiment, Train-CV selections, Validation-only
+comparison, and verification record.
 
 ## RainToday threshold clarification
 

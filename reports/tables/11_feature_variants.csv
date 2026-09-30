@@ -1,0 +1,5 @@
+Variant,Add Year,Replace Rainfall with log1p
+V0_DEFAULT,False,False
+V1_ADD_YEAR,True,False
+V2_LOG_RAINFALL_REPLACE,False,True
+V3_YEAR_AND_LOG_RAINFALL,True,True

@@ -1,0 +1,5 @@
+Model,Selected feature variant,Final fit and Validation prediction seconds
+Logistic Regression,V2_LOG_RAINFALL_REPLACE,1.0259147000033408
+Decision Tree,V0_DEFAULT,1.3753757999511436
+Random Forest,V0_DEFAULT,3.983824499999173
+Gradient Boosting,V1_ADD_YEAR,30.590956500032917

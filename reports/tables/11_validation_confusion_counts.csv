@@ -1,0 +1,5 @@
+Model,Selected feature variant,TN,FP,FN,TP
+Logistic Regression,V2_LOG_RAINFALL_REPLACE,16268,722,2388,1964
+Decision Tree,V0_DEFAULT,13988,3002,1250,3102
+Random Forest,V0_DEFAULT,16465,525,2476,1876
+Gradient Boosting,V1_ADD_YEAR,16339,651,2404,1948
