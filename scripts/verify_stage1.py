@@ -43,6 +43,13 @@ T00_REQUIRED_DIRECTORIES = (
     "scripts",
 )
 
+T08_ALLOWED_MODEL_PATHS = frozenset(
+    {
+        "models",
+        "models/final_rainfall_model.joblib",
+    }
+)
+
 T01_REQUIRED_FILES = (
     "data/raw/weatherAUS.csv",
     "notebooks/00_dataset_verification.ipynb",
@@ -1874,6 +1881,16 @@ def _check_t08_documentation(failures: list[str]) -> None:
         failures.append("T08 is not marked DONE with verification evidence in PROJECT_STATUS.md")
 
 
+def _is_t08_out_of_scope_path(relative_path: Path) -> bool:
+    """Reject application/model paths except the one intended T12 artifact."""
+
+    normalized = relative_path.as_posix().lower()
+    parts = set(normalized.split("/"))
+    if "models" in parts and normalized not in T08_ALLOWED_MODEL_PATHS:
+        return True
+    return bool({"backend", "frontend", "modeling"}.intersection(parts))
+
+
 def _check_t08_scope(failures: list[str]) -> None:
     notebook_path = PROJECT_ROOT / "notebooks/07_feature_engineering.ipynb"
     executable_texts = [
@@ -1899,12 +1916,14 @@ def _check_t08_scope(failures: list[str]) -> None:
         if any(token in text for text in executable_texts):
             failures.append(f"T08 executable code contains out-of-scope operation: {token}")
 
-    forbidden_path_parts = {"backend", "frontend", "models", "modeling"}
+    # Permit only the intended persisted T12 artifact, while continuing to
+    # reject arbitrary model files and prematurely implemented app layers.
     for path in PROJECT_ROOT.rglob("*"):
         if ".git" in path.parts:
             continue
-        if forbidden_path_parts.intersection(part.lower() for part in path.parts):
-            failures.append(f"T08 found an out-of-scope project path: {path.relative_to(PROJECT_ROOT)}")
+        relative_path = path.relative_to(PROJECT_ROOT)
+        if _is_t08_out_of_scope_path(relative_path):
+            failures.append(f"T08 found an out-of-scope project path: {relative_path}")
             break
 
 

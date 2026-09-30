@@ -1,0 +1,2 @@
+Model,Selected feature variant,Processed feature count,Development rows,Test rows,Threshold,Accuracy,Balanced Accuracy,Precision (Yes),Recall (Yes),F1 (Yes),ROC-AUC,PR-AUC,TN,FP,FN,TP
+Random Forest,V0_DEFAULT,89,120888,21305,0.5,0.8442149730110303,0.7245766741746795,0.7660676210782821,0.4964469009080142,0.6024673613606419,0.8758649512620976,0.7293491092285072,15471,768,2551,2515

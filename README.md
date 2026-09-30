@@ -7,16 +7,20 @@ rainfall and presenting weather-risk information for decision support.
 
 ## Current scope
 
-T00 Project Setup through T11 Controlled Feature / Representation Optimization
-have been completed. T11 evaluates exactly four pre-declared T08
-representations for the four fixed T10-tuned model families using whole-date,
-expanding Train-only cross-validation and fold-local preprocessing. PR-AUC is
-the sole representation-selection metric. Logistic Regression selected the
-log-Rainfall replacement, Decision Tree and Random Forest retained the default,
-and Gradient Boosting selected Year; the observed changes were small and mixed.
-The held-out Test subset remains unevaluated, and no final model has been
-selected. Final selection and one-time Test evaluation remain reserved for
-T12.
+T00 Project Setup through T12 Final Model Selection and Final Holdout Test
+Evaluation have been completed. T12 ranked the four T11-selected candidates by
+full-precision Validation PR-AUC before Test access and selected Random Forest
+with the V0 default representation. The frozen pipeline was refitted on 120,888
+Train+Validation rows and evaluated once on the 21,305-row chronological Test
+period. Final Test PR-AUC was 0.729349 and ROC-AUC was 0.875865. No model,
+representation, hyperparameter, resampling, or threshold decision changed
+after Test evaluation.
+
+The fitted pipeline is persisted at `models/final_rainfall_model.joblib`, with
+its Train+Validation-fitted preprocessing state, ordered feature schema,
+positive-class and threshold definitions, and inference metadata. Progress
+Evaluation 2 modeling and optimization implementation is complete; backend and
+frontend implementation has not started.
 
 The T08 engineered default uses cyclical month, five within-day weather
 differences, and cyclical wind direction with explicit missing indicators. The
@@ -31,7 +35,9 @@ verification record. See `reports/evidence/10_hyperparameter_tuning.md` for the
 T10 search design, selected configurations, Validation-only comparison, and
 verification record. See `reports/evidence/11_feature_optimization.md` for the
 controlled feature-variant experiment, Train-CV selections, Validation-only
-comparison, and verification record.
+comparison, and verification record. See
+`reports/evidence/12_final_model_selection.md` for the pre-Test final selection,
+one-time holdout evaluation, serialization verification, and completion record.
 
 ## RainToday threshold clarification
 
@@ -48,6 +54,7 @@ data/
   interim/            Intermediate data artifacts
   processed/          Analysis-ready data artifacts
 notebooks/            Future analysis notebooks
+models/                Persisted trained model artifacts
 src/fdm_rainfall/     Python package source
 tests/                Automated tests
 reports/
@@ -66,5 +73,7 @@ python scripts/verify_stage1.py
 ```
 
 The command exits with status code `0`, prints PASS results for T00 through T08,
-and reports completion of the Progress Evaluation 1 implementation stage when
-all completed-stage requirements are satisfied.
+and reports completion of the Progress Evaluation 1 implementation stage. T12
+verification additionally uses the focused and full unit-test suites, the
+executed final-model notebook, artifact round-trip checks, and the evidence
+record above.
