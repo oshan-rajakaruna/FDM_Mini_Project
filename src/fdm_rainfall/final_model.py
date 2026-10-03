@@ -1,4 +1,4 @@
-"""Pre-Test final selection and one-time holdout evaluation utilities for T12."""
+"""Dynamic final selection, persistence, and one-time holdout evaluation."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import joblib
 import matplotlib.pyplot as plt
@@ -45,12 +45,21 @@ FINAL_SELECTION_RULE = (
     "Gradient Boosting"
 )
 FINAL_RF_N_JOBS = 1
+MODEL_ARTIFACT_FILENAMES = {
+    "Logistic Regression": "logistic_regression.joblib",
+    "Decision Tree": "decision_tree.joblib",
+    "Random Forest": "random_forest.joblib",
+    "Gradient Boosting": "gradient_boosting.joblib",
+}
+ARTIFACT_ROLES = frozenset({"final", "comparison"})
 
 
 def frozen_model_hyperparameters(model_family: str) -> dict[str, Any]:
     """Return the complete reproducible model record frozen before Test."""
 
     parameters = deepcopy(T10_TUNED_PARAMETERS[model_family])
+    if model_family == "Logistic Regression":
+        parameters["max_iter"] = 1000
     parameters["random_state"] = RANDOM_STATE
     return parameters
 
@@ -220,6 +229,37 @@ def select_and_freeze_final_configuration(
     )
 
 
+def freeze_all_candidate_configurations(
+    validation_candidates: pd.DataFrame,
+) -> tuple[FinalSelection, dict[str, FrozenFinalConfiguration]]:
+    """Freeze all four candidates while selecting exactly one by Validation PR-AUC."""
+
+    selection = select_and_freeze_final_configuration(validation_candidates)
+    indexed = validation_candidates.set_index("Model", drop=False)
+    configurations: dict[str, FrozenFinalConfiguration] = {}
+    for model_family in MODEL_NAMES:
+        if model_family == selection.configuration.model_family:
+            configurations[model_family] = selection.configuration
+            continue
+        row = indexed.loc[model_family]
+        configurations[model_family] = FrozenFinalConfiguration(
+            model_family=model_family,
+            hyperparameters=frozen_model_hyperparameters(model_family),
+            feature_variant=str(row["Selected feature variant"]),
+            scale_numeric=model_family == "Logistic Regression",
+            positive_class=POSITIVE_LABEL,
+            negative_class=NEGATIVE_LABEL,
+            threshold=DEFAULT_THRESHOLD,
+            validation_metrics={
+                metric: float(row[metric]) for metric in COMPARISON_METRICS
+            },
+            selection_rule=FINAL_SELECTION_RULE,
+            tie_break_required=False,
+            test_consulted=False,
+        )
+    return selection, configurations
+
+
 def frozen_configuration_table(
     configuration: FrozenFinalConfiguration,
 ) -> pd.DataFrame:
@@ -338,6 +378,205 @@ def build_final_estimator(
     return estimator
 
 
+def fit_development_bundle(
+    development: pd.DataFrame,
+    configuration: FrozenFinalConfiguration,
+    artifact_role: str,
+) -> FinalRainfallModelBundle:
+    """Fit one frozen candidate on Train+Validation without accepting Test data."""
+
+    if artifact_role not in ARTIFACT_ROLES:
+        raise ValueError(f"Unknown artifact role: {artifact_role}")
+    if configuration.test_consulted:
+        raise ValueError("A Test-informed configuration cannot be persisted")
+    development_before = development.copy(deep=True)
+    parts = separate_supervised_components(development)
+    raw_development = pd.concat(
+        [parts.dates.rename(DATE_COLUMN), parts.X], axis=1
+    )
+    engineered = apply_feature_variant(
+        raw_development, configuration.feature_variant
+    )
+    preprocessor = FeatureVariantPreprocessor(
+        configuration.feature_variant, configuration.scale_numeric
+    )
+    X_development = preprocessor.fit_transform(engineered)
+    estimator = build_final_estimator(configuration)
+    estimator.fit(X_development, parts.y)
+    pd.testing.assert_frame_equal(development, development_before)
+
+    metadata = {
+        "project": "IT3051 FDM Mini Project",
+        "model_version": "T12-persisted-v2",
+        "model_id": MODEL_ARTIFACT_FILENAMES[configuration.model_family].removesuffix(
+            ".joblib"
+        ),
+        "model_family": configuration.model_family,
+        "artifact_role": artifact_role,
+        "hyperparameters": deepcopy(configuration.hyperparameters),
+        "execution_settings": final_execution_settings(configuration.model_family),
+        "feature_variant": configuration.feature_variant,
+        "scale_numeric": configuration.scale_numeric,
+        "scaling_mode": "scaled" if configuration.scale_numeric else "unscaled",
+        "positive_class": configuration.positive_class,
+        "negative_class": configuration.negative_class,
+        "threshold": configuration.threshold,
+        "selection_rule": configuration.selection_rule,
+        "test_consulted_during_selection": configuration.test_consulted,
+        "development_first_date": pd.to_datetime(parts.dates)
+        .min()
+        .date()
+        .isoformat(),
+        "development_last_date": pd.to_datetime(parts.dates)
+        .max()
+        .date()
+        .isoformat(),
+        "development_rows": len(X_development),
+        "processed_feature_count": X_development.shape[1],
+        "expected_raw_columns": [DATE_COLUMN, *predictor_columns()],
+        "contains_raw_rows": False,
+        "contains_test_labels": False,
+        "contains_test_predictions": False,
+        "contains_test_probabilities": False,
+        "contains_test_metrics": False,
+        "test_used_for_artifact_fitting": False,
+        "post_test_model_changes": False,
+    }
+    return FinalRainfallModelBundle(
+        estimator=estimator,
+        preprocessor=preprocessor,
+        configuration=configuration,
+        processed_feature_names=tuple(X_development.columns),
+        expected_raw_columns=(DATE_COLUMN, *predictor_columns()),
+        metadata=metadata,
+    )
+
+
+def evaluate_fitted_final_bundle(
+    bundle: FinalRainfallModelBundle,
+    test: pd.DataFrame,
+) -> FinalTestEvaluation:
+    """Evaluate only the already-selected, already-fitted final bundle on Test."""
+
+    if bundle.metadata.get("artifact_role") != "final":
+        raise ValueError("Only the selected final bundle may receive Test data")
+    if bundle.configuration.test_consulted:
+        raise ValueError("A Test-informed configuration cannot be evaluated")
+    test_before = test.copy(deep=True)
+    parts = separate_supervised_components(test)
+    test_dates = pd.to_datetime(parts.dates, errors="coerce")
+    if test_dates.isna().any():
+        raise ValueError("Test dates must be complete")
+    development_last = pd.Timestamp(bundle.metadata["development_last_date"])
+    if development_last >= test_dates.min():
+        raise ValueError("Development must end before Test begins")
+    if set(bundle.preprocessor.fit_index_).intersection(test.index):
+        raise ValueError("Test rows cannot appear in fitted preprocessing state")
+
+    raw_test = pd.concat([parts.dates.rename(DATE_COLUMN), parts.X], axis=1)
+    probabilities_array = bundle.predict_positive_probability(raw_test)
+    predictions_array = np.where(
+        probabilities_array >= bundle.configuration.threshold,
+        bundle.configuration.positive_class,
+        bundle.configuration.negative_class,
+    )
+    probabilities = pd.Series(
+        probabilities_array,
+        index=parts.y.index,
+        name=f"{bundle.configuration.model_family} positive probability",
+    )
+    predictions = pd.Series(
+        predictions_array,
+        index=parts.y.index,
+        name=f"{bundle.configuration.model_family} prediction",
+    )
+    metrics = calculate_binary_metrics(parts.y, predictions, probabilities)
+    row: dict[str, object] = {
+        "Model": bundle.configuration.model_family,
+        "Selected feature variant": bundle.configuration.feature_variant,
+        "Processed feature count": len(bundle.processed_feature_names),
+        "Development rows": bundle.metadata["development_rows"],
+        "Test rows": len(test),
+        "Threshold": bundle.configuration.threshold,
+    }
+    row.update(metrics)
+    metadata = deepcopy(bundle.metadata)
+    metadata.update(
+        {
+            "test_first_date": test_dates.min().date().isoformat(),
+            "test_last_date": test_dates.max().date().isoformat(),
+            "test_rows_evaluated": len(test),
+            "contains_test_labels": False,
+            "contains_test_predictions": False,
+            "contains_test_probabilities": False,
+            "contains_test_metrics": False,
+            "post_test_model_changes": False,
+        }
+    )
+    evaluated_bundle = FinalRainfallModelBundle(
+        estimator=bundle.estimator,
+        preprocessor=bundle.preprocessor,
+        configuration=bundle.configuration,
+        processed_feature_names=bundle.processed_feature_names,
+        expected_raw_columns=bundle.expected_raw_columns,
+        metadata=metadata,
+    )
+    pd.testing.assert_frame_equal(test, test_before)
+    return FinalTestEvaluation(
+        bundle=evaluated_bundle,
+        comparison=pd.DataFrame([row]),
+        predictions=predictions,
+        positive_probabilities=probabilities,
+    )
+
+
+def model_artifact_paths(
+    selected_model_family: str,
+    models_directory: str | Path,
+) -> dict[str, Path]:
+    """Route the Validation winner to the final path and all others to comparison."""
+
+    if selected_model_family not in MODEL_NAMES:
+        raise ValueError(f"Unknown selected model: {selected_model_family}")
+    root = Path(models_directory)
+    return {
+        model_family: (
+            root / "final_rainfall_model.joblib"
+            if model_family == selected_model_family
+            else root / "comparison" / MODEL_ARTIFACT_FILENAMES[model_family]
+        )
+        for model_family in MODEL_NAMES
+    }
+
+
+def save_ranked_model_bundles(
+    bundles: Mapping[str, FinalRainfallModelBundle],
+    selected_model_family: str,
+    models_directory: str | Path,
+) -> dict[str, Path]:
+    """Persist one dynamic winner and exactly three comparison bundles."""
+
+    if set(bundles) != set(MODEL_NAMES):
+        raise ValueError("Exactly the four established model bundles are required")
+    paths = model_artifact_paths(selected_model_family, models_directory)
+    comparison_directory = Path(models_directory) / "comparison"
+    comparison_directory.mkdir(parents=True, exist_ok=True)
+    for filename in MODEL_ARTIFACT_FILENAMES.values():
+        (comparison_directory / filename).unlink(missing_ok=True)
+
+    for model_family in MODEL_NAMES:
+        bundle = bundles[model_family]
+        expected_role = "final" if model_family == selected_model_family else "comparison"
+        if bundle.configuration.model_family != model_family:
+            raise ValueError("Bundle key and configured model family differ")
+        if bundle.metadata.get("artifact_role") != expected_role:
+            raise ValueError(
+                f"{model_family} must have artifact role {expected_role}"
+            )
+        save_final_bundle(bundle, paths[model_family])
+    return paths
+
+
 def fit_and_evaluate_final_model(
     prepared: PreparedFinalData,
     configuration: FrozenFinalConfiguration,
@@ -378,6 +617,7 @@ def fit_and_evaluate_final_model(
         "project": "IT3051 FDM Mini Project",
         "model_version": "T12-final-v1",
         "model_family": configuration.model_family,
+        "artifact_role": "final",
         "hyperparameters": deepcopy(configuration.hyperparameters),
         "execution_settings": final_execution_settings(configuration.model_family),
         "feature_variant": configuration.feature_variant,

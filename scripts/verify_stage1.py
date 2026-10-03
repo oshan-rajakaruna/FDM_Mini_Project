@@ -47,6 +47,11 @@ T08_ALLOWED_MODEL_PATHS = frozenset(
     {
         "models",
         "models/final_rainfall_model.joblib",
+        "models/comparison",
+        "models/comparison/logistic_regression.joblib",
+        "models/comparison/decision_tree.joblib",
+        "models/comparison/random_forest.joblib",
+        "models/comparison/gradient_boosting.joblib",
     }
 )
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import replace
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -26,13 +27,18 @@ from fdm_rainfall.final_model import (  # noqa: E402
     PreparedFinalData,
     build_final_estimator,
     combine_train_validation_after_selection,
+    evaluate_fitted_final_bundle,
     fit_and_evaluate_final_model,
+    fit_development_bundle,
     final_execution_settings,
+    freeze_all_candidate_configurations,
     frozen_model_hyperparameters,
     frozen_configuration_table,
     load_final_bundle,
     prepare_final_data,
     save_final_bundle,
+    save_ranked_model_bundles,
+    model_artifact_paths,
     select_and_freeze_final_configuration,
 )
 from fdm_rainfall.modeling import MODEL_NAMES, calculate_binary_metrics  # noqa: E402
@@ -193,6 +199,16 @@ class FinalModelTests(unittest.TestCase):
             self.assertEqual(estimator.get_params()[name], value)
         self.assertEqual(estimator.get_params()["n_jobs"], 1)
 
+    def test_logistic_configuration_records_existing_max_iter(self) -> None:
+        parameters = frozen_model_hyperparameters("Logistic Regression")
+        self.assertEqual(parameters["max_iter"], 1000)
+        estimator = build_final_estimator(
+            frozen_configuration(
+                "Logistic Regression", "V2_LOG_RAINFALL_REPLACE"
+            )
+        )
+        self.assertEqual(estimator.get_params()["max_iter"], 1000)
+
     def test_t11_selected_representation_is_preserved(self) -> None:
         result = select_and_freeze_final_configuration(candidate_evidence())
         self.assertEqual(result.configuration.feature_variant, "V0_DEFAULT")
@@ -342,6 +358,127 @@ class FinalModelTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "default threshold"):
             fit_and_evaluate_final_model(
                 toy_prepared(), replace(frozen_configuration(), threshold=0.4)
+            )
+
+    def test_all_four_candidate_configurations_are_frozen(self) -> None:
+        selection, configurations = freeze_all_candidate_configurations(
+            candidate_evidence()
+        )
+        self.assertEqual(selection.configuration.model_family, "Random Forest")
+        self.assertEqual(set(configurations), set(MODEL_NAMES))
+        self.assertEqual(
+            {
+                name: configuration.feature_variant
+                for name, configuration in configurations.items()
+            },
+            {
+                "Logistic Regression": "V2_LOG_RAINFALL_REPLACE",
+                "Decision Tree": "V0_DEFAULT",
+                "Random Forest": "V0_DEFAULT",
+                "Gradient Boosting": "V1_ADD_YEAR",
+            },
+        )
+        self.assertTrue(configurations["Logistic Regression"].scale_numeric)
+        self.assertFalse(configurations["Decision Tree"].scale_numeric)
+        self.assertFalse(configurations["Random Forest"].scale_numeric)
+        self.assertFalse(configurations["Gradient Boosting"].scale_numeric)
+
+    def test_artifact_routing_follows_dynamic_winner(self) -> None:
+        evidence = candidate_evidence((0.91, 0.50, 0.80, 0.70))
+        selection, _ = freeze_all_candidate_configurations(evidence)
+        self.assertEqual(selection.configuration.model_family, "Logistic Regression")
+        paths = model_artifact_paths(selection.configuration.model_family, "models")
+        self.assertEqual(
+            paths["Logistic Regression"], Path("models/final_rainfall_model.joblib")
+        )
+        self.assertEqual(
+            paths["Random Forest"],
+            Path("models/comparison/random_forest.joblib"),
+        )
+        self.assertNotIn(
+            Path("models/comparison/logistic_regression.joblib"), paths.values()
+        )
+
+    def test_development_bundle_fits_without_test(self) -> None:
+        development = synthetic_raw_frame().iloc[:16].copy()
+        bundle = fit_development_bundle(
+            development, frozen_configuration("Decision Tree"), "comparison"
+        )
+        self.assertEqual(bundle.metadata["artifact_role"], "comparison")
+        self.assertEqual(bundle.metadata["development_rows"], len(development))
+        self.assertTrue(bundle.preprocessor.is_fitted_)
+        self.assertFalse(bundle.metadata["test_used_for_artifact_fitting"])
+        for key in (
+            "contains_test_labels",
+            "contains_test_predictions",
+            "contains_test_probabilities",
+            "contains_test_metrics",
+        ):
+            self.assertFalse(bundle.metadata[key])
+
+    def test_comparison_bundle_cannot_receive_test(self) -> None:
+        frame = synthetic_raw_frame()
+        bundle = fit_development_bundle(
+            frame.iloc[:16].copy(),
+            frozen_configuration("Decision Tree"),
+            "comparison",
+        )
+        with self.assertRaisesRegex(ValueError, "selected final bundle"):
+            evaluate_fitted_final_bundle(bundle, frame.iloc[16:].copy())
+
+    def test_already_fitted_final_bundle_alone_receives_test(self) -> None:
+        frame = synthetic_raw_frame()
+        development, test = frame.iloc[:16].copy(), frame.iloc[16:].copy()
+        bundle = fit_development_bundle(
+            development, frozen_configuration("Decision Tree"), "final"
+        )
+        estimator_id = id(bundle.estimator)
+        result = evaluate_fitted_final_bundle(bundle, test)
+        self.assertEqual(id(result.bundle.estimator), estimator_id)
+        self.assertEqual(len(result.comparison), 1)
+        self.assertEqual(result.comparison.iloc[0]["Test rows"], len(test))
+        self.assertEqual(result.bundle.metadata["artifact_role"], "final")
+        self.assertEqual(result.bundle.metadata["test_rows_evaluated"], len(test))
+
+    def test_save_routing_persists_one_final_and_three_comparisons(self) -> None:
+        selection, configurations = freeze_all_candidate_configurations(
+            candidate_evidence()
+        )
+        bundles = {}
+        for model_family, configuration in configurations.items():
+            role = (
+                "final"
+                if model_family == selection.configuration.model_family
+                else "comparison"
+            )
+            bundles[model_family] = FinalRainfallModelBundle(
+                estimator=DecisionTreeClassifier(random_state=42),
+                preprocessor=None,  # type: ignore[arg-type]
+                configuration=configuration,
+                processed_feature_names=(),
+                expected_raw_columns=("Date", *predictor_columns()),
+                metadata={"artifact_role": role},
+            )
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            stale = root / "comparison" / "random_forest.joblib"
+            stale.parent.mkdir(parents=True)
+            stale.write_text("stale", encoding="utf-8")
+            paths = save_ranked_model_bundles(
+                bundles, selection.configuration.model_family, root
+            )
+            self.assertEqual(len(paths), 4)
+            self.assertTrue((root / "final_rainfall_model.joblib").is_file())
+            comparison_files = sorted(
+                path.name for path in (root / "comparison").iterdir()
+            )
+            self.assertEqual(
+                comparison_files,
+                [
+                    "decision_tree.joblib",
+                    "gradient_boosting.joblib",
+                    "logistic_regression.joblib",
+                ],
             )
 
 
