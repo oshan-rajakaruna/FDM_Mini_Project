@@ -1,77 +1,246 @@
-import { Check, CloudSun, MapPin, Wind } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
+import {
+  ArrowLeft,
+  ArrowRight,
+  Beaker,
+  Check,
+  CloudRain,
+  Info,
+  ListChecks,
+  MapPin,
+  RefreshCcw,
+  ShieldCheck,
+  Thermometer,
+  Wind,
+} from 'lucide-react'
+import { useEffect, useState } from 'react'
+import AtmosphereStep from '../components/prediction/AtmosphereStep'
+import LocationStep from '../components/prediction/LocationStep'
+import PredictionStepper from '../components/prediction/PredictionStepper'
+import ReviewStep from '../components/prediction/ReviewStep'
+import WeatherStep from '../components/prediction/WeatherStep'
 import SectionHeader from '../components/SectionHeader'
+import {
+  DEMO_FORM_VALUES,
+  INITIAL_FORM_VALUES,
+  normalizeStepValues,
+  validateAllSteps,
+  validateStep,
+} from '../utils/predictionForm'
 
 const steps = [
-  { number: '01', title: 'Location', icon: MapPin, description: 'Choose the observation location.' },
-  { number: '02', title: 'Weather', icon: CloudSun, description: 'Add core weather measurements.' },
-  { number: '03', title: 'Wind & Atmosphere', icon: Wind, description: 'Complete atmospheric conditions.' },
-  { number: '04', title: 'Review & Predict', icon: Check, description: 'Review inputs before prediction.' },
+  { title: 'Location & Observation', shortTitle: 'Location', icon: MapPin },
+  { title: 'Temperature & Rain', shortTitle: 'Weather', icon: Thermometer },
+  { title: 'Wind & Atmosphere', shortTitle: 'Wind & Atmosphere', icon: Wind },
+  { title: 'Review & Predict', shortTitle: 'Review & Predict', icon: ListChecks },
 ]
 
 export default function PredictPage() {
+  const [currentStep, setCurrentStep] = useState(0)
+  const [furthestStep, setFurthestStep] = useState(0)
+  const [values, setValues] = useState(() => ({ ...INITIAL_FORM_VALUES }))
+  const [errors, setErrors] = useState({})
+  const [demoLoaded, setDemoLoaded] = useState(false)
+  const [notice, setNotice] = useState('')
+
+  useEffect(() => {
+    const firstField = Object.keys(errors)[0]
+    if (!firstField) return undefined
+
+    let frameId
+    let attempts = 0
+    const focusWhenReady = () => {
+      const field = document.getElementById(firstField)
+      if (field) {
+        field.focus()
+        return
+      }
+      attempts += 1
+      if (attempts < 30) frameId = window.requestAnimationFrame(focusWhenReady)
+    }
+
+    frameId = window.requestAnimationFrame(focusWhenReady)
+    return () => window.cancelAnimationFrame(frameId)
+  }, [currentStep, errors])
+
+  const handleChange = (name, value) => {
+    setValues((current) => ({ ...current, [name]: value }))
+    setErrors((current) => {
+      if (!current[name]) return current
+      const next = { ...current }
+      delete next[name]
+      return next
+    })
+    setNotice('')
+  }
+
+  const validateAndNormalizeCurrentStep = () => {
+    const stepErrors = validateStep(currentStep, values)
+    if (Object.keys(stepErrors).length > 0) {
+      setErrors(stepErrors)
+      return false
+    }
+    setValues((current) => normalizeStepValues(currentStep, current))
+    setErrors({})
+    return true
+  }
+
+  const handleNext = () => {
+    if (!validateAndNormalizeCurrentStep()) return
+    const nextStep = Math.min(currentStep + 1, steps.length - 1)
+    setCurrentStep(nextStep)
+    setFurthestStep((current) => Math.max(current, nextStep))
+    setNotice('')
+  }
+
+  const handleBack = () => {
+    setCurrentStep((current) => Math.max(0, current - 1))
+    setErrors({})
+    setNotice('')
+  }
+
+  const handleStepSelect = (stepIndex) => {
+    if (stepIndex === currentStep || stepIndex > furthestStep) return
+    if (stepIndex > currentStep && !validateAndNormalizeCurrentStep()) return
+    setCurrentStep(stepIndex)
+    setErrors({})
+    setNotice('')
+  }
+
+  const handleReset = () => {
+    setValues({ ...INITIAL_FORM_VALUES })
+    setErrors({})
+    setCurrentStep(0)
+    setFurthestStep(0)
+    setDemoLoaded(false)
+    setNotice('')
+  }
+
+  const handleLoadExample = () => {
+    setValues({ ...DEMO_FORM_VALUES })
+    setErrors({})
+    setCurrentStep(0)
+    setFurthestStep(0)
+    setDemoLoaded(true)
+    setNotice('')
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    if (currentStep < steps.length - 1) {
+      handleNext()
+      return
+    }
+
+    const finalValidation = validateAllSteps(values)
+    if (finalValidation.stepIndex !== null) {
+      setCurrentStep(finalValidation.stepIndex)
+      setErrors(finalValidation.errors)
+      setNotice('')
+      return
+    }
+
+    setNotice('Prediction service will be connected in the next integration step.')
+  }
+
   return (
     <div className="page-container">
-      <SectionHeader
-        eyebrow="Prediction workspace"
-        title="Build tomorrow’s rainfall outlook."
-        description="The guided prediction workflow is being prepared. This foundation shows the journey without collecting data or calling a prediction service yet."
-      />
-
-      <ol className="mt-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Prediction steps">
-        {steps.map(({ number, title }, index) => (
-          <li
-            key={title}
-            className={`relative rounded-2xl border p-4 ${
-              index === 0
-                ? 'border-cyan-300/25 bg-cyan-300/10'
-                : 'border-white/10 bg-white/[0.035]'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <span className={`grid size-8 place-items-center rounded-lg text-xs font-extrabold ${index === 0 ? 'bg-cyan-300 text-slate-950' : 'bg-white/10 text-slate-400'}`}>
-                {number}
-              </span>
-              <span className={`text-sm font-bold ${index === 0 ? 'text-white' : 'text-slate-400'}`}>
-                {title}
-              </span>
-            </div>
-            {index < steps.length - 1 && (
-              <span className="absolute -right-2 top-1/2 z-10 hidden h-px w-4 bg-white/15 xl:block" />
-            )}
-          </li>
-        ))}
-      </ol>
-
-      <section className="mt-8 grid gap-5 lg:grid-cols-2">
-        {steps.map(({ number, title, icon: Icon, description }, index) => (
-          <motion.article
-            key={title}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.06 }}
-            className="glass-panel min-h-64 rounded-[1.5rem] p-6 sm:p-7"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <span className="grid size-12 place-items-center rounded-2xl border border-sky-300/15 bg-sky-300/10 text-cyan-200">
-                <Icon aria-hidden="true" size={23} strokeWidth={1.8} />
-              </span>
-              <span className="text-xs font-extrabold tracking-[0.2em] text-slate-600">{number}</span>
-            </div>
-            <h2 className="mt-7 text-xl font-bold text-white">{title}</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">{description}</p>
-            <div className="mt-7 rounded-xl border border-dashed border-white/15 bg-slate-950/20 px-4 py-5 text-center text-xs font-semibold text-slate-500">
-              Input controls will be added in the next implementation stage.
-            </div>
-          </motion.article>
-        ))}
-      </section>
-
-      <div className="mt-6 flex items-center justify-between rounded-2xl border border-amber-300/15 bg-amber-300/[0.055] px-5 py-4 text-sm text-amber-100/80">
-        <span>No prediction API is connected in this frontend foundation.</span>
-        <span className="hidden rounded-full bg-amber-300/10 px-3 py-1 text-xs font-bold sm:inline">Preview only</span>
+      <div className="grid gap-6 lg:grid-cols-[1fr_22rem] lg:items-end">
+        <SectionHeader
+          eyebrow="Prediction workspace"
+          title="Build tomorrow’s rainfall outlook."
+          description="Enter today’s raw weather observations through a guided four-step review. Missing-capable measurements can be marked as unavailable."
+        />
+        <aside className="flex gap-3 rounded-2xl border border-sky-300/15 bg-sky-300/[0.055] p-4 text-xs leading-5 text-slate-400">
+          <ShieldCheck aria-hidden="true" className="mt-0.5 shrink-0 text-cyan-200" size={19} />
+          <p>
+            Values stay in this frontend only. Nothing is submitted to a prediction service in this stage.
+          </p>
+        </aside>
       </div>
+
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+          <Info aria-hidden="true" size={15} />
+          Required fields are identified; all other inputs support missing values.
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={handleReset} className="secondary-button min-h-10 px-3.5 py-2 text-xs">
+            <RefreshCcw aria-hidden="true" size={15} /> Reset Form
+          </button>
+          <button type="button" onClick={handleLoadExample} className="secondary-button min-h-10 px-3.5 py-2 text-xs">
+            <Beaker aria-hidden="true" size={15} /> Load Example
+          </button>
+        </div>
+      </div>
+
+      {demoLoaded && (
+        <div role="status" className="mt-5 flex items-center gap-3 rounded-2xl border border-amber-300/20 bg-amber-300/[0.07] px-4 py-3 text-xs text-amber-100/80">
+          <Beaker aria-hidden="true" className="shrink-0 text-amber-200" size={18} />
+          <p>
+            <strong className="font-extrabold uppercase tracking-[0.12em] text-amber-200">Demo sample data</strong>
+            <span className="ml-2">Plausible values for interface demonstration only—not a real weather observation.</span>
+          </p>
+        </div>
+      )}
+
+      <div className="mt-7">
+        <PredictionStepper
+          steps={steps}
+          currentStep={currentStep}
+          furthestStep={furthestStep}
+          onStepSelect={handleStepSelect}
+        />
+      </div>
+
+      <form onSubmit={handleSubmit} noValidate className="mt-7">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, x: 18 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -12 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+          >
+            {currentStep === 0 && <LocationStep values={values} errors={errors} onChange={handleChange} />}
+            {currentStep === 1 && <WeatherStep values={values} errors={errors} onChange={handleChange} />}
+            {currentStep === 2 && <AtmosphereStep values={values} errors={errors} onChange={handleChange} />}
+            {currentStep === 3 && (
+              <ReviewStep values={values} onEdit={setCurrentStep} notice={notice} />
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="glass-panel mt-5 flex flex-col-reverse gap-3 rounded-2xl p-4 sm:flex-row sm:items-center sm:justify-between">
+          <button
+            type="button"
+            onClick={handleBack}
+            disabled={currentStep === 0}
+            className="secondary-button disabled:cursor-not-allowed disabled:opacity-35"
+          >
+            <ArrowLeft aria-hidden="true" size={17} /> Back
+          </button>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+            <span className="text-center text-xs font-semibold text-slate-500 sm:text-left">
+              Step {currentStep + 1} of {steps.length}
+            </span>
+            {currentStep < steps.length - 1 ? (
+              <button type="submit" className="primary-button w-full sm:w-auto">
+                Continue <ArrowRight aria-hidden="true" size={17} />
+              </button>
+            ) : (
+              <button type="submit" className="primary-button w-full sm:w-auto">
+                <CloudRain aria-hidden="true" size={18} /> Predict Tomorrow&apos;s Rain
+              </button>
+            )}
+          </div>
+        </div>
+      </form>
+
+      <p className="mt-4 flex items-center justify-center gap-2 text-center text-[0.68rem] leading-5 text-slate-600">
+        <Check aria-hidden="true" size={13} /> Raw weather inputs only—no engineered, encoded, or scaled values are requested.
+      </p>
     </div>
   )
 }
-
