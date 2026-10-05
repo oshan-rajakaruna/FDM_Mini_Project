@@ -29,7 +29,7 @@ export default function LocationField({ value, error, onChange, stations }) {
       <datalist id="weather-station-options">
         {stations.map((station) => <option key={station} value={station} />)}
       </datalist>
-      <p id="Location-hint" className="mt-2 text-[0.68rem] leading-5 text-slate-600">
+      <p id="Location-hint" className="mt-2 text-[0.68rem] leading-5 text-slate-500">
         Search the 49 weather-station locations used by the project.
       </p>
       {error && <p id={errorId} role="alert" className="mt-2 text-xs leading-5 text-rose-300">{error}</p>}

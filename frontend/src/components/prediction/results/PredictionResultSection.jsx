@@ -43,7 +43,7 @@ export default function PredictionResultSection({ previewState, onPreviewStateCh
       </header>
 
       {previewEnabled && (
-        <div className="mt-5 rounded-2xl border border-amber-300/20 bg-amber-300/[0.065] p-4" aria-label="Result UI preview controls">
+        <div className="mt-5 rounded-2xl border border-amber-300/20 bg-amber-300/[0.065] p-4 sm:p-5" aria-label="Result UI preview controls">
           <div className="flex items-start gap-3">
             <Beaker aria-hidden="true" className="mt-0.5 shrink-0 text-amber-200" size={18} />
             <div className="min-w-0 flex-1">
@@ -51,7 +51,7 @@ export default function PredictionResultSection({ previewState, onPreviewStateCh
               <p className="mt-1 text-xs leading-5 text-amber-100/65">
                 These controls display illustrative component states. They do not call an API or run the model.
               </p>
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
                 {RESULT_PREVIEW_STATES.map((state) => (
                   <button
                     key={state.id}

@@ -51,7 +51,7 @@ export default function HomePage() {
     <div className="page-container">
       <HeroSection />
 
-      <section className="py-20">
+      <section className="py-16 sm:py-20">
         <SectionHeader
           eyebrow="RainWise capabilities"
           title="Weather signals, made decision-ready."
@@ -64,7 +64,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="how-it-works" className="scroll-mt-8 py-6 lg:py-12">
+      <section id="how-it-works" className="scroll-mt-8 py-10 lg:py-14">
         <SectionHeader
           eyebrow="How it works"
           title="From observation to action."
@@ -94,7 +94,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="grid gap-5 py-20 lg:grid-cols-[1fr_0.78fr]">
+      <section className="grid gap-5 py-16 sm:py-20 lg:grid-cols-[1fr_0.78fr]">
         <div className="relative overflow-hidden rounded-[1.75rem] border border-cyan-200/15 bg-sky-300/[0.07] p-7 sm:p-9">
           <div className="absolute -right-16 -top-16 size-56 rounded-full bg-sky-400/10 blur-3xl" />
           <p className="eyebrow">Built for clarity</p>

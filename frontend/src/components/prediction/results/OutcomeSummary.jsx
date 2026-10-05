@@ -9,10 +9,10 @@ export default function OutcomeSummary({ result }) {
 
   return (
     <section className="glass-panel rounded-[1.5rem] p-5 sm:p-7" aria-labelledby="prediction-outcome-heading">
-      <div className="flex flex-col items-center gap-7 lg:flex-row lg:items-stretch">
-        <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-white/[0.07] bg-slate-950/20 p-5 sm:flex-row sm:gap-7 lg:w-auto lg:min-w-[22rem] lg:flex-col">
+      <div className="flex flex-col items-center gap-7 xl:flex-row xl:items-stretch">
+        <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-white/[0.07] bg-slate-950/20 p-5 sm:flex-row sm:gap-7 xl:w-auto xl:min-w-[22rem] xl:flex-col">
           <ProbabilityGauge probability={result.probability} />
-          <div className="mt-4 text-center sm:mt-0 lg:mt-4">
+          <div className="mt-4 text-center sm:mt-0 xl:mt-4">
             <span className={`mx-auto grid size-11 place-items-center rounded-xl ${rainLikely ? 'bg-sky-300/12 text-sky-200' : 'bg-emerald-300/12 text-emerald-200'}`}>
               <OutcomeIcon aria-hidden="true" size={22} />
             </span>

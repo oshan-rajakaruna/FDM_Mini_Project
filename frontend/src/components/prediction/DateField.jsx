@@ -23,7 +23,7 @@ export default function DateField({ value, error, onChange }) {
         />
         <CalendarDays aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" size={17} />
       </div>
-      <p className="mt-2 text-[0.68rem] leading-5 text-slate-600">Use the date these weather conditions were observed.</p>
+      <p className="mt-2 text-[0.68rem] leading-5 text-slate-500">Use the date these weather conditions were observed.</p>
       {error && <p id={errorId} role="alert" className="mt-2 text-xs leading-5 text-rose-300">{error}</p>}
     </div>
   )

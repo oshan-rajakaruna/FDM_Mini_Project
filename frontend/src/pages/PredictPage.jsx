@@ -150,7 +150,7 @@ export default function PredictPage() {
 
   return (
     <div className="page-container">
-      <div className="grid gap-6 lg:grid-cols-[1fr_22rem] lg:items-end">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-end">
         <SectionHeader
           eyebrow="Prediction workspace"
           title="Build tomorrow’s rainfall outlook."
@@ -164,12 +164,12 @@ export default function PredictPage() {
         </aside>
       </div>
 
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
           <Info aria-hidden="true" size={15} />
           Required fields are identified; all other inputs support missing values.
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
           <button type="button" onClick={handleReset} className="secondary-button min-h-10 px-3.5 py-2 text-xs">
             <RefreshCcw aria-hidden="true" size={15} /> Reset Form
           </button>
@@ -216,7 +216,7 @@ export default function PredictPage() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="glass-panel mt-5 flex flex-col-reverse gap-3 rounded-2xl p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="glass-panel mt-5 flex flex-col-reverse gap-3 rounded-2xl p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
           <button
             type="button"
             onClick={handleBack}

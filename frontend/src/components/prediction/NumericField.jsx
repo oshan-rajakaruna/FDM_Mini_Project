@@ -21,7 +21,7 @@ export default function NumericField({
         <label htmlFor={name} className="text-sm font-bold text-slate-200">
           {label}
         </label>
-        <span className="text-[0.62rem] font-bold uppercase tracking-[0.12em] text-slate-600">Optional</span>
+        <span className="text-[0.62rem] font-bold uppercase tracking-[0.12em] text-slate-500">Optional</span>
       </div>
       <div className="relative">
         <input
@@ -44,10 +44,10 @@ export default function NumericField({
         </span>
       </div>
       <div className="mt-2 flex items-start justify-between gap-3">
-        <p id={hintId} className="text-[0.68rem] leading-5 text-slate-600">
+        <p id={hintId} className="text-[0.68rem] leading-5 text-slate-500">
           Missing values are supported.
         </p>
-        <label className="flex shrink-0 cursor-pointer items-center gap-2 text-[0.68rem] font-semibold text-slate-400">
+        <label className="flex shrink-0 cursor-pointer items-center gap-2 text-[0.68rem] font-semibold text-slate-400 transition hover:text-slate-200">
           <input
             type="checkbox"
             checked={missing}

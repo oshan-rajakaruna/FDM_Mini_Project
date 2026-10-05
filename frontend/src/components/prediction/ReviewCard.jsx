@@ -18,9 +18,9 @@ export default function ReviewCard({ title, fields, values, onEdit }) {
         {fields.map((name) => {
           const missing = values[name] === null || values[name] === ''
           return (
-            <div key={name} className="flex min-h-12 items-center justify-between gap-4 border-b border-white/[0.07] py-3 text-sm">
-              <dt className="text-slate-500">{FIELD_LABELS[name]}</dt>
-              <dd className={`text-right font-semibold ${missing ? 'italic text-slate-600' : 'text-slate-200'}`}>
+            <div key={name} className="flex min-h-12 min-w-0 items-center justify-between gap-4 border-b border-white/[0.07] py-3 text-sm">
+              <dt className="min-w-0 text-slate-500">{FIELD_LABELS[name]}</dt>
+              <dd className={`min-w-0 break-words text-right font-semibold ${missing ? 'italic text-slate-500' : 'text-slate-200'}`}>
                 {formatReviewValue(name, values[name])}
               </dd>
             </div>
