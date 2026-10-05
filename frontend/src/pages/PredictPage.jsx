@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react'
 import AtmosphereStep from '../components/prediction/AtmosphereStep'
 import LocationStep from '../components/prediction/LocationStep'
 import PredictionStepper from '../components/prediction/PredictionStepper'
+import PredictionResultSection from '../components/prediction/results/PredictionResultSection'
 import ReviewStep from '../components/prediction/ReviewStep'
 import WeatherStep from '../components/prediction/WeatherStep'
 import SectionHeader from '../components/SectionHeader'
@@ -42,6 +43,7 @@ export default function PredictPage() {
   const [errors, setErrors] = useState({})
   const [demoLoaded, setDemoLoaded] = useState(false)
   const [notice, setNotice] = useState('')
+  const [resultPreviewState, setResultPreviewState] = useState('idle')
 
   useEffect(() => {
     const firstField = Object.keys(errors)[0]
@@ -72,6 +74,7 @@ export default function PredictPage() {
       return next
     })
     setNotice('')
+    setResultPreviewState('idle')
   }
 
   const validateAndNormalizeCurrentStep = () => {
@@ -114,6 +117,7 @@ export default function PredictPage() {
     setFurthestStep(0)
     setDemoLoaded(false)
     setNotice('')
+    setResultPreviewState('idle')
   }
 
   const handleLoadExample = () => {
@@ -123,6 +127,7 @@ export default function PredictPage() {
     setFurthestStep(0)
     setDemoLoaded(true)
     setNotice('')
+    setResultPreviewState('idle')
   }
 
   const handleSubmit = (event) => {
@@ -237,6 +242,15 @@ export default function PredictPage() {
           </div>
         </div>
       </form>
+
+      {currentStep === steps.length - 1 && (
+        <PredictionResultSection
+          previewState={resultPreviewState}
+          onPreviewStateChange={setResultPreviewState}
+          previewEnabled={demoLoaded}
+          values={values}
+        />
+      )}
 
       <p className="mt-4 flex items-center justify-center gap-2 text-center text-[0.68rem] leading-5 text-slate-600">
         <Check aria-hidden="true" size={13} /> Raw weather inputs only—no engineered, encoded, or scaled values are requested.
