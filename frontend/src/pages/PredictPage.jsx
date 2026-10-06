@@ -23,8 +23,6 @@ import ReviewStep from '../components/prediction/ReviewStep'
 import WeatherStep from '../components/prediction/WeatherStep'
 import SectionHeader from '../components/SectionHeader'
 import { requestPrediction } from '../services/predictionApi'
-import { savePredictionHistory } from '../utils/historyStorage'
-import { getDisplayRiskLevel } from '../utils/predictionResult'
 import {
   EXAMPLE_FORM_VALUES,
   INITIAL_FORM_VALUES,
@@ -50,8 +48,6 @@ export default function PredictPage() {
   const [predictionStatus, setPredictionStatus] = useState('idle')
   const [predictionResult, setPredictionResult] = useState(null)
   const [predictionError, setPredictionError] = useState('')
-  const [historySaveStatus, setHistorySaveStatus] = useState('idle')
-  const [historySaveMessage, setHistorySaveMessage] = useState('')
   const activeRequestRef = useRef(null)
   const submittingRef = useRef(false)
   const isLoading = predictionStatus === 'loading'
@@ -82,8 +78,6 @@ export default function PredictPage() {
     setPredictionStatus('idle')
     setPredictionResult(null)
     setPredictionError('')
-    setHistorySaveStatus('idle')
-    setHistorySaveMessage('')
   }
 
   const cancelActivePrediction = () => {
@@ -190,15 +184,13 @@ export default function PredictPage() {
     setPredictionStatus('loading')
     setPredictionResult(null)
     setPredictionError('')
-    setHistorySaveStatus('idle')
-    setHistorySaveMessage('')
 
     try {
       const result = await requestPrediction(normalizedValues, { signal: controller.signal })
       if (controller.signal.aborted) return
       setPredictionResult(result)
       setPredictionStatus('success')
-      setNotice('Prediction received from the RainWise backend.')
+      setNotice('Prediction received and added to Prediction History.')
       window.requestAnimationFrame(() => {
         document.getElementById('prediction-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       })
@@ -215,29 +207,6 @@ export default function PredictPage() {
         activeRequestRef.current = null
         submittingRef.current = false
       }
-    }
-  }
-
-  const handleSaveToHistory = () => {
-    if (predictionStatus !== 'success' || !predictionResult || historySaveStatus === 'saved') return
-
-    try {
-      savePredictionHistory({
-        observationDate: values.Date,
-        location: values.Location,
-        prediction: predictionResult.prediction,
-        rainProbability: predictionResult.rain_probability,
-        riskLevel: getDisplayRiskLevel(predictionResult.rain_probability),
-      })
-      setHistorySaveStatus('saved')
-      setHistorySaveMessage('Saved to prediction history on this device.')
-    } catch (error) {
-      setHistorySaveStatus('error')
-      setHistorySaveMessage(
-        error instanceof Error
-          ? error.message
-          : 'This prediction could not be saved to history.',
-      )
     }
   }
 
@@ -346,9 +315,6 @@ export default function PredictPage() {
           result={predictionResult}
           error={predictionError}
           onClearError={clearPrediction}
-          historySaveStatus={historySaveStatus}
-          historySaveMessage={historySaveMessage}
-          onSaveToHistory={handleSaveToHistory}
           values={values}
         />
       )}

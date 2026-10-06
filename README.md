@@ -99,8 +99,9 @@ npm.cmd run dev -- --host 127.0.0.1 --port 5173
 Open `http://127.0.0.1:5173`. The API health endpoint is available at
 `http://127.0.0.1:8000/health`, and interactive API documentation is available
 at `http://127.0.0.1:8000/docs`. Both local services must be running to request
-a prediction. Saved history is stored only in the current browser's
-`localStorage` and can be deleted from the History page.
+a prediction. Successful predictions are stored by the backend in the
+configured MongoDB database and can be reviewed or deleted from the History
+page.
 
 To verify the frontend production build, run:
 

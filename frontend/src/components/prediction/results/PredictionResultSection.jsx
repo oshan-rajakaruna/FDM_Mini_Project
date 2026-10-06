@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { BookmarkPlus, Cable, CheckCircle2, Sparkles } from 'lucide-react'
+import { Cable, CheckCircle2, History, Sparkles } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import OutcomeSummary from './OutcomeSummary'
 import ResultErrorState from './ResultErrorState'
 import ResultLoadingState from './ResultLoadingState'
@@ -24,9 +25,6 @@ export default function PredictionResultSection({
   result,
   error,
   onClearError,
-  historySaveStatus,
-  historySaveMessage,
-  onSaveToHistory,
   values,
 }) {
   return (
@@ -62,30 +60,17 @@ export default function PredictionResultSection({
                 <OutcomeSummary result={result} />
                 <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
                   <div className="flex items-start gap-3">
-                    {historySaveStatus === 'saved' ? (
-                      <CheckCircle2 aria-hidden="true" className="mt-0.5 shrink-0 text-emerald-200" size={20} />
-                    ) : (
-                      <BookmarkPlus aria-hidden="true" className="mt-0.5 shrink-0 text-cyan-200" size={20} />
-                    )}
+                    <CheckCircle2 aria-hidden="true" className="mt-0.5 shrink-0 text-emerald-200" size={20} />
                     <div>
-                      <p className="text-sm font-bold text-white">Keep this outlook on this device</p>
-                      <p className={`mt-1 text-xs leading-5 ${historySaveStatus === 'error' ? 'text-rose-300' : 'text-slate-400'}`}>
-                        {historySaveMessage || 'Save a compact record without storing the complete weather form.'}
+                      <p className="text-sm font-bold text-white">Added to Prediction History</p>
+                      <p className="mt-1 text-xs leading-5 text-slate-400">
+                        The successful outlook is available across sessions through the RainWise service.
                       </p>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={onSaveToHistory}
-                    disabled={historySaveStatus === 'saved'}
-                    className="secondary-button shrink-0"
-                  >
-                    {historySaveStatus === 'saved' ? (
-                      <><CheckCircle2 aria-hidden="true" size={16} /> Saved</>
-                    ) : (
-                      <><BookmarkPlus aria-hidden="true" size={16} /> Save to history</>
-                    )}
-                  </button>
+                  <Link to="/history" className="secondary-button shrink-0">
+                    <History aria-hidden="true" size={16} /> View history
+                  </Link>
                 </div>
                 <WeatherInputSummary values={values} />
               </div>
