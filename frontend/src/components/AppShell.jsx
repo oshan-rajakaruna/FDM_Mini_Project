@@ -27,7 +27,7 @@ export default function AppShell() {
         </main>
         <footer className="mx-auto flex w-full max-w-[1440px] flex-col gap-2 border-t border-white/10 px-5 py-7 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-7 lg:px-10">
           <span>RainWise · Weather-risk decision support</span>
-          <span>Frontend foundation · Prediction service not connected</span>
+          <span>Local RainWise prediction API enabled</span>
         </footer>
       </div>
     </div>

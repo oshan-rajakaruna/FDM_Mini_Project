@@ -13,7 +13,7 @@ export default function ProbabilityGauge({ probability }) {
     <figure
       className="relative grid size-40 shrink-0 place-items-center"
       role="img"
-      aria-label={`Illustrative rain probability: ${normalizedProbability} percent`}
+      aria-label={`Rain probability: ${normalizedProbability} percent`}
     >
       <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="size-full -rotate-90" aria-hidden="true">
         <defs>

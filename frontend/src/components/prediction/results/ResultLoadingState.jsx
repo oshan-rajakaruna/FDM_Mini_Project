@@ -7,9 +7,9 @@ export default function ResultLoadingState() {
         <span className="grid size-14 place-items-center rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.08] text-cyan-200">
           <LoaderCircle aria-hidden="true" className="animate-spin" size={25} />
         </span>
-        <h3 className="mt-5 text-lg font-extrabold text-white">Preparing the result view</h3>
+        <h3 className="mt-5 text-lg font-extrabold text-white">Running the RainWise model</h3>
         <p className="mt-2 text-sm leading-6 text-slate-400">
-          Loading-state preview only. No request is being sent and no model is running.
+          Sending the reviewed observations to the local prediction service.
         </p>
         <div className="mt-7 grid w-full gap-3 sm:grid-cols-3" aria-hidden="true">
           {[0, 1, 2].map((item) => (

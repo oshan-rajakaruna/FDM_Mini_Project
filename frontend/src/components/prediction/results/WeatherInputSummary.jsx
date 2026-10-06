@@ -21,7 +21,7 @@ export default function WeatherInputSummary({ values }) {
         </span>
         <div>
           <h4 id="weather-summary-heading" className="text-sm font-bold text-white">Weather input summary</h4>
-          <p className="mt-0.5 text-xs text-slate-500">Key observations used in this interface preview.</p>
+          <p className="mt-0.5 text-xs text-slate-500">Key observations submitted to the RainWise model.</p>
         </div>
       </div>
       <dl className="mt-4 grid gap-x-6 sm:grid-cols-2 xl:grid-cols-4">

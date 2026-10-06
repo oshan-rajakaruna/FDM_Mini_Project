@@ -120,8 +120,8 @@ export default function MobileNav({ open, onOpen, onClose }) {
                 ))}
               </nav>
               <div className="absolute inset-x-5 bottom-6 rounded-2xl border border-white/10 bg-white/[0.045] p-4 text-xs leading-5 text-slate-400">
-                RainWise frontend foundation<br />
-                Model connection coming later.
+                RainWise decision support<br />
+                Local prediction API enabled.
               </div>
             </motion.aside>
           </div>

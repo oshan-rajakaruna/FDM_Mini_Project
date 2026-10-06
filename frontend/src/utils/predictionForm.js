@@ -1,4 +1,4 @@
-import { WEATHER_STATIONS } from '../data/weatherOptions'
+import { WEATHER_STATIONS } from '../data/weatherOptions.js'
 
 export const STEP_FIELDS = [
   ['Date', 'Location', 'RainToday'],

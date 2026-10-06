@@ -7,13 +7,14 @@ import {
   CloudRain,
   Info,
   ListChecks,
+  LoaderCircle,
   MapPin,
   RefreshCcw,
   ShieldCheck,
   Thermometer,
   Wind,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import AtmosphereStep from '../components/prediction/AtmosphereStep'
 import LocationStep from '../components/prediction/LocationStep'
 import PredictionStepper from '../components/prediction/PredictionStepper'
@@ -21,6 +22,7 @@ import PredictionResultSection from '../components/prediction/results/Prediction
 import ReviewStep from '../components/prediction/ReviewStep'
 import WeatherStep from '../components/prediction/WeatherStep'
 import SectionHeader from '../components/SectionHeader'
+import { requestPrediction } from '../services/predictionApi'
 import {
   DEMO_FORM_VALUES,
   INITIAL_FORM_VALUES,
@@ -43,7 +45,12 @@ export default function PredictPage() {
   const [errors, setErrors] = useState({})
   const [demoLoaded, setDemoLoaded] = useState(false)
   const [notice, setNotice] = useState('')
-  const [resultPreviewState, setResultPreviewState] = useState('idle')
+  const [predictionStatus, setPredictionStatus] = useState('idle')
+  const [predictionResult, setPredictionResult] = useState(null)
+  const [predictionError, setPredictionError] = useState('')
+  const activeRequestRef = useRef(null)
+  const submittingRef = useRef(false)
+  const isLoading = predictionStatus === 'loading'
 
   useEffect(() => {
     const firstField = Object.keys(errors)[0]
@@ -65,7 +72,22 @@ export default function PredictPage() {
     return () => window.cancelAnimationFrame(frameId)
   }, [currentStep, errors])
 
+  useEffect(() => () => activeRequestRef.current?.abort(), [])
+
+  const clearPrediction = () => {
+    setPredictionStatus('idle')
+    setPredictionResult(null)
+    setPredictionError('')
+  }
+
+  const cancelActivePrediction = () => {
+    activeRequestRef.current?.abort()
+    activeRequestRef.current = null
+    submittingRef.current = false
+  }
+
   const handleChange = (name, value) => {
+    cancelActivePrediction()
     setValues((current) => ({ ...current, [name]: value }))
     setErrors((current) => {
       if (!current[name]) return current
@@ -74,7 +96,7 @@ export default function PredictPage() {
       return next
     })
     setNotice('')
-    setResultPreviewState('idle')
+    clearPrediction()
   }
 
   const validateAndNormalizeCurrentStep = () => {
@@ -103,6 +125,7 @@ export default function PredictPage() {
   }
 
   const handleStepSelect = (stepIndex) => {
+    if (isLoading) return
     if (stepIndex === currentStep || stepIndex > furthestStep) return
     if (stepIndex > currentStep && !validateAndNormalizeCurrentStep()) return
     setCurrentStep(stepIndex)
@@ -111,31 +134,35 @@ export default function PredictPage() {
   }
 
   const handleReset = () => {
+    cancelActivePrediction()
     setValues({ ...INITIAL_FORM_VALUES })
     setErrors({})
     setCurrentStep(0)
     setFurthestStep(0)
     setDemoLoaded(false)
     setNotice('')
-    setResultPreviewState('idle')
+    clearPrediction()
   }
 
   const handleLoadExample = () => {
+    cancelActivePrediction()
     setValues({ ...DEMO_FORM_VALUES })
     setErrors({})
     setCurrentStep(0)
     setFurthestStep(0)
     setDemoLoaded(true)
     setNotice('')
-    setResultPreviewState('idle')
+    clearPrediction()
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     if (currentStep < steps.length - 1) {
       handleNext()
       return
     }
+
+    if (submittingRef.current) return
 
     const finalValidation = validateAllSteps(values)
     if (finalValidation.stepIndex !== null) {
@@ -145,7 +172,42 @@ export default function PredictPage() {
       return
     }
 
-    setNotice('Prediction service will be connected in the next integration step.')
+    const normalizedValues = [0, 1, 2].reduce(
+      (current, stepIndex) => normalizeStepValues(stepIndex, current),
+      values,
+    )
+    const controller = new AbortController()
+    activeRequestRef.current = controller
+    submittingRef.current = true
+    setValues(normalizedValues)
+    setNotice('')
+    setPredictionStatus('loading')
+    setPredictionResult(null)
+    setPredictionError('')
+
+    try {
+      const result = await requestPrediction(normalizedValues, { signal: controller.signal })
+      if (controller.signal.aborted) return
+      setPredictionResult(result)
+      setPredictionStatus('success')
+      setNotice('Prediction received from the RainWise backend.')
+      window.requestAnimationFrame(() => {
+        document.getElementById('prediction-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+    } catch (error) {
+      if (error?.name === 'AbortError') return
+      setPredictionError(
+        error instanceof Error
+          ? error.message
+          : 'The prediction request failed unexpectedly. Please try again.',
+      )
+      setPredictionStatus('error')
+    } finally {
+      if (activeRequestRef.current === controller) {
+        activeRequestRef.current = null
+        submittingRef.current = false
+      }
+    }
   }
 
   return (
@@ -159,7 +221,7 @@ export default function PredictPage() {
         <aside className="flex gap-3 rounded-2xl border border-sky-300/15 bg-sky-300/[0.055] p-4 text-xs leading-5 text-slate-400">
           <ShieldCheck aria-hidden="true" className="mt-0.5 shrink-0 text-cyan-200" size={19} />
           <p>
-            Values stay in this frontend only. Nothing is submitted to a prediction service in this stage.
+            On submission, these observations are sent to the local RainWise API for inference by the saved model.
           </p>
         </aside>
       </div>
@@ -198,7 +260,7 @@ export default function PredictPage() {
         />
       </div>
 
-      <form onSubmit={handleSubmit} noValidate className="mt-7">
+      <form onSubmit={handleSubmit} noValidate className="mt-7" aria-busy={isLoading}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={currentStep}
@@ -220,7 +282,7 @@ export default function PredictPage() {
           <button
             type="button"
             onClick={handleBack}
-            disabled={currentStep === 0}
+            disabled={currentStep === 0 || isLoading}
             className="secondary-button disabled:cursor-not-allowed disabled:opacity-35"
           >
             <ArrowLeft aria-hidden="true" size={17} /> Back
@@ -235,8 +297,12 @@ export default function PredictPage() {
                 Continue <ArrowRight aria-hidden="true" size={17} />
               </button>
             ) : (
-              <button type="submit" className="primary-button w-full sm:w-auto">
-                <CloudRain aria-hidden="true" size={18} /> Predict Tomorrow&apos;s Rain
+              <button type="submit" disabled={isLoading} className="primary-button w-full sm:w-auto">
+                {isLoading ? (
+                  <><LoaderCircle aria-hidden="true" className="animate-spin" size={18} /> Requesting prediction</>
+                ) : (
+                  <><CloudRain aria-hidden="true" size={18} /> Predict Tomorrow&apos;s Rain</>
+                )}
               </button>
             )}
           </div>
@@ -245,9 +311,10 @@ export default function PredictPage() {
 
       {currentStep === steps.length - 1 && (
         <PredictionResultSection
-          previewState={resultPreviewState}
-          onPreviewStateChange={setResultPreviewState}
-          previewEnabled={demoLoaded}
+          status={predictionStatus}
+          result={predictionResult}
+          error={predictionError}
+          onClearError={clearPrediction}
           values={values}
         />
       )}

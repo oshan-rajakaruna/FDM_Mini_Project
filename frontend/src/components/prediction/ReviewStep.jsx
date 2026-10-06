@@ -1,4 +1,4 @@
-import { CircleCheck, CloudOff } from 'lucide-react'
+import { CircleCheck, CloudCog } from 'lucide-react'
 import { REVIEW_GROUPS } from '../../utils/predictionForm'
 import ReviewCard from './ReviewCard'
 
@@ -29,9 +29,9 @@ export default function ReviewStep({ values, onEdit, notice }) {
       )}
 
       <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-5 text-sm text-slate-400">
-        <CloudOff aria-hidden="true" className="mt-0.5 shrink-0 text-slate-500" size={20} />
+        <CloudCog aria-hidden="true" className="mt-0.5 shrink-0 text-slate-500" size={20} />
         <p className="leading-6">
-          No prediction is generated in this frontend-only stage. Your inputs remain in this browser session and are not sent anywhere.
+          Submit when ready. These raw observations will be sent to the local RainWise API and processed by the saved model pipeline.
         </p>
       </div>
     </div>
