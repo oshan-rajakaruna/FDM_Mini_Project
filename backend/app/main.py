@@ -4,10 +4,15 @@ from contextlib import asynccontextmanager
 import logging
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
+from .database import (
+    MongoService,
+    MongoServiceError,
+    get_mongo_service,
+)
 from .model_service import ModelLoadError, ModelService, get_model_service
 from .prediction_service import (
     PredictionInputError,
@@ -19,6 +24,7 @@ from .schemas import (
     HealthResponse,
     PredictionRequest,
     PredictionResponse,
+    ReadinessChecks,
 )
 
 
@@ -27,13 +33,27 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):
-    """Validate and retain the frozen model once when the API starts."""
+    """Initialize process-level model and database services."""
 
+    mongo_service: MongoService | None = None
     try:
         application.state.model_service = get_model_service()
     except ModelLoadError as exc:
         raise RuntimeError(f"RainWise model startup failed: {exc}") from exc
-    yield
+
+    try:
+        mongo_service = get_mongo_service()
+        mongo_service.connect()
+        application.state.mongo_service = mongo_service
+    except MongoServiceError as exc:
+        if mongo_service is not None:
+            mongo_service.close()
+        raise RuntimeError(f"RainWise database startup failed: {exc}") from None
+
+    try:
+        yield
+    finally:
+        mongo_service.close()
 
 
 app = FastAPI(
@@ -65,13 +85,26 @@ def api_info() -> ApiInfoResponse:
 
 
 @app.get("/health", response_model=HealthResponse, tags=["System"])
-def health_check() -> HealthResponse:
-    """Confirm that the API process is available."""
+def health_check(request: Request, response: Response) -> HealthResponse:
+    """Report secret-free readiness for the API, model, and database."""
+
+    model_ready = getattr(request.app.state, "model_service", None) is not None
+    mongo_service = getattr(request.app.state, "mongo_service", None)
+    database_ready = mongo_service is not None and mongo_service.ping()
+    ready = model_ready and database_ready
+
+    if not ready:
+        response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
     return HealthResponse(
-        status="ok",
+        status="ok" if ready else "degraded",
         service="rainwise-backend",
         version=settings.app_version,
+        checks=ReadinessChecks(
+            backend="ready",
+            model="ready" if model_ready else "not_ready",
+            database="ready" if database_ready else "not_ready",
+        ),
     )
 
 

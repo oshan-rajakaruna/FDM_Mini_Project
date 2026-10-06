@@ -71,12 +71,21 @@ class PredictionResponse(BaseModel):
     positive_class: Literal["Yes"]
 
 
+class ReadinessChecks(BaseModel):
+    """Secret-free readiness state for backend dependencies."""
+
+    backend: Literal["ready", "not_ready"]
+    model: Literal["ready", "not_ready"]
+    database: Literal["ready", "not_ready"]
+
+
 class HealthResponse(BaseModel):
     """Response returned by the health-check endpoint."""
 
-    status: Literal["ok"]
+    status: Literal["ok", "degraded"]
     service: str
     version: str
+    checks: ReadinessChecks
 
 
 class ApiInfoResponse(BaseModel):

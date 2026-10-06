@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 
 DEFAULT_CORS_ORIGINS = (
     "http://localhost:5173",
@@ -13,6 +15,12 @@ DEFAULT_CORS_ORIGINS = (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+BACKEND_ROOT = Path(__file__).resolve().parents[1]
+BACKEND_ENV_FILE = BACKEND_ROOT / ".env"
+
+# Local development can use backend/.env. Deployed environment variables keep
+# precedence because local files must never override process configuration.
+load_dotenv(BACKEND_ENV_FILE, override=False)
 
 
 def _read_cors_origins() -> tuple[str, ...]:
@@ -37,6 +45,15 @@ def _read_project_path(environment_variable: str, default: Path) -> Path:
     return path.resolve()
 
 
+def _read_optional_environment_variable(name: str) -> str | None:
+    value = os.getenv(name, "").strip()
+    return value or None
+
+
+def _read_database_name() -> str:
+    return os.getenv("MONGODB_DATABASE", "").strip() or "rainwise"
+
+
 @dataclass(frozen=True, slots=True)
 class Settings:
     """Runtime settings for the API and its frozen model artifact."""
@@ -45,6 +62,11 @@ class Settings:
     app_version: str = "0.1.0"
     app_description: str = "Backend foundation for RainWise weather-risk decision support."
     cors_origins: tuple[str, ...] = field(default_factory=_read_cors_origins)
+    mongodb_uri: str | None = field(
+        default_factory=lambda: _read_optional_environment_variable("MONGODB_URI"),
+        repr=False,
+    )
+    mongodb_database: str = field(default_factory=_read_database_name)
     model_artifact_path: Path = field(
         default_factory=lambda: _read_project_path(
             "RAINWISE_MODEL_PATH",

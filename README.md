@@ -71,10 +71,20 @@ scripts/              Project utility and verification scripts
 
 Run the backend and frontend in separate terminals from the repository root.
 
-Install and start the API:
+Install the API dependencies, copy the safe environment template, and add your
+MongoDB Atlas connection details to the untracked `backend/.env` file:
 
 ```powershell
 python -m pip install -r backend/requirements.txt
+Copy-Item backend/.env.example backend/.env
+```
+
+`MONGODB_URI` is required. `MONGODB_DATABASE` defaults to `rainwise` when it is
+not set. Never commit `backend/.env` or place credentials in source files.
+
+Start the API after configuration:
+
+```powershell
 python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
 ```
 
