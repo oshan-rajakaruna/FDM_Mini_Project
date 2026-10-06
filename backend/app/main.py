@@ -19,6 +19,11 @@ from .prediction_service import (
     PredictionServiceError,
     predict_rainfall,
 )
+from .prediction_history import (
+    PredictionHistoryError,
+    PredictionHistoryRepository,
+    PredictionPersistenceError,
+)
 from .schemas import (
     ApiInfoResponse,
     HealthResponse,
@@ -29,6 +34,24 @@ from .schemas import (
 
 
 logger = logging.getLogger(__name__)
+
+
+def get_prediction_history_repository(
+    request: Request,
+) -> PredictionHistoryRepository:
+    """Return the lifespan-managed prediction history repository."""
+
+    repository = getattr(
+        request.app.state,
+        "prediction_history_repository",
+        None,
+    )
+    if repository is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Prediction history storage is unavailable.",
+        )
+    return repository
 
 
 @asynccontextmanager
@@ -45,7 +68,14 @@ async def lifespan(application: FastAPI):
         mongo_service = get_mongo_service()
         mongo_service.connect()
         application.state.mongo_service = mongo_service
-    except MongoServiceError as exc:
+        prediction_history_repository = PredictionHistoryRepository(
+            mongo_service.database
+        )
+        prediction_history_repository.ensure_indexes()
+        application.state.prediction_history_repository = (
+            prediction_history_repository
+        )
+    except (MongoServiceError, PredictionHistoryError) as exc:
         if mongo_service is not None:
             mongo_service.close()
         raise RuntimeError(f"RainWise database startup failed: {exc}") from None
@@ -112,6 +142,10 @@ def health_check(request: Request, response: Response) -> HealthResponse:
 def predict(
     request: PredictionRequest,
     model_service: Annotated[ModelService, Depends(get_model_service)],
+    history_repository: Annotated[
+        PredictionHistoryRepository,
+        Depends(get_prediction_history_repository),
+    ],
 ) -> PredictionResponse:
     """Predict next-day rain using the persisted model's inference pipeline."""
 
@@ -128,6 +162,23 @@ def predict(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(exc),
         ) from exc
+
+    try:
+        history_repository.save_prediction(
+            observation_date=request.Date,
+            location=request.Location,
+            prediction=result.prediction,
+            rain_probability=result.rain_probability,
+        )
+    except PredictionPersistenceError:
+        logger.error("RainWise prediction persistence failed")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=(
+                "Prediction completed but could not be saved. "
+                "Please try again."
+            ),
+        ) from None
 
     return PredictionResponse(
         prediction=result.prediction,
