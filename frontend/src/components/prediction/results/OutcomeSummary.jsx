@@ -2,18 +2,13 @@ import { CloudRain, CloudSun } from 'lucide-react'
 import ProbabilityGauge from './ProbabilityGauge'
 import RecommendationCard from './RecommendationCard'
 import RiskLevelDisplay from './RiskLevelDisplay'
-
-function displayRiskLevel(probability) {
-  if (probability < 0.33) return 'Low'
-  if (probability < 0.67) return 'Moderate'
-  return 'High'
-}
+import { getDisplayRiskLevel } from '../../../utils/predictionResult'
 
 export default function OutcomeSummary({ result }) {
   const rainLikely = result.prediction === 'Yes'
   const outcome = rainLikely ? 'Rain Likely' : 'Rain Unlikely'
   const probabilityPercent = Math.round(result.rain_probability * 1000) / 10
-  const riskLevel = displayRiskLevel(result.rain_probability)
+  const riskLevel = getDisplayRiskLevel(result.rain_probability)
   const recommendation = rainLikely
     ? 'Carry rain protection and review weather-sensitive outdoor plans.'
     : 'Normal plans can generally continue, with local updates checked when conditions matter.'

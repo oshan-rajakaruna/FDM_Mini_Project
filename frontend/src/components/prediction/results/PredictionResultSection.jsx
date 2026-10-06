@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Cable, Sparkles } from 'lucide-react'
+import { BookmarkPlus, Cable, CheckCircle2, Sparkles } from 'lucide-react'
 import OutcomeSummary from './OutcomeSummary'
 import ResultErrorState from './ResultErrorState'
 import ResultLoadingState from './ResultLoadingState'
@@ -19,7 +19,16 @@ function ReadyState() {
   )
 }
 
-export default function PredictionResultSection({ status, result, error, onClearError, values }) {
+export default function PredictionResultSection({
+  status,
+  result,
+  error,
+  onClearError,
+  historySaveStatus,
+  historySaveMessage,
+  onSaveToHistory,
+  values,
+}) {
   return (
     <section id="prediction-result" className="mt-8 scroll-mt-6" aria-labelledby="prediction-result-heading">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -51,6 +60,33 @@ export default function PredictionResultSection({ status, result, error, onClear
             {status === 'success' && result && (
               <div className="space-y-5">
                 <OutcomeSummary result={result} />
+                <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+                  <div className="flex items-start gap-3">
+                    {historySaveStatus === 'saved' ? (
+                      <CheckCircle2 aria-hidden="true" className="mt-0.5 shrink-0 text-emerald-200" size={20} />
+                    ) : (
+                      <BookmarkPlus aria-hidden="true" className="mt-0.5 shrink-0 text-cyan-200" size={20} />
+                    )}
+                    <div>
+                      <p className="text-sm font-bold text-white">Keep this outlook on this device</p>
+                      <p className={`mt-1 text-xs leading-5 ${historySaveStatus === 'error' ? 'text-rose-300' : 'text-slate-400'}`}>
+                        {historySaveMessage || 'Save a compact record without storing the complete weather form.'}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onSaveToHistory}
+                    disabled={historySaveStatus === 'saved'}
+                    className="secondary-button shrink-0"
+                  >
+                    {historySaveStatus === 'saved' ? (
+                      <><CheckCircle2 aria-hidden="true" size={16} /> Saved</>
+                    ) : (
+                      <><BookmarkPlus aria-hidden="true" size={16} /> Save to history</>
+                    )}
+                  </button>
+                </div>
                 <WeatherInputSummary values={values} />
               </div>
             )}
