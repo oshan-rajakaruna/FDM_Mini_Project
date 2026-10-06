@@ -88,7 +88,7 @@ export const INITIAL_FORM_VALUES = {
   Cloud3pm: null,
 }
 
-export const DEMO_FORM_VALUES = {
+export const EXAMPLE_FORM_VALUES = {
   Date: '2016-03-18',
   Location: 'SydneyAirport',
   RainToday: 'No',

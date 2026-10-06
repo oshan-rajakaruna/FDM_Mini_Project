@@ -102,7 +102,7 @@ export default function HomePage() {
             Start with a guided weather review.
           </h2>
           <p className="relative mt-4 max-w-2xl text-sm leading-7 text-slate-300">
-            The prediction experience will guide users through location, weather, wind, and atmospheric observations before presenting a review step.
+            The prediction workspace guides you through location, weather, wind, and atmospheric observations before sending a reviewed request to the local RainWise service.
           </p>
           <Link to="/predict" className="primary-button relative mt-7">
             Open prediction workspace <ArrowRight size={18} />

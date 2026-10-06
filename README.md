@@ -2,8 +2,9 @@
 
 Mini project for **IT3051 Fundamentals of Data Mining**.
 
-The project will develop a reproducible workflow for predicting next-day
-rainfall and presenting weather-risk information for decision support.
+The project provides a reproducible workflow and local web application for
+predicting next-day rainfall and presenting weather-risk information for
+decision support.
 
 ## Current scope
 
@@ -18,9 +19,9 @@ after Test evaluation.
 
 The fitted pipeline is persisted at `models/final_rainfall_model.joblib`, with
 its Train+Validation-fitted preprocessing state, ordered feature schema,
-positive-class and threshold definitions, and inference metadata. Progress
-Evaluation 2 modeling and optimization implementation is complete; backend and
-frontend implementation has not started.
+positive-class and threshold definitions, and inference metadata. A React/Vite
+frontend and FastAPI backend provide local model inference and browser-local
+prediction history without changing the frozen model pipeline.
 
 The T08 engineered default uses cyclical month, five within-day weather
 differences, and cyclical wind direction with explicit missing indicators. The
@@ -49,11 +50,13 @@ found that the usable dataset pairs follow the strict convention
 
 ```text
 docs/                 Project documentation
+backend/              FastAPI application and Python dependencies
+frontend/             React/Vite user interface
 data/
   raw/                Original, immutable input data
   interim/            Intermediate data artifacts
   processed/          Analysis-ready data artifacts
-notebooks/            Future analysis notebooks
+notebooks/            Executed analysis and modeling notebooks
 models/                Persisted trained model artifacts
 src/fdm_rainfall/     Python package source
 tests/                Automated tests
@@ -62,6 +65,38 @@ reports/
   tables/             Generated tables
   evidence/           Task verification evidence
 scripts/              Project utility and verification scripts
+```
+
+## Run RainWise locally
+
+Run the backend and frontend in separate terminals from the repository root.
+
+Install and start the API:
+
+```powershell
+python -m pip install -r backend/requirements.txt
+python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
+```
+
+Install and start the frontend:
+
+```powershell
+Set-Location frontend
+npm.cmd install
+npm.cmd run dev -- --host 127.0.0.1 --port 5173
+```
+
+Open `http://127.0.0.1:5173`. The API health endpoint is available at
+`http://127.0.0.1:8000/health`, and interactive API documentation is available
+at `http://127.0.0.1:8000/docs`. Both local services must be running to request
+a prediction. Saved history is stored only in the current browser's
+`localStorage` and can be deleted from the History page.
+
+To verify the frontend production build, run:
+
+```powershell
+Set-Location frontend
+npm.cmd run build
 ```
 
 ## Verify the completed stage

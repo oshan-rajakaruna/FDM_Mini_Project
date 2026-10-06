@@ -66,10 +66,10 @@ export default function Sidebar({ collapsed, onToggle }) {
           </p>
           <div className="mt-2 flex items-center gap-2 text-sm font-semibold text-slate-200">
             <span className="size-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.7)]" />
-            Prediction API enabled
+            Local API configured
           </div>
           <p className="mt-2 text-xs leading-5 text-slate-400">
-            Form submissions use the local RainWise backend.
+            Start the RainWise backend before submitting a prediction.
           </p>
         </div>
       )}

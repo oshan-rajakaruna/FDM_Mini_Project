@@ -26,7 +26,7 @@ import { requestPrediction } from '../services/predictionApi'
 import { savePredictionHistory } from '../utils/historyStorage'
 import { getDisplayRiskLevel } from '../utils/predictionResult'
 import {
-  DEMO_FORM_VALUES,
+  EXAMPLE_FORM_VALUES,
   INITIAL_FORM_VALUES,
   normalizeStepValues,
   validateAllSteps,
@@ -45,7 +45,7 @@ export default function PredictPage() {
   const [furthestStep, setFurthestStep] = useState(0)
   const [values, setValues] = useState(() => ({ ...INITIAL_FORM_VALUES }))
   const [errors, setErrors] = useState({})
-  const [demoLoaded, setDemoLoaded] = useState(false)
+  const [exampleLoaded, setExampleLoaded] = useState(false)
   const [notice, setNotice] = useState('')
   const [predictionStatus, setPredictionStatus] = useState('idle')
   const [predictionResult, setPredictionResult] = useState(null)
@@ -145,18 +145,18 @@ export default function PredictPage() {
     setErrors({})
     setCurrentStep(0)
     setFurthestStep(0)
-    setDemoLoaded(false)
+    setExampleLoaded(false)
     setNotice('')
     clearPrediction()
   }
 
   const handleLoadExample = () => {
     cancelActivePrediction()
-    setValues({ ...DEMO_FORM_VALUES })
+    setValues({ ...EXAMPLE_FORM_VALUES })
     setErrors({})
     setCurrentStep(0)
     setFurthestStep(0)
-    setDemoLoaded(true)
+    setExampleLoaded(true)
     setNotice('')
     clearPrediction()
   }
@@ -272,12 +272,12 @@ export default function PredictPage() {
         </div>
       </div>
 
-      {demoLoaded && (
+      {exampleLoaded && (
         <div role="status" className="mt-5 flex items-center gap-3 rounded-2xl border border-amber-300/20 bg-amber-300/[0.07] px-4 py-3 text-xs text-amber-100/80">
           <Beaker aria-hidden="true" className="shrink-0 text-amber-200" size={18} />
           <p>
-            <strong className="font-extrabold uppercase tracking-[0.12em] text-amber-200">Demo sample data</strong>
-            <span className="ml-2">Plausible values for interface demonstration only—not a real weather observation.</span>
+            <strong className="font-extrabold uppercase tracking-[0.12em] text-amber-200">Example observations</strong>
+            <span className="ml-2">Sample form values only—not a real observation. Any submitted result still comes from the backend model.</span>
           </p>
         </div>
       )}
