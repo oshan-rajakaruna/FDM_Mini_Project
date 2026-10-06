@@ -1,16 +1,31 @@
 """FastAPI application entry point for the RainWise backend."""
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
+from .model_service import ModelLoadError, get_model_service
 from .schemas import ApiInfoResponse, HealthResponse
+
+
+@asynccontextmanager
+async def lifespan(application: FastAPI):
+    """Validate and retain the frozen model once when the API starts."""
+
+    try:
+        application.state.model_service = get_model_service()
+    except ModelLoadError as exc:
+        raise RuntimeError(f"RainWise model startup failed: {exc}") from exc
+    yield
 
 
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
     description=settings.app_description,
+    lifespan=lifespan,
 )
 
 app.add_middleware(
