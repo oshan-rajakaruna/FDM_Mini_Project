@@ -1,13 +1,28 @@
 """FastAPI application entry point for the RainWise backend."""
 
 from contextlib import asynccontextmanager
+import logging
+from typing import Annotated
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
-from .model_service import ModelLoadError, get_model_service
-from .schemas import ApiInfoResponse, HealthResponse
+from .model_service import ModelLoadError, ModelService, get_model_service
+from .prediction_service import (
+    PredictionInputError,
+    PredictionServiceError,
+    predict_rainfall,
+)
+from .schemas import (
+    ApiInfoResponse,
+    HealthResponse,
+    PredictionRequest,
+    PredictionResponse,
+)
+
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -57,4 +72,33 @@ def health_check() -> HealthResponse:
         status="ok",
         service="rainwise-backend",
         version=settings.app_version,
+    )
+
+
+@app.post("/predict", response_model=PredictionResponse, tags=["Prediction"])
+def predict(
+    request: PredictionRequest,
+    model_service: Annotated[ModelService, Depends(get_model_service)],
+) -> PredictionResponse:
+    """Predict next-day rain using the persisted model's inference pipeline."""
+
+    try:
+        result = predict_rainfall(request, model_service)
+    except PredictionInputError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=str(exc),
+        ) from exc
+    except PredictionServiceError as exc:
+        logger.exception("RainWise prediction failed")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(exc),
+        ) from exc
+
+    return PredictionResponse(
+        prediction=result.prediction,
+        rain_probability=result.rain_probability,
+        threshold=result.threshold,
+        positive_class=result.positive_class,
     )
