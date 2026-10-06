@@ -66,8 +66,8 @@ class MongoService:
             client = MongoClient(
                 uri,
                 appname="RainWise API",
-                connectTimeoutMS=5_000,
-                serverSelectionTimeoutMS=5_000,
+                connectTimeoutMS=10_000,
+                serverSelectionTimeoutMS=15_000,
                 tz_aware=True,
             )
             client.admin.command("ping")

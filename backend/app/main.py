@@ -20,13 +20,20 @@ from .prediction_service import (
     predict_rainfall,
 )
 from .prediction_history import (
+    InvalidPredictionHistoryId,
+    PredictionHistoryDeleteError,
     PredictionHistoryError,
+    PredictionHistoryNotFound,
+    PredictionHistoryReadError,
     PredictionHistoryRepository,
     PredictionPersistenceError,
 )
 from .schemas import (
     ApiInfoResponse,
     HealthResponse,
+    PredictionHistoryClearResponse,
+    PredictionHistoryDeleteResponse,
+    PredictionHistoryItem,
     PredictionRequest,
     PredictionResponse,
     ReadinessChecks,
@@ -186,3 +193,99 @@ def predict(
         threshold=result.threshold,
         positive_class=result.positive_class,
     )
+
+
+@app.get(
+    "/history",
+    response_model=list[PredictionHistoryItem],
+    tags=["History"],
+)
+def list_prediction_history(
+    history_repository: Annotated[
+        PredictionHistoryRepository,
+        Depends(get_prediction_history_repository),
+    ],
+) -> list[PredictionHistoryItem]:
+    """Return saved predictions newest-first."""
+
+    try:
+        records = history_repository.list_predictions()
+    except PredictionHistoryReadError:
+        logger.error("RainWise prediction history read failed")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Prediction history is temporarily unavailable.",
+        ) from None
+
+    return [
+        PredictionHistoryItem(
+            id=record.id,
+            observationDate=record.observation_date,
+            location=record.location,
+            prediction=record.prediction,
+            rainProbability=record.rain_probability,
+            createdAt=record.created_at,
+        )
+        for record in records
+    ]
+
+
+@app.delete(
+    "/history/{id}",
+    response_model=PredictionHistoryDeleteResponse,
+    tags=["History"],
+)
+def delete_prediction_history_record(
+    id: str,
+    history_repository: Annotated[
+        PredictionHistoryRepository,
+        Depends(get_prediction_history_repository),
+    ],
+) -> PredictionHistoryDeleteResponse:
+    """Delete one saved prediction by its public id."""
+
+    try:
+        history_repository.delete_prediction(id)
+    except InvalidPredictionHistoryId as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from None
+    except PredictionHistoryNotFound as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from None
+    except PredictionHistoryDeleteError:
+        logger.error("RainWise prediction history delete failed")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Prediction history is temporarily unavailable.",
+        ) from None
+
+    return PredictionHistoryDeleteResponse(id=id, deleted=True)
+
+
+@app.delete(
+    "/history",
+    response_model=PredictionHistoryClearResponse,
+    tags=["History"],
+)
+def clear_prediction_history(
+    history_repository: Annotated[
+        PredictionHistoryRepository,
+        Depends(get_prediction_history_repository),
+    ],
+) -> PredictionHistoryClearResponse:
+    """Delete all saved predictions without dropping collection indexes."""
+
+    try:
+        deleted_count = history_repository.delete_all_predictions()
+    except PredictionHistoryDeleteError:
+        logger.error("RainWise prediction history clear failed")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Prediction history is temporarily unavailable.",
+        ) from None
+
+    return PredictionHistoryClearResponse(deletedCount=deleted_count)

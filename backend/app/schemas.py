@@ -1,6 +1,6 @@
 """Response schemas for RainWise system endpoints."""
 
-from datetime import date
+from datetime import date, datetime
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -69,6 +69,30 @@ class PredictionResponse(BaseModel):
     rain_probability: Annotated[float, Field(ge=0, le=1)]
     threshold: Annotated[float, Field(ge=0, le=1)]
     positive_class: Literal["Yes"]
+
+
+class PredictionHistoryItem(BaseModel):
+    """Public representation of one saved prediction."""
+
+    id: str
+    observationDate: date
+    location: str
+    prediction: Literal["Yes", "No"]
+    rainProbability: Annotated[float, Field(ge=0, le=1)]
+    createdAt: datetime
+
+
+class PredictionHistoryDeleteResponse(BaseModel):
+    """Confirmation returned after deleting one saved prediction."""
+
+    id: str
+    deleted: Literal[True]
+
+
+class PredictionHistoryClearResponse(BaseModel):
+    """Confirmation returned after clearing saved predictions."""
+
+    deletedCount: Annotated[int, Field(ge=0)]
 
 
 class ReadinessChecks(BaseModel):
