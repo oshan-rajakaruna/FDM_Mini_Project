@@ -88,31 +88,6 @@ export const INITIAL_FORM_VALUES = {
   Cloud3pm: null,
 }
 
-export const EXAMPLE_FORM_VALUES = {
-  Date: '2016-03-18',
-  Location: 'SydneyAirport',
-  RainToday: 'No',
-  MinTemp: 17.4,
-  MaxTemp: 26.8,
-  Temp9am: 20.2,
-  Temp3pm: 25.1,
-  Rainfall: 0.2,
-  Evaporation: 5.8,
-  Sunshine: 9.1,
-  WindGustDir: 'NE',
-  WindGustSpeed: 41,
-  WindDir9am: 'NNE',
-  WindDir3pm: 'ENE',
-  WindSpeed9am: 15,
-  WindSpeed3pm: 22,
-  Humidity9am: 68,
-  Humidity3pm: 48,
-  Pressure9am: 1015.2,
-  Pressure3pm: 1011.6,
-  Cloud9am: 3,
-  Cloud3pm: 4,
-}
-
 export const REVIEW_GROUPS = [
   { title: 'Location & observation', fields: STEP_FIELDS[0], editStep: 0 },
   {

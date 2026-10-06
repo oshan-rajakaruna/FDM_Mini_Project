@@ -24,12 +24,12 @@ import WeatherStep from '../components/prediction/WeatherStep'
 import SectionHeader from '../components/SectionHeader'
 import { requestPrediction } from '../services/predictionApi'
 import {
-  EXAMPLE_FORM_VALUES,
   INITIAL_FORM_VALUES,
   normalizeStepValues,
   validateAllSteps,
   validateStep,
 } from '../utils/predictionForm'
+import { generateRandomWeatherExample } from '../utils/weatherExample'
 
 const steps = [
   { title: 'Location & Observation', shortTitle: 'Location', icon: MapPin },
@@ -146,7 +146,7 @@ export default function PredictPage() {
 
   const handleLoadExample = () => {
     cancelActivePrediction()
-    setValues({ ...EXAMPLE_FORM_VALUES })
+    setValues(generateRandomWeatherExample())
     setErrors({})
     setCurrentStep(0)
     setFurthestStep(0)
@@ -246,7 +246,7 @@ export default function PredictPage() {
           <Beaker aria-hidden="true" className="shrink-0 text-amber-200" size={18} />
           <p>
             <strong className="font-extrabold uppercase tracking-[0.12em] text-amber-200">Example observations</strong>
-            <span className="ml-2">Sample form values only—not a real observation. Any submitted result still comes from the backend model.</span>
+            <span className="ml-2">Randomized sample values only—not a real observation. Review or edit them before requesting a backend prediction.</span>
           </p>
         </div>
       )}
