@@ -10,7 +10,7 @@ export default function RecommendationCard({ recommendation }) {
         <div>
           <h4 id="recommendation-heading" className="text-sm font-bold text-white">Planning recommendation</h4>
           <p className="mt-2 text-sm leading-6 text-slate-300">{recommendation}</p>
-          <p className="mt-3 text-[0.68rem] leading-5 text-slate-500">
+          <p className="mt-3 text-[0.68rem] leading-5 text-slate-400">
             Decision-support guidance only. Weather conditions can change.
           </p>
         </div>

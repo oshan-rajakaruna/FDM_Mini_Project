@@ -46,7 +46,7 @@ export default function ProbabilityGauge({ probability }) {
       </svg>
       <figcaption className="absolute inset-0 grid place-content-center text-center">
         <span className="text-3xl font-extrabold tracking-[-0.05em] text-white">{normalizedProbability}%</span>
-        <span className="mt-1 text-[0.62rem] font-extrabold uppercase tracking-[0.16em] text-slate-500">
+        <span className="mt-1 text-[0.62rem] font-extrabold uppercase tracking-[0.16em] text-slate-400">
           Rain probability
         </span>
       </figcaption>

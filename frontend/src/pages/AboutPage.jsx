@@ -43,7 +43,7 @@ export default function AboutPage() {
         <aside className="relative overflow-hidden rounded-[1.75rem] border border-cyan-200/15 bg-cyan-300/[0.07] p-7 sm:p-9">
           <div className="absolute -right-16 -top-16 size-56 rounded-full bg-sky-300/10 blur-3xl" />
           <span className="relative grid size-14 place-items-center rounded-2xl border border-white/10 bg-white/[0.08] text-cyan-200">
-            <Binary size={27} />
+            <Binary aria-hidden="true" size={27} />
           </span>
           <p className="relative mt-16 text-xs font-bold uppercase tracking-[0.18em] text-cyan-200/70">Prediction target</p>
           <h2 className="relative mt-3 text-3xl font-extrabold tracking-tight text-white">RainTomorrow</h2>

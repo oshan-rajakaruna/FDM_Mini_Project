@@ -20,7 +20,7 @@ after Test evaluation.
 The fitted pipeline is persisted at `models/final_rainfall_model.joblib`, with
 its Train+Validation-fitted preprocessing state, ordered feature schema,
 positive-class and threshold definitions, and inference metadata. A React/Vite
-frontend and FastAPI backend provide local model inference and browser-local
+frontend and FastAPI backend provide local model inference and MongoDB-backed
 prediction history without changing the frozen model pipeline.
 
 The T08 engineered default uses cyclical month, five within-day weather
@@ -67,6 +67,30 @@ reports/
 scripts/              Project utility and verification scripts
 ```
 
+## Application architecture
+
+RainWise uses a small three-tier application flow:
+
+1. The React/Vite frontend validates and submits the 22 raw weather inputs.
+2. FastAPI passes the raw observation through the frozen model bundle's own
+   preprocessing and prediction path.
+3. After successful inference, FastAPI stores a compact history record in
+   MongoDB Atlas. The History page reads and manages those records through the
+   backend API; it does not use browser storage.
+
+The backend owns one reusable MongoDB client per process and closes it during
+application shutdown. Model and database readiness are checked during normal
+FastAPI startup.
+
+## Prerequisites
+
+- Python with `pip` and support for the versions pinned in
+  `backend/requirements.txt`
+- Node.js and npm compatible with the versions in `frontend/package-lock.json`
+- A MongoDB Atlas deployment, database user, and network access from the local
+  machine
+- The tracked frozen model artifact at `models/final_rainfall_model.joblib`
+
 ## Run RainWise locally
 
 Run the backend and frontend in separate terminals from the repository root.
@@ -80,7 +104,9 @@ Copy-Item backend/.env.example backend/.env
 ```
 
 `MONGODB_URI` is required. `MONGODB_DATABASE` defaults to `rainwise` when it is
-not set. Never commit `backend/.env` or place credentials in source files.
+not set. The committed `backend/.env.example` contains placeholders only.
+Replace them only in `backend/.env`. Never commit that file, paste its URI into
+logs, or place credentials in source files.
 
 Start the API after configuration:
 
@@ -102,6 +128,29 @@ at `http://127.0.0.1:8000/docs`. Both local services must be running to request
 a prediction. Successful predictions are stored by the backend in the
 configured MongoDB database and can be reviewed or deleted from the History
 page.
+
+The frontend targets `http://127.0.0.1:8000` by default. To use another backend
+origin, set `VITE_RAINWISE_API_URL` in the frontend environment before starting
+or building the app. The backend permits the local Vite development and preview
+origins by default; deployments can set `RAINWISE_CORS_ORIGINS` to a
+comma-separated allowlist.
+
+## API overview
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/` | Basic API information and documentation link |
+| `GET` | `/health` | Backend, model, and database readiness |
+| `POST` | `/predict` | Validate 22 raw fields, run real model inference, and persist the successful result |
+| `GET` | `/history` | Return saved prediction records newest-first |
+| `DELETE` | `/history/{id}` | Delete one saved prediction |
+| `DELETE` | `/history` | Clear prediction history without dropping the collection or index |
+
+Prediction history stores only the observation date, location, prediction,
+rain probability, and UTC creation time. It does not store all 22 weather
+inputs, credentials, or model internals. The `/predict` response remains the
+model result contract: `prediction`, `rain_probability`, `threshold`, and
+`positive_class`.
 
 To verify the frontend production build, run:
 

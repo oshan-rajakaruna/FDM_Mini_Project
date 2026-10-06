@@ -21,7 +21,7 @@ export default function NumericField({
         <label htmlFor={name} className="text-sm font-bold text-slate-200">
           {label}
         </label>
-        <span className="text-[0.62rem] font-bold uppercase tracking-[0.12em] text-slate-500">Optional</span>
+        <span className="text-[0.62rem] font-bold uppercase tracking-[0.12em] text-slate-400">Optional</span>
       </div>
       <div className="relative">
         <input
@@ -39,12 +39,12 @@ export default function NumericField({
           aria-describedby={error ? `${hintId} ${errorId}` : hintId}
           className={`field-control pr-16 ${error ? 'border-rose-300/60 focus:border-rose-300 focus:ring-rose-300/15' : ''}`}
         />
-        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">
+        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">
           {unit}
         </span>
       </div>
       <div className="mt-2 flex items-start justify-between gap-3">
-        <p id={hintId} className="text-[0.68rem] leading-5 text-slate-500">
+        <p id={hintId} className="text-[0.68rem] leading-5 text-slate-400">
           Missing values are supported.
         </p>
         <label className="flex shrink-0 cursor-pointer items-center gap-2 text-[0.68rem] font-semibold text-slate-400 transition hover:text-slate-200">

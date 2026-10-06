@@ -2,6 +2,7 @@ import { CalendarDays } from 'lucide-react'
 
 export default function DateField({ value, error, onChange }) {
   const errorId = 'Date-error'
+  const hintId = 'Date-hint'
 
   return (
     <div>
@@ -18,12 +19,12 @@ export default function DateField({ value, error, onChange }) {
           value={value}
           onChange={(event) => onChange('Date', event.target.value)}
           aria-invalid={Boolean(error)}
-          aria-describedby={error ? errorId : undefined}
-          className={`field-control pr-11 ${error ? 'border-rose-300/60' : ''}`}
+          aria-describedby={error ? `${hintId} ${errorId}` : hintId}
+          className={`field-control pr-11 ${error ? 'border-rose-300/60 focus:border-rose-300 focus:ring-rose-300/15' : ''}`}
         />
         <CalendarDays aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" size={17} />
       </div>
-      <p className="mt-2 text-[0.68rem] leading-5 text-slate-500">Use the date these weather conditions were observed.</p>
+      <p id={hintId} className="mt-2 text-[0.68rem] leading-5 text-slate-400">Use the date these weather conditions were observed.</p>
       {error && <p id={errorId} role="alert" className="mt-2 text-xs leading-5 text-rose-300">{error}</p>}
     </div>
   )

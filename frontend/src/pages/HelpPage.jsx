@@ -119,9 +119,9 @@ export default function HelpPage() {
             placeholder="Search weather fields..."
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-600"
+            className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-400"
           />
-          <span className="hidden text-xs font-semibold text-slate-500 sm:inline" aria-live="polite">
+          <span className="hidden text-xs font-semibold text-slate-400 sm:inline" aria-live="polite">
             {matchingFieldCount} {matchingFieldCount === 1 ? 'field' : 'fields'}
           </span>
         </div>

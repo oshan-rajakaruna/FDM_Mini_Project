@@ -61,15 +61,15 @@ export default function Sidebar({ collapsed, onToggle }) {
 
       {!collapsed && (
         <div className="rounded-2xl border border-sky-300/10 bg-sky-300/[0.055] p-4">
-          <p className="text-[0.67rem] font-bold uppercase tracking-[0.17em] text-sky-200/55">
-            System status
+          <p className="text-[0.67rem] font-bold uppercase tracking-[0.17em] text-sky-200/70">
+            Service connection
           </p>
           <div className="mt-2 flex items-center gap-2 text-sm font-semibold text-slate-200">
-            <span className="size-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.7)]" />
-            Local API configured
+            <span className="size-2 rounded-full border border-cyan-200/60 bg-cyan-300/35" aria-hidden="true" />
+            Checked on request
           </div>
           <p className="mt-2 text-xs leading-5 text-slate-400">
-            Start the RainWise backend before submitting a prediction.
+            Start the RainWise backend before predicting or opening history.
           </p>
         </div>
       )}

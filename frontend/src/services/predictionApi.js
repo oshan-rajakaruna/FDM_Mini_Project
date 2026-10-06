@@ -3,8 +3,6 @@ import { ApiError, requestJson } from './apiClient.js'
 
 const PREDICTION_FIELDS = STEP_FIELDS.flat()
 
-export { ApiError as PredictionApiError }
-
 export function createPredictionPayload(values) {
   return Object.fromEntries(
     PREDICTION_FIELDS.map((field) => [field, values[field] ?? null]),

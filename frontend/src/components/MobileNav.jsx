@@ -107,7 +107,7 @@ export default function MobileNav({ open, onOpen, onClose }) {
                     end={to === '/'}
                     onClick={onClose}
                     className={({ isActive }) =>
-                      `flex min-h-13 items-center gap-3 rounded-xl border px-4 py-3.5 text-sm font-bold transition ${
+                      `flex min-h-13 items-center gap-3 rounded-xl border px-4 py-3.5 text-sm font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300 ${
                         isActive
                           ? 'border-cyan-300/20 bg-cyan-300/10 text-white'
                           : 'border-transparent text-slate-400 hover:bg-white/[0.06] hover:text-white'
@@ -121,7 +121,7 @@ export default function MobileNav({ open, onOpen, onClose }) {
               </nav>
               <div className="absolute inset-x-5 bottom-6 rounded-2xl border border-white/10 bg-white/[0.045] p-4 text-xs leading-5 text-slate-400">
                 RainWise decision support<br />
-                Local prediction API configured.
+                Backend availability is checked on request.
               </div>
             </motion.aside>
           </div>

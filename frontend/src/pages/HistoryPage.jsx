@@ -300,9 +300,9 @@ export default function HistoryPage() {
                           <OutcomeIcon aria-hidden="true" size={23} />
                         </span>
                         <div className="min-w-0">
-                          <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-500">{rainLikely ? 'Rain Likely' : 'Rain Unlikely'}</p>
+                          <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">{rainLikely ? 'Rain Likely' : 'Rain Unlikely'}</p>
                           <h3 className="mt-1 break-words text-xl font-extrabold text-white">{record.location}</h3>
-                          <p className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
+                          <p className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-slate-400">
                             <Clock3 aria-hidden="true" size={13} /> Created {formatCreatedAt(record.createdAt)}
                           </p>
                         </div>
@@ -321,15 +321,15 @@ export default function HistoryPage() {
 
                     <dl className="mt-5 grid gap-4 border-t border-white/[0.07] pt-5 sm:grid-cols-3">
                       <div>
-                        <dt className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-slate-500">Observation date</dt>
+                        <dt className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-slate-400">Observation date</dt>
                         <dd className="mt-1.5 text-sm font-bold text-slate-200">{formatObservationDate(record.observationDate)}</dd>
                       </div>
                       <div>
-                        <dt className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-slate-500">Rain probability</dt>
+                        <dt className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-slate-400">Rain probability</dt>
                         <dd className="mt-1.5 text-lg font-extrabold text-white">{formatProbability(record.rainProbability)}%</dd>
                       </div>
                       <div>
-                        <dt className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-slate-500">Display risk</dt>
+                        <dt className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-slate-400">Display risk</dt>
                         <dd className="mt-1.5">
                           <span className={`inline-flex rounded-lg border px-2.5 py-1 text-xs font-extrabold ${riskStyles[riskLevel]}`}>
                             {riskLevel}

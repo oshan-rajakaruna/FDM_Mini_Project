@@ -227,7 +227,7 @@ export default function PredictPage() {
       </div>
 
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+        <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
           <Info aria-hidden="true" size={15} />
           Required fields are identified; all other inputs support missing values.
         </div>
@@ -289,7 +289,7 @@ export default function PredictPage() {
           </button>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-            <span className="text-center text-xs font-semibold text-slate-500 sm:text-left">
+            <span className="text-center text-xs font-semibold text-slate-400 sm:text-left">
               Step {currentStep + 1} of {steps.length}
             </span>
             {currentStep < steps.length - 1 ? (
@@ -319,7 +319,7 @@ export default function PredictPage() {
         />
       )}
 
-      <p className="mt-4 flex items-center justify-center gap-2 text-center text-[0.68rem] leading-5 text-slate-600">
+      <p className="mt-4 flex items-center justify-center gap-2 text-center text-[0.68rem] leading-5 text-slate-400">
         <Check aria-hidden="true" size={13} /> Raw weather inputs only—no engineered, encoded, or scaled values are requested.
       </p>
     </div>

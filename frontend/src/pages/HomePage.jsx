@@ -79,7 +79,7 @@ export default function HomePage() {
                     <Icon aria-hidden="true" size={20} strokeWidth={1.8} />
                   </span>
                   <p className="mt-6 text-sm font-bold leading-5 text-white">{label}</p>
-                  <p className="mt-1 text-xs leading-5 text-slate-500">{note}</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-400">{note}</p>
                 </div>
                 {index < workflow.length - 1 && (
                   <ArrowRight

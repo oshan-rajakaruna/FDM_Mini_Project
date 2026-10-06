@@ -26,7 +26,7 @@ export default function OutcomeSummary({ result }) {
             <h3 id="prediction-outcome-heading" className="mt-3 text-2xl font-extrabold tracking-tight text-white">
               {outcome}
             </h3>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-slate-400">
               Model output at a {Math.round(result.threshold * 100)}% classification threshold
             </p>
           </div>

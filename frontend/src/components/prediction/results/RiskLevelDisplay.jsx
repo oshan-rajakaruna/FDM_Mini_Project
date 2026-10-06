@@ -11,7 +11,7 @@ export default function RiskLevelDisplay({ level }) {
     <section aria-labelledby="risk-level-heading">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h4 id="risk-level-heading" className="text-sm font-bold text-white">Display risk level</h4>
-        <span className="text-xs font-semibold text-slate-500">Current: {level}</span>
+        <span className="text-xs font-semibold text-slate-400">Current: {level}</span>
       </div>
       <div className="mt-3 grid grid-cols-3 gap-2" aria-label={`Risk level: ${level}`}>
         {RISK_LEVELS.map((riskLevel) => {
@@ -20,7 +20,7 @@ export default function RiskLevelDisplay({ level }) {
             <span
               key={riskLevel}
               className={`rounded-lg border px-2 py-2 text-center text-[0.68rem] font-extrabold uppercase tracking-[0.1em] ${
-                active ? activeStyles[riskLevel] : 'border-white/[0.07] bg-white/[0.025] text-slate-600'
+                active ? activeStyles[riskLevel] : 'border-white/[0.07] bg-white/[0.025] text-slate-400'
               }`}
               aria-current={active ? 'true' : undefined}
             >
@@ -29,7 +29,7 @@ export default function RiskLevelDisplay({ level }) {
           )
         })}
       </div>
-      <p className="mt-3 text-[0.68rem] leading-5 text-slate-500">
+      <p className="mt-3 text-[0.68rem] leading-5 text-slate-400">
         Low, Moderate, and High are display-only guidance bands—not model thresholds.
       </p>
     </section>

@@ -2,6 +2,7 @@ import { MapPin } from 'lucide-react'
 
 export default function LocationField({ value, error, onChange, stations }) {
   const errorId = 'Location-error'
+  const hintId = 'Location-hint'
 
   return (
     <div>
@@ -21,15 +22,15 @@ export default function LocationField({ value, error, onChange, stations }) {
           onChange={(event) => onChange('Location', event.target.value)}
           placeholder="Search or select a station"
           aria-invalid={Boolean(error)}
-          aria-describedby={error ? errorId : 'Location-hint'}
-          className={`field-control pr-11 ${error ? 'border-rose-300/60' : ''}`}
+          aria-describedby={error ? `${hintId} ${errorId}` : hintId}
+          className={`field-control pr-11 ${error ? 'border-rose-300/60 focus:border-rose-300 focus:ring-rose-300/15' : ''}`}
         />
         <MapPin aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" size={17} />
       </div>
       <datalist id="weather-station-options">
         {stations.map((station) => <option key={station} value={station} />)}
       </datalist>
-      <p id="Location-hint" className="mt-2 text-[0.68rem] leading-5 text-slate-500">
+      <p id={hintId} className="mt-2 text-[0.68rem] leading-5 text-slate-400">
         Search the 49 weather-station locations used by the project.
       </p>
       {error && <p id={errorId} role="alert" className="mt-2 text-xs leading-5 text-rose-300">{error}</p>}

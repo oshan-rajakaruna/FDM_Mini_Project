@@ -36,7 +36,7 @@ export default function PredictionStepper({ steps, currentStep, furthestStep, on
                 {complete ? <Check aria-hidden="true" size={17} /> : <Icon aria-hidden="true" size={18} />}
               </span>
               <span className="min-w-0">
-                <span className="block text-[0.62rem] font-extrabold uppercase tracking-[0.18em] text-slate-500">
+                <span className="block text-[0.62rem] font-extrabold uppercase tracking-[0.18em] text-slate-400">
                   Step {index + 1}
                 </span>
                 <span className={`mt-1 block truncate text-sm font-bold ${active ? 'text-white' : 'text-slate-300'}`}>
