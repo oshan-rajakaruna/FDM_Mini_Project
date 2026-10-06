@@ -99,7 +99,8 @@ Install the API dependencies, copy the safe environment template, and add your
 MongoDB Atlas connection details to the untracked `backend/.env` file:
 
 ```powershell
-python -m pip install -r backend/requirements.txt
+python -m venv backend\.venv
+backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
 Copy-Item backend/.env.example backend/.env
 ```
 
@@ -111,18 +112,19 @@ logs, or place credentials in source files.
 Start the API after configuration:
 
 ```powershell
-python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
+backend\.venv\Scripts\python.exe -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
 ```
 
 Install and start the frontend:
 
 ```powershell
-Set-Location frontend
-npm.cmd install
-npm.cmd run dev -- --host 127.0.0.1 --port 5173
+cd frontend
+npm install
+npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. The API health endpoint is available at
+Open `http://127.0.0.1:3000`. Vite is configured to use this host and port
+strictly, so no command-line host or port flags are required. The API health endpoint is available at
 `http://127.0.0.1:8000/health`, and interactive API documentation is available
 at `http://127.0.0.1:8000/docs`. Both local services must be running to request
 a prediction. Successful predictions are stored by the backend in the
